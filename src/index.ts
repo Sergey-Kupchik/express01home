@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 
 const app = express()
-const port = 3009
+const port = process.env.PORT || 3003;
 
 app.get('/', (req:any, res:any) => {
 
