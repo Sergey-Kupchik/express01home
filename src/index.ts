@@ -5,7 +5,7 @@ const port = process.env.PORT || 3003;
 
 app.get('/', (req:any, res:any) => {
 
-    let helloWorld = 'Hello World!';
+    let helloWorld = 'Hello Heroku!';
     res.send(helloWorld)
 })
 
