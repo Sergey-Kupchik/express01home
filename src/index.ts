@@ -44,6 +44,11 @@ app.get('/city', (req:Request, res:Response) => {
     }
 })
 
+app.get('/', (req:Request, res:Response) => {
+    const title = "Welcom to my heroku node.js APP";
+    res.send(title)
+})
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
