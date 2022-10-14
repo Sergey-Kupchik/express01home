@@ -37,6 +37,16 @@ app.post('/product', (req:Request, res:Response) => {
     res.status(201).send(newProduct)
 })
 
+app.put('/product/:productId', (req:Request, res:Response) => {
+    const product = products.find(p=>p.id===+req.params.productId)
+    if (product) {
+        product.title=req.body.title
+        res.send(201)
+    } else {
+        res.send(404)
+    }
+})
+
 app.get('/product/:productId', (req:Request, res:Response) => {
     const product = products.find(p=>p.id===+req.params.productId)
     if (product) {
