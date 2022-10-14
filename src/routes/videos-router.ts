@@ -36,7 +36,7 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 
 videosRouter.post('/', (req: Request, res: Response) => {
     const newTitle = req.body.title;
-    if (newTitle) {
+    if (newTitle && newTitle.toString().length<=40) {
         const newVideo: VideoType = {
             id: newId(),
             title: req.body.title,
@@ -52,8 +52,8 @@ videosRouter.post('/', (req: Request, res: Response) => {
 videosRouter.put('/:id', (req: Request, res: Response) => {
     const searchResult = videos.find(v => v.id === +req.params.id);
     const newTitle = req.body.title
-    if (searchResult) {
-        if (newTitle) {
+    if (searchResult ) {
+        if (newTitle && newTitle.toString().length<=40) {
             searchResult.title = newTitle;
             res.send(204)
         } else {
