@@ -12,7 +12,7 @@ type AddressType = {
     city:string
 }
 
-const products: ProductType[] = [{id:"1", title:"Orange"},{id:"2", title:"Melon"},{id:"3", title:"Pumpkin"}]
+const products: ProductType[] = [{id:"1", title:"Orange"},{id:"2", title:"Melon"},{id:"3", title:"Pumpkin"},{id:"4", title:"apple"}]
 const addresses: AddressType[] = [{id:3, city:"Atlanta"},{id:4, city:"Orlando"}]
 
 app.get('/product', (req:Request, res:Response) => {
@@ -37,7 +37,7 @@ app.get('/product/:productId', (req:Request, res:Response) => {
 app.delete('/product/:productId', (req:Request, res:Response) => {
     for (let i=0; i<products.length; i++ ){
         if (products[i].id===req.params.productId){
-            products.slice(i,1)
+            products.splice(i,1)
             res.send(200)
             return
         } else {
