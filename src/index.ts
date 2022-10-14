@@ -1,7 +1,10 @@
 import express, {Request, Response} from 'express';
+import bodyParser from "body-parser";
 
 const app = express()
 const port = process.env.PORT || 5003;
+const parsesMiddleware = bodyParser({})
+app.use(parsesMiddleware);
 
 type ProductType = {
     id:number
@@ -25,6 +28,15 @@ app.get('/product', (req:Request, res:Response) => {
     }
 })
 
+app.post('/product', (req:Request, res:Response) => {
+    const newProduct:ProductType = {
+        id: +(new Date()),
+        title: req.body.title
+    }
+    products.push(newProduct);
+    res.status(201).send(newProduct)
+})
+
 app.get('/product/:productId', (req:Request, res:Response) => {
     const product = products.find(p=>p.id===+req.params.productId)
     if (product) {
@@ -38,7 +50,7 @@ app.delete('/product/:productId', (req:Request, res:Response) => {
     for (let i=0; i<products.length; i++ ){
         if (products[i].id===+req.params.productId){
             products.splice(i,1)
-            res.send(201)
+            res.send(204)
             return
         }
     }
