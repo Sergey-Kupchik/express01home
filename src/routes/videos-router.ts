@@ -66,19 +66,14 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
 
 videosRouter.delete('/:id', (req: Request, res: Response) => {
     const searchId = +req.params.id;
-    if (searchId) {
         for (let i = 0; i < videos.length; i++) {
             if (videos[i].id === searchId) {
                 videos.splice(i, 1)
                 res.send(204)
                 return
-            } else {
-                res.send(404)
             }
         }
-    } else {
         res.send(404)
-    }
 })
 
 
