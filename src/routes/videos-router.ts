@@ -6,7 +6,7 @@ const errorResp = {
     errorsMessages: [
         {
             message: "Body and title are required",
-            field: "body.title is missing in request"
+            field: "title"
         }
     ]
 };
