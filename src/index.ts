@@ -35,8 +35,7 @@ app.get('/product/:productId', (req:Request, res:Response) => {
 })
 
 app.delete('/product/:productId', (req:Request, res:Response) => {
-    const product = products.find(p=>p.id===req.params.productId)
-    for (let i=0; i=0; i++ ){
+    for (let i=0; i<products.length; i++ ){
         if (products[i].id===req.params.productId){
             products.slice(i,1)
             res.send(200)
