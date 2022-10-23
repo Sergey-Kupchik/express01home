@@ -7,14 +7,14 @@ const app = express()
 const port = process.env.PORT || 5003;
 const parsesMiddleware = bodyParser({})
 
+
 app.use(parsesMiddleware);
 
 app.use('/videos', videosRouter);
 app.use('/product', productsRouter);
 
 app.get('/', (req: Request, res: Response) => {
-    const title = "Welcome to my heroku node.js APP!";
-    res.send(title)
+    res.send('Hello root')
 })
 
 app.listen(port, () => {
