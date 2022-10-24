@@ -1,20 +1,19 @@
 import {newId} from "../routes/videos-router";
-import {ProductType} from "./products-repository";
 
 type BlogType = {
-    id: number
+    id: string
     name: string
     youtubeUrl: string
 }
 
 const blogs: BlogType[] = [
     {
-        id: 1,
+        id: "1",
         name: "Blog1",
         youtubeUrl: "https://www.youtube.com/watch?v=ae6LWyidPJo&ab_channel=AllianceTheatre",
     },
     {
-        id: 2,
+        id: "2",
         name: "Blog2",
         youtubeUrl: "https://www.youtube.com/watch?v=OvgqJOWGQfU&ab_channel=HouzzTV",
     }
@@ -25,12 +24,12 @@ const blogsRepository = {
         return blogs;
     },
     getBlogById(id: string): BlogType | undefined {
-        const searchResult = blogs.find((b) => b.id === +id)
+        const searchResult = blogs.find((b) => b.id === id)
         return searchResult;
     },
     createProduct(name: string, youtubeUrl: string): BlogType {
         const newBlog: BlogType = {
-            id: newId(),
+            id: newId().toString(),
             name,
             youtubeUrl
         }
@@ -38,7 +37,7 @@ const blogsRepository = {
         return newBlog;
     },
     updateBlog(id: string, name: string, youtubeUrl: string): boolean {
-        const searchResult = blogs.find((b) => b.id === +id)
+        const searchResult = blogs.find((b) => b.id === id)
         if (searchResult) {
             searchResult.name = name;
             searchResult.youtubeUrl = youtubeUrl;
@@ -48,7 +47,7 @@ const blogsRepository = {
     },
     deleteBlogById(id: string): boolean {
         for (let i=0;i<blogs.length;i++){
-            if (blogs[i].id===+id){
+            if (blogs[i].id===id){
                 blogs.splice(i, 1)
                 return true
             }
@@ -59,5 +58,5 @@ const blogsRepository = {
 
 
 export {
-    blogsRepository, BlogType
+    blogsRepository, BlogType, blogs
 }

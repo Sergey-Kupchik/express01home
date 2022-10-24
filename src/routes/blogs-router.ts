@@ -2,10 +2,10 @@ import {Request, Response, Router} from 'express';
 import {isAuthZ} from "../middlewares/isAuthZ-middleware";
 import {blogsRepository, BlogType} from "../repositories/blogs-repository";
 import {
-    inputBlogsValidationMiddleware,
     nameValidation,
     youtubeUrlValidation
 } from "../middlewares/blogs-validation-middleware";
+import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 
 const blogsRouter = Router();
 
@@ -26,7 +26,7 @@ blogsRouter.post('/',
     isAuthZ,
     nameValidation,
     youtubeUrlValidation,
-    inputBlogsValidationMiddleware,
+    inputValidationMiddleware,
     (req: Request, res: Response) => {
         const newBlog: BlogType = blogsRepository.createProduct(req.body.name, req.body.youtubeUrl)
         res.status(201).send(newBlog)
@@ -36,7 +36,7 @@ blogsRouter.put('/:id',
     isAuthZ,
     nameValidation,
     youtubeUrlValidation,
-    inputBlogsValidationMiddleware,
+    inputValidationMiddleware,
     (req: Request, res: Response) => {
         const isUpdated: boolean = blogsRepository.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl)
         if (!isUpdated) {
