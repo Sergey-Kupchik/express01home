@@ -1,4 +1,4 @@
-import {body, validationResult} from "express-validator";
+import {body, param, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 
 const nameValidation = body('name')
@@ -6,6 +6,10 @@ const nameValidation = body('name')
     .trim().withMessage('name should be symbols string')
     .notEmpty().withMessage('name is required')
     .isLength({max: 15}).withMessage('max length is 15');
+
+
+const idValidation = param(':id')
+    .isLength({max: 2}).withMessage('max length is 3');
 
 const youtubeUrlValidation = body('youtubeUrl')
     .isString().withMessage('youtubeUrl should be string')
@@ -15,4 +19,4 @@ const youtubeUrlValidation = body('youtubeUrl')
     .isURL().withMessage('should be valid URL value');
 
 
-export {nameValidation, youtubeUrlValidation};
+export {nameValidation, youtubeUrlValidation, idValidation};
