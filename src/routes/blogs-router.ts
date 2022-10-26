@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {isAuthZ} from "../middlewares/isAuthZ-middleware";
+import {isAuthT} from "../middlewares/isAuth-middleware";
 import {blogsRepository, BlogType} from "../repositories/blogs-repository";
 import {
     nameValidation,
@@ -9,13 +9,13 @@ import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 
 const blogsRouter = Router();
 
-blogsRouter.get('/', (req: Request, res: Response) => {
-    const blogs: BlogType[] = blogsRepository.getAllBlogs()
+blogsRouter.get('/', async (req: Request, res: Response) => {
+    const blogs: BlogType[] = await blogsRepository.getAllBlogs()
     res.send(blogs)
 });
 
-blogsRouter.get('/:id', (req: Request, res: Response) => {
-    const blog: BlogType | undefined = blogsRepository.getBlogById(req.params.id)
+blogsRouter.get('/:id', async (req: Request, res: Response) => {
+    const blog: BlogType | undefined = await blogsRepository.getBlogById(req.params.id)
     if (!blog) {
         res.send(404)
     }
@@ -23,22 +23,22 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
 });
 
 blogsRouter.post('/',
-    isAuthZ,
+    isAuthT,
     nameValidation,
     youtubeUrlValidation,
     inputValidationMiddleware,
-    (req: Request, res: Response) => {
-        const newBlog: BlogType = blogsRepository.createProduct(req.body.name, req.body.youtubeUrl)
+    async (req: Request, res: Response) => {
+        const newBlog: BlogType = await blogsRepository.createProduct(req.body.name, req.body.youtubeUrl)
         res.status(201).send(newBlog)
     });
 
 blogsRouter.put('/:id',
-    isAuthZ,
+    isAuthT,
     nameValidation,
     youtubeUrlValidation,
     inputValidationMiddleware,
-    (req: Request, res: Response) => {
-        const isUpdated: boolean = blogsRepository.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl)
+    async (req: Request, res: Response) => {
+        const isUpdated: boolean =  await blogsRepository.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl)
         if (!isUpdated) {
             res.send(404)
         }
@@ -46,9 +46,9 @@ blogsRouter.put('/:id',
     });
 
 blogsRouter.delete('/:id',
-    isAuthZ,
-    (req: Request, res: Response) => {
-        const isDeleted: boolean = blogsRepository.deleteBlogById(req.params.id, )
+    isAuthT,
+    async (req: Request, res: Response) => {
+        const isDeleted: boolean =  await blogsRepository.deleteBlogById(req.params.id, )
         if (!isDeleted) {
             res.send(404)
         }

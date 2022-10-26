@@ -14,7 +14,7 @@ type PostType = {
 const posts: PostType[] = [
     {
         id: "1",
-        title: 'Title1',
+        title: 'TitleAsync',
         shortDescription: 'blblblblbblbl',
         content: "https://www.youtube.com/watch?v=JdTsAmOP80c&t=487s&ab_channel=ImagineDragonsLive",
         blogId: uuidv4(),
@@ -31,46 +31,52 @@ const posts: PostType[] = [
 ];
 
 const postsRepository = {
-    getAllPosts(): PostType[] {
+    async getAllPosts(): Promise<PostType[]> {
         return posts;
     },
-    createPost(title: string, shortDescription: string, content: string, blogId: string,): PostType {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<PostType> {
+        const blog = await blogsRepository.getBlogById(blogId)
         const newPost: PostType = {
             id: uuidv4(),
             title,
             shortDescription,
             content,
             blogId,
-            blogName: blogsRepository.getBlogById(blogId)!.name
+            blogName: blog ? blog.name : "No name"
         }
         posts.push(newPost)
         return newPost;
     },
-    getPostById(id: string): PostType | undefined {
+    async getPostById(id: string): Promise<PostType | undefined> {
         const searchResult = posts.find((p) => p.id === id)
         return searchResult;
     },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string,): boolean {
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string,): Promise<boolean> {
         const searchResult = posts.find((p) => p.id === id)
+        const blog = await blogsRepository.getBlogById(blogId)
         if (searchResult) {
             searchResult.title = title;
             searchResult.shortDescription = shortDescription;
             searchResult.content = content;
             searchResult.blogId = blogId;
-            searchResult.blogName= blogsRepository.getBlogById(blogId)!.name;
+            searchResult.blogName = blog ? blog.name : "No name"
             return true
         }
         return false
     },
-    deletePostById(id: string): boolean {
-        for (let i=0;i<posts.length;i++){
-            if (posts[i].id===id){
+    async deletePostById(id: string): Promise<boolean> {
+        for (let i = 0; i < posts.length; i++) {
+            if (posts[i].id === id) {
                 posts.splice(i, 1)
                 return true
             }
         }
         return false;
     },
+    async deleteAllPosts(): Promise<boolean> {
+        posts.splice(0, posts.length);
+        return true
+    },
 };
 
-export {postsRepository, PostType, posts}
+export {postsRepository, PostType}

@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {isAuthZ} from "../middlewares/isAuthZ-middleware";
+import {isAuthT} from "../middlewares/isAuth-middleware";
 import {postsRepository, PostType} from "../repositories/posts-repository";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {
@@ -13,27 +13,27 @@ import {
 const postsRouter = Router();
 
 postsRouter.get('/',
-    (req: Request, res: Response) => {
-        const posts: PostType[] = postsRepository.getAllPosts()
+    async (req: Request, res: Response) => {
+        const posts: PostType[] = await postsRepository.getAllPosts()
         res.send(posts)
     });
 postsRouter.get('/:id',
-    (req: Request, res: Response) => {
-        const posts: PostType | undefined = postsRepository.getPostById(req.params.id.toString())
+    async (req: Request, res: Response) => {
+        const posts: PostType | undefined = await postsRepository.getPostById(req.params.id.toString())
         if (!posts) {
             res.send(404)
         }
         res.send(posts)
     });
 postsRouter.put('/:id',
-    isAuthZ,
+    isAuthT,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
     blogIdValidation,
     inputValidationMiddleware,
-    (req: Request, res: Response) => {
-        const isUpdated: boolean = postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+    async (req: Request, res: Response) => {
+        const isUpdated: boolean = await postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (!isUpdated) {
             res.send(404)
         }
@@ -41,9 +41,9 @@ postsRouter.put('/:id',
     });
 
 postsRouter.delete('/:id',
-    isAuthZ,
-    (req: Request, res: Response) => {
-        const isDeleted: boolean = postsRepository.deletePostById(req.params.id,)
+    isAuthT,
+    async (req: Request, res: Response) => {
+        const isDeleted: boolean = await postsRepository.deletePostById(req.params.id,)
         if (!isDeleted) {
             res.send(404)
         }
@@ -51,14 +51,14 @@ postsRouter.delete('/:id',
     });
 
 postsRouter.post('/',
-    isAuthZ,
+    isAuthT,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
     blogIdValidation,
     inputValidationMiddleware,
-    (req: Request, res: Response) => {
-        const post = postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+    async (req: Request, res: Response) => {
+        const post: PostType = await postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
         res.status(201).send(post)
     })
 

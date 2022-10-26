@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 
-const isAuthZ = (req: Request, res: Response, next: NextFunction) => {
+const isAuthT = (req: Request, res: Response, next: NextFunction) => {
     const basicToken = req.headers["authorization"]
     if (basicToken === "Basic YWRtaW46cXdlcnR5") {
         next()
@@ -9,4 +9,4 @@ const isAuthZ = (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export {isAuthZ};
+export {isAuthT};

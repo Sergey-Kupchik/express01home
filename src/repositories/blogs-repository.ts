@@ -9,7 +9,7 @@ type BlogType = {
 const blogs: BlogType[] = [
     {
         id: "1",
-        name: "Blog1",
+        name: "BlogAsync",
         youtubeUrl: "https://www.youtube.com/watch?v=ae6LWyidPJo&ab_channel=AllianceTheatre",
     },
     {
@@ -20,14 +20,14 @@ const blogs: BlogType[] = [
 ];
 
 const blogsRepository = {
-    getAllBlogs(): BlogType[] {
+    async getAllBlogs(): Promise<BlogType[]> {
         return blogs;
     },
-    getBlogById(id: string): BlogType | undefined {
+    async getBlogById(id: string):  Promise<BlogType | undefined> {
         const searchResult = blogs.find((b) => b.id === id)
         return searchResult;
     },
-    createProduct(name: string, youtubeUrl: string): BlogType {
+    async createProduct(name: string, youtubeUrl: string):  Promise<BlogType> {
         const newBlog: BlogType = {
             id: newId().toString(),
             name,
@@ -36,7 +36,7 @@ const blogsRepository = {
         blogs.push(newBlog)
         return newBlog;
     },
-    updateBlog(id: string, name: string, youtubeUrl: string): boolean {
+    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const searchResult = blogs.find((b) => b.id === id)
         if (searchResult) {
             searchResult.name = name;
@@ -45,7 +45,7 @@ const blogsRepository = {
         }
         return false
     },
-    deleteBlogById(id: string): boolean {
+    async deleteBlogById(id: string): Promise<boolean> {
         for (let i=0;i<blogs.length;i++){
             if (blogs[i].id===id){
                 blogs.splice(i, 1)
@@ -54,9 +54,13 @@ const blogsRepository = {
         }
         return false;
     },
+    async deleteAllBlogs (): Promise<boolean> {
+        blogs.splice(0, blogs.length);
+        return true
+    }
 }
 
 
 export {
-    blogsRepository, BlogType, blogs
+    blogsRepository, BlogType
 }

@@ -23,8 +23,8 @@ const contentValidation = body("content")
 
 
 
-const isValidBlogId: CustomValidator = value => {
-    const blog: BlogType | undefined = blogsRepository.getBlogById(value.toString());
+const isValidBlogId: CustomValidator = async (value) => {
+    const blog: BlogType | undefined = await blogsRepository.getBlogById(value.toString());
     if (blog) {
         return true;
     } else {

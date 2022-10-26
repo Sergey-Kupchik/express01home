@@ -1,6 +1,6 @@
 import { Request, Response, Router} from 'express';
 import {productsRepository} from "../repositories/products-repository";
-import {isAuthZ} from "../middlewares/isAuthZ-middleware";
+import {isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware, titleValidation} from "../middlewares/validation-middleware";
 
 const productsRouter = Router();
@@ -33,7 +33,7 @@ productsRouter.put('/:id',
     })
 
 productsRouter.get('/:productId',
-    isAuthZ,
+    isAuthT,
     (req: Request, res: Response) => {
         const product = productsRepository.findProductById(req.params.productId)
         if (product) {
