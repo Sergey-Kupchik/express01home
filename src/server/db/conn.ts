@@ -1,10 +1,9 @@
 import {Collection, MongoClient} from 'mongodb';
-import * as mongoDB from "mongodb";
 import {PostType} from "../../repositories/posts-in-memory-repository";
 import {BlogType} from "../../repositories/blogs-db-repository";
 
-// const url = 'mongodb://0.0.0.0:27017';
-const url = 'mongodb+srv://kupchikrabota:1319710Minsk@cluster0.ldnmezy.mongodb.net/?retryWrites=true&w=majority';
+
+const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';
 
 const client = new MongoClient(url);
 
