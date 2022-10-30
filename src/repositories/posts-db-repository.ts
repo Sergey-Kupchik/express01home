@@ -16,7 +16,7 @@ type PostType = {
 
 const postsRepository = {
     async getAllPosts(): Promise<PostType[]> {
-        return await dbCollections.posts.find({}).toArray();
+        return await dbCollections.posts.find({},{ projection:{_id:0}}).toArray();
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<PostType> {
         const blog = await blogsRepository.getBlogById(blogId)
@@ -33,7 +33,7 @@ const postsRepository = {
         return newPost;
     },
     async getPostById(id: string): Promise<PostType | null> {
-        const searchResult = await dbCollections.posts.findOne({id})
+        const searchResult = await dbCollections.posts.findOne({id},{ projection:{_id:0}})
         return searchResult;
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string,): Promise<boolean> {
