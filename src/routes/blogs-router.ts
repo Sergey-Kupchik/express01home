@@ -11,15 +11,20 @@ const blogsRouter = Router();
 
 blogsRouter.get('/', async (req: Request, res: Response) => {
     const blogs: BlogType[] = await blogsRepository.getAllBlogs()
-    res.send(blogs)
+     res.send(blogs)
+     return
 });
 
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
     const blog: BlogType | null = await blogsRepository.getBlogById(req.params.id)
     if (!blog) {
-        res.send(404)
+         res.sendStatus(404)
+         return
+        
     }
-    res.send(blog)
+     res.send(blog)
+     return
+
 });
 
 blogsRouter.post('/',
@@ -29,7 +34,8 @@ blogsRouter.post('/',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const newBlog: BlogType = await blogsRepository.createProduct(req.body.name, req.body.youtubeUrl)
-        res.status(201).send(newBlog)
+         res.status(201).send(newBlog)
+         return
     });
 
 blogsRouter.put('/:id',
@@ -40,9 +46,11 @@ blogsRouter.put('/:id',
     async (req: Request, res: Response) => {
         const isUpdated: boolean =  await blogsRepository.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl)
         if (!isUpdated) {
-            res.send(404)
+             res.sendStatus(404)
+             return
         }
-        res.send(204)
+         res.sendStatus(204)
+         return
     });
 
 blogsRouter.delete('/:id',
@@ -50,9 +58,11 @@ blogsRouter.delete('/:id',
     async (req: Request, res: Response) => {
         const isDeleted: boolean =  await blogsRepository.deleteBlogById(req.params.id, )
         if (!isDeleted) {
-            res.send(404)
+             res.sendStatus(404)
+             return
         }
-        res.send(204)
+         res.sendStatus(204)
+         return
     });
 
 export {

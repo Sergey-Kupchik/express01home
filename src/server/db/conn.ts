@@ -3,27 +3,33 @@ import * as mongoDB from "mongodb";
 import {PostType} from "../../repositories/posts-in-memory-repository";
 import {BlogType} from "../../repositories/blogs-db-repository";
 
-const url = 'mongodb://0.0.0.0:27017';
-const dbName = 'first';
-const postsCollName = 'posts';
-const blogsCollName = 'blogs';
-type CollectionsType = {
-    posts: Collection<PostType>
-    blogs: Collection<BlogType>
-}
-const collections: CollectionsType = {} as CollectionsType;
-
+// const url = 'mongodb://0.0.0.0:27017';
+const url = 'mongodb+srv://kupchikrabota:1319710Minsk@cluster0.ldnmezy.mongodb.net/?retryWrites=true&w=majority';
 
 const client = new MongoClient(url);
 
+const dbName = 'first';
+const postsCollName = 'posts';
+const blogsCollName = 'blogs';
+type dbCollectionsType = {
+    posts: Collection<PostType>
+    blogs: Collection<BlogType>
+}
+const dbCollections: dbCollectionsType = {} as dbCollectionsType;
+
+// export const postsCollection =  client.db(dbName).collection<PostType>(postsCollName)
+// export const blogsCollection =  client.db(dbName).collection<BlogType>(blogsCollName)
+
 async function connectToDatabase() {
     try {
+        console.log(url);
+
        await client.connect();
         await client.db(dbName).command({ping:1});
         const postsCollection:Collection<PostType> = await client.db(dbName).collection(postsCollName);
         const blogsCollection:Collection<BlogType> = await client.db(dbName).collection(blogsCollName);
-        collections.posts = postsCollection;
-        collections.blogs = blogsCollection;
+        dbCollections.posts = postsCollection;
+        dbCollections.blogs = blogsCollection;
         console.log(`Connected to mongodb server`)
     } catch (error) {
         await client.close()
@@ -31,4 +37,4 @@ async function connectToDatabase() {
     }
 }
 
-export { connectToDatabase, collections}
+export { connectToDatabase, dbCollections}

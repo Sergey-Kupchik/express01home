@@ -1,7 +1,7 @@
-import {Request, Response, Router} from 'express';
-import {isAuthT} from "../middlewares/isAuth-middleware";
-import {postsRepository, PostType} from "../repositories/posts-db-repository";
-import {inputValidationMiddleware} from "../middlewares/validation-middleware";
+import { Request, Response, Router } from 'express';
+import { isAuthT } from "../middlewares/isAuth-middleware";
+import { postsRepository, PostType } from "../repositories/posts-db-repository";
+import { inputValidationMiddleware } from "../middlewares/validation-middleware";
 import {
     blogIdValidation,
     titleValidation,
@@ -15,17 +15,22 @@ const postsRouter = Router();
 postsRouter.get('/',
     async (req: Request, res: Response) => {
         const posts: PostType[] = await postsRepository.getAllPosts()
-        res.send(posts)
+         res.send(posts)
+         return
     });
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
         const posts: PostType | null = await postsRepository.getPostById(req.params.id.toString())
         if (!posts) {
-            res.send(404)
+             res.sendStatus(404)
+             return
         }
-        res.send(posts)
+          res.send(posts)
+          return
     });
 postsRouter.put('/:id',
+
+    // param('id').isLength({max: 2}).withMessage('max length is 3'),
     isAuthT,
     titleValidation,
     shortDescriptionValidation,
@@ -35,9 +40,11 @@ postsRouter.put('/:id',
     async (req: Request, res: Response) => {
         const isUpdated: boolean = await postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (!isUpdated) {
-            res.send(404)
+             res.sendStatus(404)
+             return
         }
-        res.send(204)
+         res.sendStatus(204)
+         return
     });
 
 postsRouter.delete('/:id',
@@ -45,9 +52,11 @@ postsRouter.delete('/:id',
     async (req: Request, res: Response) => {
         const isDeleted: boolean = await postsRepository.deletePostById(req.params.id,)
         if (!isDeleted) {
-            res.send(404)
+             res.sendStatus(404)
+             return
         }
-        res.send(204)
+         res.sendStatus(204)
+         return
     });
 
 postsRouter.post('/',
@@ -59,7 +68,8 @@ postsRouter.post('/',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const post: PostType = await postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
-        res.status(201).send(post)
+         res.status(201).send(post)
+         return
     })
 
-export {postsRouter};
+export { postsRouter };

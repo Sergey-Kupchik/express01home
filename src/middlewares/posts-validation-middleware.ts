@@ -25,7 +25,7 @@ const contentValidation = body("content")
 
 const isValidBlogId: CustomValidator = async (value) => {
     const blog: BlogType | null = await blogsRepository.getBlogById(value.toString());
-    if (blog) {
+    if (blog !== null) {
         return true;
     } else {
         return Promise.reject('we do not have this blogId');

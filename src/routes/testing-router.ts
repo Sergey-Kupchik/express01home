@@ -7,6 +7,7 @@ const testingRouter = Router();
 testingRouter.delete('/all-data', async (req: Request, res: Response) => {
     await postsRepository.deleteAllPosts()
     await blogsRepository.deleteAllBlogs()
-    res.send(204)
+     res.send(204)
+     return
 });
 export {testingRouter};

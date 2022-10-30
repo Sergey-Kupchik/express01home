@@ -22,15 +22,18 @@ const authorName = (): string => (Math.random() + 1).toString(36).substring(7);
 export const newId = (): number => +(new Date());
 
 videosRouter.get('/', (req: Request, res: Response) => {
-    res.send(videos)
+     res.send(videos)
+     return
 })
 
 videosRouter.get('/:id', (req: Request, res: Response) => {
     const searchResult = videos.find(v => v.id === +req.params.id);
     if (searchResult) {
-        res.send(searchResult)
+          res.send(searchResult)
+        return
     } else {
-        res.send(404)
+           res.sendStatus(404)
+           return
     }
 })
 
@@ -43,9 +46,11 @@ videosRouter.post('/', (req: Request, res: Response) => {
             author: authorName(),
         }
         videos.push(newVideo);
-        res.status(201).send(newVideo)
+          res.sendStatus(201).send(newVideo)
+        return
     } else {
-        res.status(400).send(errorResp)
+          res.sendStatus(400).send(errorResp)
+          return
     }
 })
 
@@ -55,12 +60,15 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
     if (searchResult ) {
         if (newTitle && newTitle.toString().length<=40) {
             searchResult.title = newTitle;
-            res.send(204)
+                res.sendStatus(204)
+                return
         } else {
-            res.status(400).send(errorResp)
+               res.status(400).send(errorResp)
+               return
         }
     } else {
-        res.send(404)
+          res.sendStatus(404)
+          return
     }
 })
 
@@ -69,11 +77,13 @@ videosRouter.delete('/:id', (req: Request, res: Response) => {
         for (let i = 0; i < videos.length; i++) {
             if (videos[i].id === searchId) {
                 videos.splice(i, 1)
-                res.send(204)
-                return
+                  res.sendStatus(204)
+                  return
+                
             }
         }
-        res.send(404)
+         res.sendStatus(404)
+         return
 })
 
 

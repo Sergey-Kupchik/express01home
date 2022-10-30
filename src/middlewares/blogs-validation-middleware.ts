@@ -8,8 +8,7 @@ const nameValidation = body('name')
     .isLength({max: 15}).withMessage('max length is 15');
 
 
-const idValidation = param(':id')
-    .isLength({max: 2}).withMessage('max length is 3');
+const idValidation = param('id').isLength({max: 2}).isString().trim().notEmpty().withMessage('max length is 3');
 
 const youtubeUrlValidation = body('youtubeUrl')
     .isString().withMessage('youtubeUrl should be string')

@@ -1,4 +1,4 @@
-import {body, validationResult} from "express-validator";
+import {body,param, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 
 const titleValidation = body('title').isLength({

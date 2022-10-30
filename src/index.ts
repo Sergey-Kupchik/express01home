@@ -1,5 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import express, {Request, Response} from 'express';
-import bodyParser from "body-parser";
 import {videosRouter} from "./routes/videos-router";
 import {productsRouter} from "./routes/products-router";
 import {blogsRouter} from "./routes/blogs-router";
@@ -8,9 +9,8 @@ import {testingRouter} from "./routes/testing-router";
 import {connectToDatabase} from "./server/db/conn";
 
 const app = express()
-const port = process.env.PORT || 5003;
-const parsesMiddleware = bodyParser({})
-
+const port = process.env.PORT || 5004;
+const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
 
