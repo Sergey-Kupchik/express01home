@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {isAuthT} from "../middlewares/isAuth-middleware";
-import {postsRepository, PostType} from "../repositories/posts-repository";
+import {postsRepository, PostType} from "../repositories/posts-db-repository";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {
     blogIdValidation,
@@ -19,7 +19,7 @@ postsRouter.get('/',
     });
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const posts: PostType | undefined = await postsRepository.getPostById(req.params.id.toString())
+        const posts: PostType | null = await postsRepository.getPostById(req.params.id.toString())
         if (!posts) {
             res.send(404)
         }

@@ -5,6 +5,7 @@ import {productsRouter} from "./routes/products-router";
 import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
 import {testingRouter} from "./routes/testing-router";
+import {connectToDatabase} from "./server/db/conn";
 
 const app = express()
 const port = process.env.PORT || 5003;
@@ -23,6 +24,10 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello root')
 })
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+const startApp = async () => {
+    await connectToDatabase()
+    app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`)
+    })
+};
+startApp();

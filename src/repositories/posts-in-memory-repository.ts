@@ -1,15 +1,8 @@
 import {newId} from "../routes/videos-router";
 import {v4 as uuidv4} from 'uuid';
-import {blogsRepository, BlogType} from "./blogs-repository";
+import {blogsRepository, } from "./blogs-db-repository";
+import {PostType} from "./posts-db-repository";
 
-type PostType = {
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string
-};
 
 const posts: PostType[] = [
     {

@@ -1,10 +1,7 @@
 import {newId} from "../routes/videos-router";
+import {BlogType} from "./blogs-db-repository";
 
-type BlogType = {
-    id: string
-    name: string
-    youtubeUrl: string
-}
+
 
 const blogs: BlogType[] = [
     {
@@ -62,5 +59,5 @@ const blogsRepository = {
 
 
 export {
-    blogsRepository, BlogType
+    blogsRepository
 }

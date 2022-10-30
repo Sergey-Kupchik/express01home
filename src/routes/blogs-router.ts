@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {isAuthT} from "../middlewares/isAuth-middleware";
-import {blogsRepository, BlogType} from "../repositories/blogs-repository";
+import {blogsRepository, BlogType} from "../repositories/blogs-db-repository";
 import {
     nameValidation,
     youtubeUrlValidation
@@ -15,7 +15,7 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
 });
 
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
-    const blog: BlogType | undefined = await blogsRepository.getBlogById(req.params.id)
+    const blog: BlogType | null = await blogsRepository.getBlogById(req.params.id)
     if (!blog) {
         res.send(404)
     }
