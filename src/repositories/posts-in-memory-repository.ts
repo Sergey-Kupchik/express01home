@@ -2,6 +2,7 @@ import {newId} from "../routes/videos-router";
 import {v4 as uuidv4} from 'uuid';
 import {blogsRepository, } from "./blogs-db-repository";
 import {PostType} from "./posts-db-repository";
+import { currentDate } from "../utils/utils";
 
 
 const posts: PostType[] = [
@@ -11,7 +12,8 @@ const posts: PostType[] = [
         shortDescription: 'blblblblbblbl',
         content: "https://www.youtube.com/watch?v=JdTsAmOP80c&t=487s&ab_channel=ImagineDragonsLive",
         blogId: uuidv4(),
-        blogName: 'Name1'
+        blogName: 'Name1',
+        createdAt: currentDate()
     },
     {
         id: "2",
@@ -19,7 +21,8 @@ const posts: PostType[] = [
         shortDescription: 'affddfa',
         content: "https://learn.javascript.ru/array-methods",
         blogId: uuidv4(),
-        blogName: 'Name2'
+        blogName: 'Name2',
+        createdAt: currentDate()
     }
 ];
 
@@ -35,7 +38,8 @@ const postsRepository = {
             shortDescription,
             content,
             blogId,
-            blogName: blog ? blog.name : "No name"
+            blogName: blog ? blog.name : "No name",
+            createdAt: currentDate()
         }
         posts.push(newPost)
         return newPost;

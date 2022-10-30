@@ -33,9 +33,13 @@ blogsRouter.post('/',
     youtubeUrlValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const newBlog: BlogType = await blogsRepository.createProduct(req.body.name, req.body.youtubeUrl)
-         res.status(201).send(newBlog)
-         return
+        const newBlog: BlogType|null = await blogsRepository.createBlog(req.body.name, req.body.youtubeUrl)
+        if (newBlog){
+            res.status(201).send(newBlog)
+            return
+        }
+        res.sendStatus(404)
+        return
     });
 
 blogsRouter.put('/:id',

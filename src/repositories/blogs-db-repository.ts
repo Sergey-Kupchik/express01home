@@ -18,15 +18,15 @@ const blogsRepository = {
         const result = await dbCollections.blogs.findOne({id},{ projection:{_id:0}})
         return result;
     },
-    async createProduct(name: string, youtubeUrl: string): Promise<BlogType> {
+    async createBlog(name: string, youtubeUrl: string): Promise<BlogType|null> {
         const newBlog: BlogType = {
             id: uuidv4(),
             name,
             youtubeUrl
         }
         await dbCollections.blogs.insertOne(newBlog)
-        // const newBlogFrom = await this.getBlogById(newBlog.id)
-        return newBlog;
+        const newBlogFromDb = await this.getBlogById(newBlog.id)
+        return newBlogFromDb;
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await dbCollections.blogs.updateOne({id}, {

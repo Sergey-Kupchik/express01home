@@ -1,6 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 import {blogsRepository} from "./blogs-db-repository";
 import {dbCollections} from "../server/db/conn";
+import { currentDate } from '../utils/utils';
 
 
 
@@ -11,6 +12,7 @@ type PostType = {
     content: string
     blogId: string
     blogName: string
+    createdAt: string
 };
 
 
@@ -18,7 +20,7 @@ const postsRepository = {
     async getAllPosts(): Promise<PostType[]> {
         return await dbCollections.posts.find({},{ projection:{_id:0}}).toArray();
     },
-    async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<PostType> {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<PostType| null> {
         const blog = await blogsRepository.getBlogById(blogId)
         const newPost: PostType = {
             id: uuidv4(),
@@ -26,11 +28,13 @@ const postsRepository = {
             shortDescription,
             content,
             blogId,
-            blogName: blog ? blog.name : "No name"
+            blogName: blog ? blog.name : "No name",
+            createdAt: currentDate(),
         }
         const result = await dbCollections.posts.insertOne(newPost)
         console.log(`result createPost from postsRepository is ${result}`)
-        return newPost;
+        const newPostFromDb = await this.getPostById(newPost.id)
+        return newPostFromDb;
     },
     async getPostById(id: string): Promise<PostType | null> {
         const searchResult = await dbCollections.posts.findOne({id},{ projection:{_id:0}})
