@@ -1,11 +1,13 @@
 import {newId} from "../routes/videos-router";
 import {dbCollections} from "../server/db/conn";
 import {v4 as uuidv4} from "uuid";
+import { currentDate } from "../utils/utils";
 
 type BlogType = {
     id: string
     name: string
     youtubeUrl: string
+    createdAt: string
 }
 
 
@@ -22,7 +24,8 @@ const blogsRepository = {
         const newBlog: BlogType = {
             id: uuidv4(),
             name,
-            youtubeUrl
+            youtubeUrl,
+            createdAt: currentDate(),
         }
         await dbCollections.blogs.insertOne(newBlog)
         const newBlogFromDb = await this.getBlogById(newBlog.id)

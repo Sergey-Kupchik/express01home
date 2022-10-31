@@ -1,4 +1,5 @@
 import {newId} from "../routes/videos-router";
+import { currentDate } from "../utils/utils";
 import {BlogType} from "./blogs-db-repository";
 
 
@@ -7,11 +8,13 @@ const blogs: BlogType[] = [
     {
         id: "1",
         name: "BlogAsync",
+        createdAt: currentDate(),
         youtubeUrl: "https://www.youtube.com/watch?v=ae6LWyidPJo&ab_channel=AllianceTheatre",
     },
     {
         id: "2",
         name: "Blog2",
+        createdAt: currentDate(),
         youtubeUrl: "https://www.youtube.com/watch?v=OvgqJOWGQfU&ab_channel=HouzzTV",
     }
 ];
@@ -28,7 +31,8 @@ const blogsRepository = {
         const newBlog: BlogType = {
             id: newId().toString(),
             name,
-            youtubeUrl
+            youtubeUrl,
+            createdAt: currentDate(),
         }
         blogs.push(newBlog)
         return newBlog;
