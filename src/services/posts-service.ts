@@ -52,7 +52,7 @@ const postsService = {
         return result
     },
     async deletePostById(id: string): Promise<boolean> {
-        const result = await blogsRepository.deleteBlogById(id)
+        const result = await postsRepository.deletePostById(id)
         return result
     },
     async deleteAllPosts(): Promise<boolean> {
