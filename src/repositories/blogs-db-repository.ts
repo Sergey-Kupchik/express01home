@@ -1,14 +1,7 @@
-import {newId} from "../routes/videos-router";
 import {dbCollections} from "../server/db/conn";
-import {v4 as uuidv4} from "uuid";
-import { currentDate } from "../utils/utils";
+import {BlogType} from "../services/blogs-service";
 
-type BlogType = {
-    id: string
-    name: string
-    youtubeUrl: string
-    createdAt: string
-}
+
 
 
 const blogsRepository = {
@@ -20,13 +13,7 @@ const blogsRepository = {
         const result = await dbCollections.blogs.findOne({id},{ projection:{_id:0}})
         return result;
     },
-    async createBlog(name: string, youtubeUrl: string): Promise<BlogType|null> {
-        const newBlog: BlogType = {
-            id: uuidv4(),
-            name,
-            youtubeUrl,
-            createdAt: currentDate(),
-        }
+    async createBlog(newBlog: BlogType): Promise<BlogType|null> {
         await dbCollections.blogs.insertOne(newBlog)
         const newBlogFromDb = await this.getBlogById(newBlog.id)
         return newBlogFromDb;
@@ -52,5 +39,5 @@ const blogsRepository = {
 
 
 export {
-    blogsRepository, BlogType
+    blogsRepository
 }

@@ -1,8 +1,7 @@
-import {newId} from "../routes/videos-router";
 import {v4 as uuidv4} from 'uuid';
-import {blogsRepository, } from "./blogs-db-repository";
-import {PostType} from "./posts-db-repository";
-import { currentDate } from "../utils/utils";
+import {blogsRepository,} from "./blogs-db-repository";
+import {currentDate} from "../utils/utils";
+import {PostType} from "../services/posts-service";
 
 
 const posts: PostType[] = [

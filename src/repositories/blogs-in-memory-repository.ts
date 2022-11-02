@@ -1,6 +1,6 @@
 import {newId} from "../routes/videos-router";
 import { currentDate } from "../utils/utils";
-import {BlogType} from "./blogs-db-repository";
+import {BlogType} from "../services/blogs-service";
 
 
 

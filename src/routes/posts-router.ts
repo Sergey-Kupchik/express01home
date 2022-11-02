@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
 import { isAuthT } from "../middlewares/isAuth-middleware";
-import { postsRepository, PostType } from "../repositories/posts-db-repository";
 import { inputValidationMiddleware } from "../middlewares/validation-middleware";
 import {
     blogIdValidation,
@@ -8,19 +7,20 @@ import {
     shortDescriptionValidation,
     contentValidation
 } from "../middlewares/posts-validation-middleware";
+import {postsService, PostType} from "../services/posts-service";
 
 
 const postsRouter = Router();
 
 postsRouter.get('/',
     async (req: Request, res: Response) => {
-        const posts: PostType[] = await postsRepository.getAllPosts()
+        const posts: PostType[] = await postsService.getAllPosts()
          res.send(posts)
          return
     });
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const posts: PostType | null = await postsRepository.getPostById(req.params.id.toString())
+        const posts: PostType | null = await postsService.getPostById(req.params.id.toString())
         if (!posts) {
              res.sendStatus(404)
              return
@@ -38,7 +38,7 @@ postsRouter.put('/:id',
     blogIdValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const isUpdated: boolean = await postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        const isUpdated: boolean = await postsService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if (!isUpdated) {
              res.sendStatus(404)
              return
@@ -50,7 +50,7 @@ postsRouter.put('/:id',
 postsRouter.delete('/:id',
     isAuthT,
     async (req: Request, res: Response) => {
-        const isDeleted: boolean = await postsRepository.deletePostById(req.params.id,)
+        const isDeleted: boolean = await postsService.deletePostById(req.params.id,)
         if (!isDeleted) {
              res.sendStatus(404)
              return
@@ -67,7 +67,7 @@ postsRouter.post('/',
     blogIdValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const post: PostType | null= await postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+        const post: PostType | null= await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
          if (post){
             res.status(201).send(post)
          return

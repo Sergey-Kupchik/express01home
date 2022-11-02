@@ -1,6 +1,7 @@
 import {Collection, MongoClient} from 'mongodb';
-import {PostType} from "../../repositories/posts-in-memory-repository";
-import {BlogType} from "../../repositories/blogs-db-repository";
+import {PostType} from "../../services/posts-service";
+import {BlogType} from "../../services/blogs-service";
+
 
 
 const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';

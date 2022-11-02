@@ -1,6 +1,5 @@
 import {body, CustomValidator} from "express-validator";
-import {postsRepository} from "../repositories/posts-in-memory-repository";
-import {blogsRepository, BlogType} from "../repositories/blogs-db-repository";
+import {blogsService, BlogType} from "../services/blogs-service";
 
 
 const titleValidation = body("title")
@@ -24,7 +23,7 @@ const contentValidation = body("content")
 
 
 const isValidBlogId: CustomValidator = async (value) => {
-    const blog: BlogType | null = await blogsRepository.getBlogById(value.toString());
+    const blog: BlogType | null = await blogsService.getBlogById(value.toString());
     if (blog !== null) {
         return true;
     } else {
