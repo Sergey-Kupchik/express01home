@@ -6,17 +6,18 @@ import {
 } from "../middlewares/blogs-validation-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {blogsService, BlogType} from "../services/blogs-service";
+import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
 
 const blogsRouter = Router();
 
 blogsRouter.get('/', async (req: Request, res: Response) => {
-    const blogs: BlogType[] = await blogsService.getAllBlogs()
+    const blogs: BlogType[] = await blogsQueryRepository.getAllBlogs()
      res.send(blogs)
      return
 });
 
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
-    const blog: BlogType | null = await blogsService.getBlogById(req.params.id)
+    const blog: BlogType | null = await blogsQueryRepository.getBlogById(req.params.id)
     if (!blog) {
          res.sendStatus(404)
          return
@@ -33,8 +34,9 @@ blogsRouter.post('/',
     youtubeUrlValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const newBlog: BlogType|null = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
-        if (newBlog){
+        const newBlogId: string|null = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
+        if (newBlogId){
+           const newBlog =  blogsQueryRepository.getBlogById(newBlogId)
             res.status(201).send(newBlog)
             return
         }

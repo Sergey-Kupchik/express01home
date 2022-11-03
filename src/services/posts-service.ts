@@ -3,7 +3,6 @@ import {currentDate} from '../utils/utils';
 import {postsRepository} from "../repositories/posts-db-repository";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
-import {postsQueryRepository} from "../repositories/queries/posts-query-repository";
 
 
 type PostType = {
@@ -18,10 +17,8 @@ type PostType = {
 
 type PostInfoType = Omit<PostType, "id" | "createdAt" >;
 const postsService = {
-    async getAllPosts(): Promise<PostType[]> {
-        return await postsQueryRepository.getAllPosts();
-    },
-    async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<PostType| null> {
+
+    async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<string| null> {
         const blog = await blogsQueryRepository.getBlogById(blogId)
         const newPost: PostType = {
             id: uuidv4(),
@@ -33,13 +30,11 @@ const postsService = {
             createdAt: currentDate(),
         }
         const result = await postsRepository.createPost(newPost)
-        console.log(`result createPost from postsRepository is ${result}`)
-        const newPostFromDb = await this.getPostById(newPost.id)
-        return newPostFromDb;
-    },
-    async getPostById(id: string): Promise<PostType | null> {
-        const searchResult = await postsQueryRepository.getPostById(id)
-        return searchResult;
+       if (result) {
+           return newPost.id
+       } else {
+           return null;
+       }
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string,): Promise<boolean> {
         const blog = await blogsQueryRepository.getBlogById(blogId)

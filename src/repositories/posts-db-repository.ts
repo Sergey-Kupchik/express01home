@@ -1,13 +1,11 @@
 import {dbCollections} from "../server/db/conn";
 import {PostInfoType, PostType} from "../services/posts-service";
-import {postsQueryRepository} from "./queries/posts-query-repository";
 
 
 const postsRepository = {
-    async createPost(newPost: PostType): Promise<PostType| null> {
+    async createPost(newPost: PostType): Promise<boolean> {
         const result = await dbCollections.posts.insertOne(newPost)
-        const newPostFromDb = await postsQueryRepository.getPostById(newPost.id)
-        return newPostFromDb;
+        return result.acknowledged;
     },
     async updatePost(id: string, postInfo: PostInfoType): Promise<boolean> {
         const result = await dbCollections.posts.updateOne({id}, {

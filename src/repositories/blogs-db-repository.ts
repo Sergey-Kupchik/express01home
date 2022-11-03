@@ -1,15 +1,13 @@
 import {dbCollections} from "../server/db/conn";
 import {BlogType} from "../services/blogs-service";
-import {blogsQueryRepository} from "./queries/blogs-query-repository";
 
 
 
 
 const blogsRepository = {
-    async createBlog(newBlog: BlogType): Promise<BlogType|null> {
-        await dbCollections.blogs.insertOne(newBlog)
-        const newBlogFromDb = await blogsQueryRepository.getBlogById(newBlog.id)
-        return newBlogFromDb;
+    async createBlog(newBlog: BlogType): Promise<boolean> {
+        const resp = await dbCollections.blogs.insertOne(newBlog)
+        return resp.acknowledged;
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await dbCollections.blogs.updateOne({id}, {

@@ -1,7 +1,6 @@
 import {v4 as uuidv4} from "uuid";
 import {currentDate} from "../utils/utils";
 import {blogsRepository} from "../repositories/blogs-db-repository";
-import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
 
 type BlogType = {
     id: string
@@ -10,23 +9,20 @@ type BlogType = {
     createdAt: string
 }
 const blogsService = {
-    async getAllBlogs(): Promise<BlogType[]> {
-        const blogs = await blogsQueryRepository.getAllBlogs()
-        return blogs;
-    },
-    async getBlogById(id: string): Promise<BlogType | null> {
-        const result = await blogsQueryRepository.getBlogById(id)
-        return result;
-    },
-    async createBlog(name: string, youtubeUrl: string): Promise<BlogType | null> {
+    async createBlog(name: string, youtubeUrl: string): Promise<string|null> {
         const newBlog: BlogType = {
             id: uuidv4(),
             name,
             youtubeUrl,
             createdAt: currentDate(),
         }
-        const newBlogFromDb = await blogsRepository.createBlog(newBlog)
-        return newBlogFromDb;
+        const resp = await blogsRepository.createBlog(newBlog)
+        if (resp) {
+            return newBlog.id;
+        } else {
+            return null
+        }
+
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await blogsRepository.updateBlog(id, name, youtubeUrl)
