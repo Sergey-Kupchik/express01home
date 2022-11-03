@@ -1,19 +1,13 @@
 import {dbCollections} from "../server/db/conn";
 import {PostInfoType, PostType} from "../services/posts-service";
+import {postsQueryRepository} from "./queries/posts-query-repository";
 
 
 const postsRepository = {
-    async getAllPosts(): Promise<PostType[]> {
-        return await dbCollections.posts.find({},{ projection:{_id:0}}).toArray();
-    },
     async createPost(newPost: PostType): Promise<PostType| null> {
         const result = await dbCollections.posts.insertOne(newPost)
-        const newPostFromDb = await this.getPostById(newPost.id)
+        const newPostFromDb = await postsQueryRepository.getPostById(newPost.id)
         return newPostFromDb;
-    },
-    async getPostById(id: string): Promise<PostType | null> {
-        const searchResult = await dbCollections.posts.findOne({id},{ projection:{_id:0}})
-        return searchResult;
     },
     async updatePost(id: string, postInfo: PostInfoType): Promise<boolean> {
         const result = await dbCollections.posts.updateOne({id}, {

@@ -1,5 +1,5 @@
 import { Request, Response, Router} from 'express';
-import {productsRepository} from "../repositories/products-repository";
+import {productsRepository} from "../repositories/inMemory/products-repository";
 import {isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware, titleValidation} from "../middlewares/validation-middleware";
 

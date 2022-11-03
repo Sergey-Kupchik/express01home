@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
-import {blogsRepository,} from "./blogs-db-repository";
-import {currentDate} from "../utils/utils";
-import {PostType} from "../services/posts-service";
+import {currentDate} from "../../utils/utils";
+import {PostType} from "../../services/posts-service";
+import {blogsQueryRepository} from "../queries/blogs-query-repository";
 
 
 const posts: PostType[] = [
@@ -30,7 +30,7 @@ const postsRepository = {
         return posts;
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<PostType> {
-        const blog = await blogsRepository.getBlogById(blogId)
+        const blog = await blogsQueryRepository.getBlogById(blogId)
         const newPost: PostType = {
             id: uuidv4(),
             title,
@@ -49,7 +49,7 @@ const postsRepository = {
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string,): Promise<boolean> {
         const searchResult = posts.find((p) => p.id === id)
-        const blog = await blogsRepository.getBlogById(blogId)
+        const blog = await blogsQueryRepository.getBlogById(blogId)
         if (searchResult) {
             searchResult.title = title;
             searchResult.shortDescription = shortDescription;

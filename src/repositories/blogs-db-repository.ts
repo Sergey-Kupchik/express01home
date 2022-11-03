@@ -1,21 +1,14 @@
 import {dbCollections} from "../server/db/conn";
 import {BlogType} from "../services/blogs-service";
+import {blogsQueryRepository} from "./queries/blogs-query-repository";
 
 
 
 
 const blogsRepository = {
-    async getAllBlogs(): Promise<BlogType[]> {
-        const blogs = await dbCollections.blogs.find({},{ projection:{_id:0}}).toArray()
-        return blogs;
-    },
-    async getBlogById(id: string): Promise<BlogType | null> {
-        const result = await dbCollections.blogs.findOne({id},{ projection:{_id:0}})
-        return result;
-    },
     async createBlog(newBlog: BlogType): Promise<BlogType|null> {
         await dbCollections.blogs.insertOne(newBlog)
-        const newBlogFromDb = await this.getBlogById(newBlog.id)
+        const newBlogFromDb = await blogsQueryRepository.getBlogById(newBlog.id)
         return newBlogFromDb;
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {

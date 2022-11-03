@@ -1,6 +1,7 @@
 import {v4 as uuidv4} from "uuid";
 import {currentDate} from "../utils/utils";
 import {blogsRepository} from "../repositories/blogs-db-repository";
+import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
 
 type BlogType = {
     id: string
@@ -10,11 +11,11 @@ type BlogType = {
 }
 const blogsService = {
     async getAllBlogs(): Promise<BlogType[]> {
-        const blogs = await blogsRepository.getAllBlogs()
+        const blogs = await blogsQueryRepository.getAllBlogs()
         return blogs;
     },
     async getBlogById(id: string): Promise<BlogType | null> {
-        const result = await blogsRepository.getBlogById(id)
+        const result = await blogsQueryRepository.getBlogById(id)
         return result;
     },
     async createBlog(name: string, youtubeUrl: string): Promise<BlogType | null> {

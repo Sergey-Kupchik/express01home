@@ -1,4 +1,4 @@
-import {newId} from "../routes/videos-router";
+import {newId} from "../../routes/videos-router";
 
 const products: ProductType[] = [
     {id: 1, title: "GMO"},
