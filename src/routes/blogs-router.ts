@@ -21,7 +21,6 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
     if (!blog) {
          res.sendStatus(404)
          return
-        
     }
      res.send(blog)
      return
@@ -36,7 +35,7 @@ blogsRouter.post('/',
     async (req: Request, res: Response) => {
         const newBlogId: string|null = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
         if (newBlogId){
-           const newBlog =  blogsQueryRepository.getBlogById(newBlogId)
+           const newBlog =  await blogsQueryRepository.getBlogById(newBlogId)
             res.status(201).send(newBlog)
             return
         }
