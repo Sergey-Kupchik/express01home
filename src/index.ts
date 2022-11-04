@@ -7,9 +7,10 @@ import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
 import {testingRouter} from "./routes/testing-router";
 import {connectToDatabase} from "./server/db/conn";
+import {filteredBlogsRouter} from "./routes/filtered-blogs-router";
 
 const app = express()
-const port = process.env.PORT || 5004;
+const port = process.env.PORT;
 const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
@@ -19,6 +20,8 @@ app.use('/product', productsRouter);
 app.use('/blogs', blogsRouter);
 app.use('/posts', postsRouter);
 app.use('/testing', testingRouter);
+app.use('/testing', testingRouter);
+app.use('/blogsfilter', filteredBlogsRouter);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello root')
