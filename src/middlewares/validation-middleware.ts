@@ -12,7 +12,7 @@ const inputValidationMiddleware = (req: Request, res: Response, next: NextFuncti
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(404).json({
+        return res.status(400).json({
             errorsMessages: errors.array({onlyFirstError: true}).map(e => ({
                 message: e.msg,
                 field: e.param

@@ -56,12 +56,11 @@ blogsRouter.post('/',
     });
 blogsRouter.post('/:blogId/posts',
     urlBlogIdValidation,
-    testValidationMiddleware,
     isAuthT,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
-    inputValidationMiddleware,
+    testValidationMiddleware,
     async (req: Request, res: Response) => {
         const newPostId: string | null = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId);
         if (newPostId) {
