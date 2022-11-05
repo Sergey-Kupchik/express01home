@@ -46,23 +46,11 @@ filteredBlogsRouter.post('/:blogId/posts',
             res.status(201).send(newBlog)
             return
         } else {
-            res.sendStatus(204)
+            res.sendStatus(404)
             return
         }
     });
-filteredBlogsRouter.get('/:blogId/posts',
-    urlBlogIdValidation,
-    inputValidationMiddleware,
-    async (req: Request, res: Response) => {
-        const blogId = req.params.blogId;
-        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
-        const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
-        const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
-        const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : sortDirectionEnum.desc;
-        const posts = await postsQueryRepository.getAllPostsFor1Blog(blogId, pageNumber, pageSize, sortBy, sortDirection)
-        res.send(posts)
-        return
-    });
+
 
 export {
     filteredBlogsRouter

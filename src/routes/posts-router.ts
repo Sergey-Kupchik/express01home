@@ -8,14 +8,18 @@ import {
     contentValidation
 } from "../middlewares/posts-validation-middleware";
 import {postsService, PostType} from "../services/posts-service";
-import {postsQueryRepository} from "../repositories/queries/posts-query-repository";
+import {PostsOutputType, postsQueryRepository} from "../repositories/queries/posts-query-repository";
 
 
 const postsRouter = Router();
 
 postsRouter.get('/',
     async (req: Request, res: Response) => {
-        const posts: PostType[] = await postsQueryRepository.getAllPosts()
+        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
+        const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
+        const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
+        const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "desc";
+        const posts: PostsOutputType = await postsQueryRepository.getFilteredPosts( pageNumber, pageSize, sortBy, sortDirection)
         res.send(posts)
         return
     });
