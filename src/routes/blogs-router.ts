@@ -4,7 +4,7 @@ import {
     nameValidation,
     youtubeUrlValidation
 } from "../middlewares/blogs-validation-middleware";
-import {inputValidationMiddleware} from "../middlewares/validation-middleware";
+import {inputValidationMiddleware, testValidationMiddleware} from "../middlewares/validation-middleware";
 import {blogsService, BlogType} from "../services/blogs-service";
 import {BlogOutputType, blogsQueryRepository, sortDirectionEnum} from "../repositories/queries/blogs-query-repository";
 import {
@@ -15,7 +15,6 @@ import {
 } from "../middlewares/posts-validation-middleware";
 import {postsService} from "../services/posts-service";
 import {postsQueryRepository} from "../repositories/queries/posts-query-repository";
-import {filteredBlogsRouter} from "./filtered-blogs-router";
 
 const blogsRouter = Router();
 
@@ -56,8 +55,9 @@ blogsRouter.post('/',
         return
     });
 blogsRouter.post('/:blogId/posts',
-    isAuthT,
     urlBlogIdValidation,
+    testValidationMiddleware,
+    isAuthT,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,

@@ -71,4 +71,5 @@ type PostsOutputType = {
 }
 
 export {
-    postsQueryRepository, PostsOutputT
+    postsQueryRepository, PostsOutputType
+}
