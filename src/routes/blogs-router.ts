@@ -57,7 +57,7 @@ blogsRouter.post('/',
     });
 blogsRouter.post('/:blogId/posts',
     isAuthT,
-    // urlBlogIdValidation,
+    urlBlogIdValidation,
     titleValidation,
     shortDescriptionValidation,
     contentValidation,

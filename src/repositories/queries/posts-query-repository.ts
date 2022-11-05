@@ -12,11 +12,12 @@ const postsQueryRepository = {
         return searchResult;
     },
     async getAllPostsFor1Blog(blogId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
-        const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
+        // const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
+        const filterParam = {blogId}
+        const totalCount: number = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}}).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const filterParam = {blogId}
         const posts: PostType[] = await dbCollections.posts.find(filterParam, {projection: {_id: 0}})
             .sort(sortBy, sortDirectionParam)
             .skip(skipItems)
@@ -31,11 +32,12 @@ const postsQueryRepository = {
         return PostsOutput;
     },
     async getFilteredPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
-        const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
+        // const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
+        const filterParam = {}
+        const totalCount: number = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}}).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const filterParam = {}
         const posts = await dbCollections.posts.find(filterParam, {projection: {_id: 0}})
             .sort(sortBy, sortDirectionParam)
             .skip(skipItems)
@@ -69,5 +71,4 @@ type PostsOutputType = {
 }
 
 export {
-    postsQueryRepository, PostsOutputType
-}
+    postsQueryRepository, PostsOutputT
