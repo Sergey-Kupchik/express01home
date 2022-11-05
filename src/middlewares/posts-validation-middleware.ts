@@ -1,4 +1,4 @@
-import {body, CustomValidator} from "express-validator";
+import {body,param, CustomValidator} from "express-validator";
 import { BlogType} from "../services/blogs-service";
 import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
 
@@ -33,4 +33,8 @@ const isValidBlogId: CustomValidator = async (value) => {
 };
 const blogIdValidation = body('blogId')
     .isString().trim().notEmpty().custom(isValidBlogId);
-export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation};
+
+const urlBlogIdValidation = param('blogId')
+    .isString().trim().notEmpty().isLength({min: 2}).custom(isValidBlogId);
+
+export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation, urlBlogIdValidation};

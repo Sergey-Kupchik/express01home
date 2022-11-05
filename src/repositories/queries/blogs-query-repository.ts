@@ -11,19 +11,19 @@ const blogsQueryRepository = {
         const result = await dbCollections.blogs.findOne({id}, {projection: {_id: 0}})
         return result;
     },
-    async getFilteredBlogs(searchNameTerm: string| null, page: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<BlogOutputType> {
+    async getFilteredBlogs(searchNameTerm: string| null, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<BlogOutputType> {
         const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
-        const skipItems: number = (page - 1) * pageSize;
-        const filterParam = searchNameTerm?{"name" : { $regex: searchNameTerm, '$options' : 'i'} }:{}
+        const skipItems: number = (pageNumber - 1) * pageSize;
+        const filterParam = searchNameTerm?({"name" : { $regex: searchNameTerm, '$options' : 'i'} }):{}
         const blogs: BlogType[] = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}})
             .sort(sortBy,sortDirectionParam)
             .skip(skipItems)
             .limit(pageSize).toArray()
         const BlogOutput = {
             pagesCount,
-            page,
+            page: pageNumber,
             pageSize,
             totalCount,
             items: blogs
@@ -52,7 +52,7 @@ type BlogOutputType = {
     }>
 }
 export {
-    blogsQueryRepository, BlogOutputType,
+    blogsQueryRepository, BlogOutputType, sortDirectionType, sortDirectionEnum
 }
 
 
