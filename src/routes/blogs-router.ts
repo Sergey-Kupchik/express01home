@@ -4,7 +4,7 @@ import {
     nameValidation,
     youtubeUrlValidation
 } from "../middlewares/blogs-validation-middleware";
-import {inputValidationMiddleware, testValidationMiddleware} from "../middlewares/validation-middleware";
+import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {blogsService, BlogType} from "../services/blogs-service";
 import {BlogOutputType, blogsQueryRepository, sortDirectionEnum} from "../repositories/queries/blogs-query-repository";
 import {
@@ -60,7 +60,7 @@ blogsRouter.post('/:blogId/posts',
     titleValidation,
     shortDescriptionValidation,
     contentValidation,
-    testValidationMiddleware,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const newPostId: string | null = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId);
         if (newPostId) {
