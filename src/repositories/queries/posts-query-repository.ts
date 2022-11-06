@@ -14,7 +14,7 @@ const postsQueryRepository = {
     async getAllPostsFor1Blog(blogId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
         // const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
         const filterParam = {blogId}
-        const totalCount: number = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}}).count()
+        const totalCount: number = await dbCollections.blogs.find(filterParam).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
