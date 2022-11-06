@@ -12,8 +12,9 @@ const blogsQueryRepository = {
         return result;
     },
     async getFilteredBlogs(searchNameTerm: string| null, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<BlogOutputType> {
-        const totalCount: number = await dbCollections.blogs.count()
         const filterParam = searchNameTerm?({"name" : { $regex: searchNameTerm, '$options' : 'i'} }):{}
+        const totalCount: number = await dbCollections.blogs.find(filterParam).count()
+
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
