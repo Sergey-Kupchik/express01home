@@ -4,7 +4,7 @@ import {
     nameValidation,
     youtubeUrlValidation
 } from "../middlewares/blogs-validation-middleware";
-import {inputValidationMiddleware} from "../middlewares/validation-middleware";
+import {inputValidationMiddleware, inputValidationMiddleware2} from "../middlewares/validation-middleware";
 import {blogsService, BlogType} from "../services/blogs-service";
 import {BlogOutputType, blogsQueryRepository, sortDirectionEnum} from "../repositories/queries/blogs-query-repository";
 import {
@@ -74,7 +74,7 @@ blogsRouter.post('/:blogId/posts',
     });
 blogsRouter.get('/:blogId/posts',
     urlBlogIdValidation,
-    inputValidationMiddleware,
+    inputValidationMiddleware2,
     async (req: Request, res: Response) => {
         const blogId = req.params.blogId;
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
