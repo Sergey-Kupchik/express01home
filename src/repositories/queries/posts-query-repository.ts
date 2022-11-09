@@ -12,7 +12,6 @@ const postsQueryRepository = {
         return searchResult;
     },
     async getAllPostsFor1Blog(blogId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
-        // const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
         const filterParam = {blogId}
         const totalCount: number = await dbCollections.posts.find(filterParam).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
@@ -32,7 +31,6 @@ const postsQueryRepository = {
         return PostsOutput;
     },
     async getFilteredPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
-        // const totalCount: number = await dbCollections.blogs.estimatedDocumentCount();
         const filterParam = {}
         const totalCount: number = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}}).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
