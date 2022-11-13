@@ -1,7 +1,7 @@
 import {Collection, MongoClient} from 'mongodb';
 import {PostType} from "../../services/posts-service";
 import {BlogType} from "../../services/blogs-service";
-
+import {UserDdType} from "../../repositories/users-db-repository";
 
 
 const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';
@@ -11,25 +11,24 @@ const client = new MongoClient(url);
 const dbName = 'first';
 const postsCollName = 'posts';
 const blogsCollName = 'blogs';
+const usersCollName = 'users';
 type dbCollectionsType = {
     posts: Collection<PostType>
     blogs: Collection<BlogType>
+    users: Collection<UserDdType>
 }
 const dbCollections: dbCollectionsType = {} as dbCollectionsType;
 
-// export const postsCollection =  client.db(dbName).collection<PostType>(postsCollName)
-// export const blogsCollection =  client.db(dbName).collection<BlogType>(blogsCollName)
-
 async function connectToDatabase() {
     try {
-        console.log(url);
-
-       await client.connect();
-        await client.db(dbName).command({ping:1});
-        const postsCollection:Collection<PostType> = await client.db(dbName).collection(postsCollName);
-        const blogsCollection:Collection<BlogType> = await client.db(dbName).collection(blogsCollName);
+        await client.connect();
+        await client.db(dbName).command({ping: 1});
+        const postsCollection: Collection<PostType> = await client.db(dbName).collection(postsCollName);
+        const blogsCollection: Collection<BlogType> = await client.db(dbName).collection(blogsCollName);
+        const usersCollection: Collection<UserDdType> = await client.db(dbName).collection(usersCollName);
         dbCollections.posts = postsCollection;
         dbCollections.blogs = blogsCollection;
+        dbCollections.users = usersCollection;
         console.log(`Connected to mongodb server`)
     } catch (error) {
         await client.close()
@@ -37,4 +36,4 @@ async function connectToDatabase() {
     }
 }
 
-export { connectToDatabase, dbCollections}
+export {connectToDatabase, dbCollections}

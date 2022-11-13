@@ -1,6 +1,9 @@
+const currentDate = () => new Date().toISOString();
+
+const validateEmail = (email: string) => {
+    const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return re.test(email);
+};
 
 
-const currentDate =()=> new Date().toISOString();
-
-
-export{currentDate}
+export {currentDate, validateEmail}

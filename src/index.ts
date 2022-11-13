@@ -6,6 +6,8 @@ import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
 import {testingRouter} from "./routes/testing-router";
 import {connectToDatabase} from "./server/db/conn";
+import {usersRouter} from "./routes/users-router";
+import {loginRouter} from "./routes/login-router";
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use('/product', productsRouter);
 app.use('/blogs', blogsRouter);
 app.use('/posts', postsRouter);
 app.use('/testing', testingRouter);
+app.use('/login', loginRouter);
+app.use('/users', usersRouter);
 
 
 app.get('/', (req: Request, res: Response) => {

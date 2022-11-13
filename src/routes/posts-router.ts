@@ -54,6 +54,7 @@ postsRouter.put('/:id',
 
 postsRouter.delete('/:id',
     isAuthT,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted: boolean = await postsService.deletePostById(req.params.id,)
         if (!isDeleted) {
