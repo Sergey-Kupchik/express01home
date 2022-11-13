@@ -21,8 +21,7 @@ const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | n
     return param
 }
 
-const q
-    = {
+const usersQueryRepository = {
     async getAllUser(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType, searchLoginTerm: string | null, searchEmailTerm: string | null,): Promise<UsersOutputType> {
         const filter = filterParam(searchLoginTerm, searchEmailTerm)
         const totalCount: number = await dbCollections.users.find(filter, {projection: {_id: 0}}).count()
