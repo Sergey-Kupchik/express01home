@@ -6,7 +6,7 @@ const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | n
     let param;
     if (searchLoginTerm && searchEmailTerm) {
         param = {
-            $and: [
+            $or: [
                 {login: {$regex: searchLoginTerm, '$options': 'i'}},
                 {email: {$regex: searchEmailTerm, '$options': 'i'}}
             ]
