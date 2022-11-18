@@ -24,19 +24,13 @@ const usersRepository = {
     },
     async findUserByEmail(email: string,): Promise<UserDdType | null> {
         const result = await dbCollections.users.findOne({
-            email: {
-                $regex: email,
-                '$options': 'i'
-            }
+            email
         }, {projection: {_id: 0}});
         return result;
     },
     async findUserByLogin(login: string,): Promise<UserDdType | null> {
         const result = await dbCollections.users.findOne({
-            login: {
-                $regex: login,
-                '$options': 'i'
-            }
+            login
         }, {projection: {_id: 0}});
         return result;
     },

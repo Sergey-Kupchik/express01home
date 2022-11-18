@@ -3,8 +3,7 @@ import {UserDdType} from "../repositories/users-db-repository";
 import {usersService} from "../services/users-service";
 
 const isEmailUnique: CustomValidator = async (value) => {
-    const user: UserDdType | null = await usersService.findUserByEmail(value.toString().toLowerCase());
-    debugger
+    const user: UserDdType | null = await usersService.findUserByEmail(value.toLowerCase());
     if (user === null) {
         return true;
     } else {
@@ -12,8 +11,7 @@ const isEmailUnique: CustomValidator = async (value) => {
     }
 };
 const isLoginUnique: CustomValidator = async (value) => {
-    const user: UserDdType | null = await usersService.findUserByLogin(value.toString());
-    debugger
+    const user: UserDdType | null = await usersService.findUserByLogin(value);
     if (user === null) {
         return true;
     } else {
@@ -25,14 +23,14 @@ const loginValidation = body("login")
     .trim().withMessage(`login should be symbols string`)
     .notEmpty().withMessage(`login  is required`)
     .isLength({min: 3, max: 10}).withMessage(`length is 10 max and 3 min`)
-    // .custom(isLoginUnique);
+    .custom(isLoginUnique);
 
 const emailValidation = body("email")
     .isString().withMessage(`email should be string`)
     .trim().withMessage(`email should be symbols string`)
     .notEmpty().withMessage(`email  is required`)
     .isEmail().withMessage("email be email format")
-    // .custom(isEmailUnique);
+    .custom(isEmailUnique);
 
 const passwordValidation = body("password")
     .isString().withMessage(`password should be string`)
