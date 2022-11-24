@@ -1,4 +1,8 @@
 import {NextFunction, Request, Response} from "express";
+import {tokensService} from "../services/tokens-service";
+import {usersService} from "../services/users-service";
+import {CommentOutputType} from "../services/coments-service";
+import {commentsQueryRepository} from "../repositories/queries/comments-query-repository";
 
 const isAuthT = (req: Request, res: Response, next: NextFunction) => {
     const basicToken = req.headers["authorization"]
@@ -7,6 +11,35 @@ const isAuthT = (req: Request, res: Response, next: NextFunction) => {
     } else {
         res.send(401)
     }
-}
+};
 
-export {isAuthT};
+const authJwt = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.headers["authorization"]) {
+        res.send(401)
+    }
+    const jwtToken = req.headers["authorization"]?.split(" ")[1]
+    if (jwtToken) {
+        const userId: string | null = await tokensService.verifyToken(jwtToken);
+        if (userId) {
+            req.user = await usersService.findUserById(userId);
+            next()
+            return
+        } else {
+            return res.send(401)
+        }
+    } else {
+        return res.send(401)
+    }
+};
+
+const authZ = async (req: Request, res: Response, next: NextFunction) => {
+    const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
+    if (сomment && req.user!.id===сomment.userId) {
+        next()
+    }
+    else {
+        return res.send(403)
+    }
+};
+
+export {isAuthT, authJwt, authZ};

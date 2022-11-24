@@ -5,6 +5,7 @@ import {isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/user-middleware";
 import {UserType} from "../repositories/users-db-repository";
+import {tokensService} from "../services/tokens-service";
 
 
 const usersRouter = Router();
@@ -16,12 +17,12 @@ usersRouter.post('/',
     passwordValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const result: UserType | null = await usersService.createUser(req.body.login,req.body.email, req.body.password)
+        const result: string | null = await usersService.createUser(req.body.login,req.body.email, req.body.password)
         if (!result){
             return res.sendStatus(401)
         }
-         res.status(201).send(result)
-        return
+        return res.status(201).send({"accessToken": result})
+
     });
 usersRouter.get('/',
     isAuthT,

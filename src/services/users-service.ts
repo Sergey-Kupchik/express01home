@@ -2,10 +2,11 @@ import bcrypt from "bcrypt";
 import {currentDate, validateEmail} from "../utils/utils";
 import {UserDdType, usersRepository, UserType} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from "uuid";
+import {tokensService} from "./tokens-service";
 
 
 const usersService = {
-    async createUser(login: string, email: string, password: string): Promise<UserType | null> {
+    async createUser(login: string, email: string, password: string): Promise<string | null> {
         const newUser: UserDdType = {
             id: uuidv4(),
             login,
@@ -14,8 +15,11 @@ const usersService = {
             createdAt: currentDate(),
         }
         await usersRepository.createUser(newUser);
-        const result = await this.findUserById(newUser.id)
-        return result
+        const user = await this.findUserById(newUser.id)
+        if (user){
+            return await tokensService.createToken(newUser.id)
+        }
+        return null
     },
     async _hashPassword(password: string): Promise<string> {
         const hash = await bcrypt.hash(password, 10);

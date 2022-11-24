@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {isAuthT} from "../middlewares/isAuth-middleware";
+import {authJwt, isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {
     blogIdValidation,
@@ -9,6 +9,8 @@ import {
 } from "../middlewares/posts-validation-middleware";
 import {postsService, PostType} from "../services/posts-service";
 import {PostsOutputType, postsQueryRepository} from "../repositories/queries/posts-query-repository";
+import {CommentOutputType, commentsService} from "../services/coments-service";
+import {CommentGroupType, commentsQueryRepository} from "../repositories/queries/comments-query-repository";
 
 
 const postsRouter = Router();
@@ -83,5 +85,29 @@ postsRouter.post('/',
             return
         }
     })
+
+postsRouter.post('/:id/comments',
+    authJwt,
+    contentValidation,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const comment: CommentOutputType|null = await commentsService.createComment(req.params.id, req.body.content, req.user!,)
+        if (!comment) {
+            return res.sendStatus(404)
+        }
+        return res.status(201).send(comment)
+
+    });
+
+postsRouter.get('/:id/comments',
+    async (req: Request, res: Response) => {
+        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
+        const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
+        const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
+        const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "desc";
+        const comments: CommentGroupType = await commentsQueryRepository.getComments4Post( pageNumber, pageSize, sortBy, sortDirection, req.params.id)
+        res.send(comments)
+        return
+    });
 
 export {postsRouter};

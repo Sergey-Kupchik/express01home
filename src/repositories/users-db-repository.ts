@@ -11,7 +11,6 @@ type UserDdType = UserType & { hash: string }
 const usersRepository = {
     async createUser(newUser: UserDdType): Promise<boolean> {
         const result = await dbCollections.users.insertOne(newUser)
-        debugger
         return result.acknowledged;
     },
     async deleteAllUser(): Promise<boolean> {
