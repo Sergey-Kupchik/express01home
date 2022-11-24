@@ -2,7 +2,7 @@ import {Request, Response, Router} from 'express';
 import {isAuthT} from "../middlewares/isAuth-middleware";
 import {
     nameValidation,
-    youtubeUrlValidation
+    websiteUrlValidation
 } from "../middlewares/blogs-validation-middleware";
 import {inputValidationMiddleware, inputValidationMiddleware2} from "../middlewares/validation-middleware";
 import {blogsService, BlogType} from "../services/blogs-service";
@@ -42,10 +42,10 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
 blogsRouter.post('/',
     isAuthT,
     nameValidation,
-    youtubeUrlValidation,
+    websiteUrlValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const newBlogId: string | null = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
+        const newBlogId: string | null = await blogsService.createBlog(req.body.name, req.body.websiteUrl)
         if (newBlogId) {
             const newBlog = await blogsQueryRepository.getBlogById(newBlogId)
             res.status(201).send(newBlog)
@@ -91,10 +91,10 @@ blogsRouter.get('/:blogId/posts',
 blogsRouter.put('/:id',
     isAuthT,
     nameValidation,
-    youtubeUrlValidation,
+    websiteUrlValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const isUpdated: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl)
+        const isUpdated: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.websiteUrl)
         if (!isUpdated) {
             res.sendStatus(404)
             return

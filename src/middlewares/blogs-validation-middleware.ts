@@ -10,12 +10,12 @@ const nameValidation = body('name')
 
 const idValidation = param('id').isLength({max: 2}).isString().trim().notEmpty().withMessage('max length is 3');
 
-const youtubeUrlValidation = body('youtubeUrl')
-    .isString().withMessage('youtubeUrl should be string')
-    .trim().withMessage('youtubeUrl should be symbols string')
-    .notEmpty().withMessage('youtubeUrl is required')
+const websiteUrlValidation = body('websiteUrl')
+    .isString().withMessage('websiteUrl should be string')
+    .trim().withMessage('websiteUrl should be symbols string')
+    .notEmpty().withMessage('websiteUrl is required')
     .isLength({ max: 100}).withMessage('max length is 100')
     .isURL().withMessage('should be valid URL value');
 
 
-export {nameValidation, youtubeUrlValidation, idValidation};
+export {nameValidation, websiteUrlValidation, idValidation};

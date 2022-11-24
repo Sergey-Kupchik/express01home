@@ -47,7 +47,7 @@ type BlogOutputType = {
     "items": Array<{
         id: string
         name: string
-        youtubeUrl: string
+        websiteUrl: string
         createdAt: string
     }>
 }

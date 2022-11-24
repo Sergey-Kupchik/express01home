@@ -9,13 +9,13 @@ const blogs: BlogType[] = [
         id: "1",
         name: "BlogAsync",
         createdAt: currentDate(),
-        youtubeUrl: "https://www.youtube.com/watch?v=ae6LWyidPJo&ab_channel=AllianceTheatre",
+        websiteUrl: "https://www.youtube.com/watch?v=ae6LWyidPJo&ab_channel=AllianceTheatre",
     },
     {
         id: "2",
         name: "Blog2",
         createdAt: currentDate(),
-        youtubeUrl: "https://www.youtube.com/watch?v=OvgqJOWGQfU&ab_channel=HouzzTV",
+        websiteUrl: "https://www.youtube.com/watch?v=OvgqJOWGQfU&ab_channel=HouzzTV",
     }
 ];
 
@@ -27,21 +27,21 @@ const blogsRepository = {
         const searchResult = blogs.find((b) => b.id === id)
         return searchResult;
     },
-    async createProduct(name: string, youtubeUrl: string):  Promise<BlogType> {
+    async createProduct(name: string, websiteUrl: string):  Promise<BlogType> {
         const newBlog: BlogType = {
             id: newId().toString(),
             name,
-            youtubeUrl,
+            websiteUrl,
             createdAt: currentDate(),
         }
         blogs.push(newBlog)
         return newBlog;
     },
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlog(id: string, name: string, websiteUrl: string): Promise<boolean> {
         const searchResult = blogs.find((b) => b.id === id)
         if (searchResult) {
             searchResult.name = name;
-            searchResult.youtubeUrl = youtubeUrl;
+            searchResult.websiteUrl = websiteUrl;
             return true
         }
         return false

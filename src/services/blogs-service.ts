@@ -5,15 +5,15 @@ import {blogsRepository} from "../repositories/blogs-db-repository";
 type BlogType = {
     id: string
     name: string
-    youtubeUrl: string
+    websiteUrl: string
     createdAt: string
 }
 const blogsService = {
-    async createBlog(name: string, youtubeUrl: string): Promise<string|null> {
+    async createBlog(name: string, websiteUrl: string): Promise<string|null> {
         const newBlog: BlogType = {
             id: uuidv4(),
             name,
-            youtubeUrl,
+            websiteUrl,
             createdAt: currentDate(),
         }
         const resp = await blogsRepository.createBlog(newBlog)
@@ -24,8 +24,8 @@ const blogsService = {
         }
 
     },
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        const result = await blogsRepository.updateBlog(id, name, youtubeUrl)
+    async updateBlog(id: string, name: string, websiteUrl: string): Promise<boolean> {
+        const result = await blogsRepository.updateBlog(id, name, websiteUrl)
         return result;
     },
     async deleteBlogById(id: string): Promise<boolean> {

@@ -9,11 +9,11 @@ const blogsRepository = {
         const resp = await dbCollections.blogs.insertOne(newBlog)
         return resp.acknowledged;
     },
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlog(id: string, name: string, websiteUrl: string): Promise<boolean> {
         const result = await dbCollections.blogs.updateOne({id}, {
             $set: {
                 name,
-                youtubeUrl,
+                websiteUrl,
             }
         })
         return result.modifiedCount === 1;
