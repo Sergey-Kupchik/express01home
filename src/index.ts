@@ -29,7 +29,7 @@ app.use('/comments', commentsRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello  11.24.22')
+    res.send('Hello  11.24.22 #2')
 })
 
 const startApp = async () => {
