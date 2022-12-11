@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';
-    const client = new MongoClient(process.env.MONGO_URL!);
+const client = new MongoClient(process.env.MONGO_URL!);
 
 const dbName = 'first';
 const postsCollName = 'posts';
