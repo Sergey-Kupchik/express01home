@@ -7,14 +7,16 @@ type BlogType = {
     name: string
     websiteUrl: string
     createdAt: string
+    description: string
 }
 const blogsService = {
-    async createBlog(name: string, websiteUrl: string): Promise<string|null> {
+    async createBlog(name: string, websiteUrl: string, description: string): Promise<string|null> {
         const newBlog: BlogType = {
             id: uuidv4(),
             name,
             websiteUrl,
             createdAt: currentDate(),
+            description
         }
         const resp = await blogsRepository.createBlog(newBlog)
         if (resp) {
@@ -24,8 +26,8 @@ const blogsService = {
         }
 
     },
-    async updateBlog(id: string, name: string, websiteUrl: string): Promise<boolean> {
-        const result = await blogsRepository.updateBlog(id, name, websiteUrl)
+    async updateBlog(id: string, name: string, websiteUrl: string, description: string): Promise<boolean> {
+        const result = await blogsRepository.updateBlog(id, name, websiteUrl, description)
         return result;
     },
     async deleteBlogById(id: string): Promise<boolean> {

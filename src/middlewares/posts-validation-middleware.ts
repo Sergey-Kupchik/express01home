@@ -9,6 +9,12 @@ const titleValidation = body("title")
     .notEmpty().withMessage(`title  is required`)
     .isLength({max: 30}).withMessage(`length is 30 max`);
 
+const descriptionValidation = body("description")
+    .isString().withMessage(`description should be string`)
+    .trim().withMessage(`description should be symbols string`)
+    .notEmpty().withMessage(`description  is required`)
+    .isLength({max: 500}).withMessage(`length is 500 max`);
+
 const shortDescriptionValidation = body("shortDescription")
     .isString().withMessage(`shortDescription should be string`)
     .trim().withMessage(`shortDescription should be symbols string`)
@@ -37,4 +43,4 @@ const blogIdValidation = body('blogId')
 const urlBlogIdValidation = param('blogId')
     .isString().trim().notEmpty().isLength({min: 2}).custom(isValidBlogId);
 
-export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation, urlBlogIdValidation};
+export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation, urlBlogIdValidation, descriptionValidation};

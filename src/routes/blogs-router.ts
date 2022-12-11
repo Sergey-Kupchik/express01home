@@ -8,7 +8,7 @@ import {inputValidationMiddleware, inputValidationMiddleware2} from "../middlewa
 import {blogsService, BlogType} from "../services/blogs-service";
 import {BlogOutputType, blogsQueryRepository, sortDirectionEnum} from "../repositories/queries/blogs-query-repository";
 import {
-    contentValidation,
+    contentValidation, descriptionValidation,
     shortDescriptionValidation,
     titleValidation,
     urlBlogIdValidation
@@ -43,9 +43,10 @@ blogsRouter.post('/',
     isAuthT,
     nameValidation,
     websiteUrlValidation,
+    descriptionValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const newBlogId: string | null = await blogsService.createBlog(req.body.name, req.body.websiteUrl)
+        const newBlogId: string | null = await blogsService.createBlog(req.body.name, req.body.websiteUrl, req.body.description)
         if (newBlogId) {
             const newBlog = await blogsQueryRepository.getBlogById(newBlogId)
             res.status(201).send(newBlog)
@@ -92,9 +93,10 @@ blogsRouter.put('/:id',
     isAuthT,
     nameValidation,
     websiteUrlValidation,
+    descriptionValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const isUpdated: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.websiteUrl)
+        const isUpdated: boolean = await blogsService.updateBlog(req.params.id, req.body.name, req.body.websiteUrl, req.body.description)
         if (!isUpdated) {
             res.sendStatus(404)
             return

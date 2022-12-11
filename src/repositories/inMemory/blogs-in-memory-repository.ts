@@ -10,12 +10,14 @@ const blogs: BlogType[] = [
         name: "BlogAsync",
         createdAt: currentDate(),
         websiteUrl: "https://www.youtube.com/watch?v=ae6LWyidPJo&ab_channel=AllianceTheatre",
+        description:"wqqwq"
     },
     {
         id: "2",
         name: "Blog2",
         createdAt: currentDate(),
         websiteUrl: "https://www.youtube.com/watch?v=OvgqJOWGQfU&ab_channel=HouzzTV",
+        description:"wqqwq"
     }
 ];
 
@@ -27,12 +29,13 @@ const blogsRepository = {
         const searchResult = blogs.find((b) => b.id === id)
         return searchResult;
     },
-    async createProduct(name: string, websiteUrl: string):  Promise<BlogType> {
+    async createProduct(name: string, websiteUrl: string, description:string):  Promise<BlogType> {
         const newBlog: BlogType = {
             id: newId().toString(),
             name,
             websiteUrl,
             createdAt: currentDate(),
+            description
         }
         blogs.push(newBlog)
         return newBlog;
