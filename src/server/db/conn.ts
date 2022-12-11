@@ -3,11 +3,11 @@ import {PostType} from "../../services/posts-service";
 import {BlogType} from "../../services/blogs-service";
 import {UserDdType} from "../../repositories/users-db-repository";
 import {CommentType} from "../../services/coments-service";
-
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';
-
-const client = new MongoClient(url);
+    const client = new MongoClient(process.env.MONGO_URL!);
 
 const dbName = 'first';
 const postsCollName = 'posts';
