@@ -11,19 +11,21 @@ import {tokensService} from "../services/tokens-service";
 const usersRouter = Router();
 
 usersRouter.post('/',
+    isAuthT,
     loginValidation,
     emailValidation,
     passwordValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const result: string | null = await usersService.createUser(req.body.login,req.body.email, req.body.password)
+        const result: UserType | null = await usersService.createUser(req.body.login,req.body.email, req.body.password)
         if (!result){
             return res.sendStatus(401)
         }
-        return res.status(201).send({"accessToken": result})
+        return res.status(201).send(result)
 
     });
 usersRouter.get('/',
+    isAuthT,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
@@ -36,6 +38,7 @@ usersRouter.get('/',
         return res.send(users)
     });
 usersRouter.delete('/:id',
+    isAuthT,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted: boolean = await usersService.deleteUserById(req.params.id,)

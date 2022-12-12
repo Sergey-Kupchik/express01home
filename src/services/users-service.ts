@@ -6,7 +6,7 @@ import {tokensService} from "./tokens-service";
 
 
 const usersService = {
-    async createUser(login: string, email: string, password: string): Promise<string | null> {
+    async createUser(login: string, email: string, password: string): Promise<UserType | null> {
         const newUser: UserDdType = {
             id: uuidv4(),
             login,
@@ -16,10 +16,10 @@ const usersService = {
         }
         await usersRepository.createUser(newUser);
         const user = await this.findUserById(newUser.id)
-        if (user){
-            return await tokensService.createToken(newUser.id)
-        }
-        return null
+        // if (user){
+        //     return await tokensService.createToken(newUser.id)
+        // }
+        return user
     },
     async _hashPassword(password: string): Promise<string> {
         const hash = await bcrypt.hash(password, 10);
@@ -43,13 +43,16 @@ const usersService = {
             return result;
         }
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<string|null> {
         let user = validateEmail(loginOrEmail) ? await this.findUserByEmail(loginOrEmail) : await this.findUserByLogin(loginOrEmail);
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.hash)
-            return isPasswordValid
+             if (isPasswordValid){
+                 return await tokensService.createToken(user.id)
+             }
+             return  null
         }
-        return false
+        return null
     },
     async findUserByEmail(email: string,): Promise<UserDdType | null> {
         const user = await usersRepository.findUserByEmail(email.toLowerCase());
