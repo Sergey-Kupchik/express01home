@@ -8,7 +8,7 @@ const authRouter = Router();
 
 authRouter.post('/login',
     async (req: Request, res: Response) => {
-        const token: string | null = await usersService.checkCredentials(req.body.login, req.body.password)
+        const token: string | null = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (!token){
             return res.sendStatus(401)
         }
