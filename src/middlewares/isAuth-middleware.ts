@@ -25,7 +25,7 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
             next()
             return
         } else {
-            return res.send(401)
+            return res.send(404)
         }
     } else {
         return res.send(401)
