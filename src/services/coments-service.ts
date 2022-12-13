@@ -16,11 +16,19 @@ const commentsService = {
             postId,
         }
         const isCommentCreated: boolean = await commentsRepository.createComment(newComment)
-        if (!isCommentCreated) {
+        const post: CommentType | null = await commentsQueryRepository.getCommentById(newComment.id)
+        if (isCommentCreated && post) {
+            return {
+                id: post.id,
+                content: post.content,
+                userId: post.userId,
+                userLogin: post.userLogin,
+                createdAt: post.createdAt,
+            };
+        }
+        else {
             return null
         }
-        const post: CommentType | null = await commentsQueryRepository.getCommentById(newComment.id)
-        return post;
     },
     async updateCommentById(commentId: string, content: string): Promise<boolean> {
         const result = commentsRepository.updateCommentById(commentId, content)
