@@ -5,7 +5,7 @@ import {
     blogIdValidation,
     titleValidation,
     shortDescriptionValidation,
-    contentValidation
+    contentValidation, contentCommentsValidation
 } from "../middlewares/posts-validation-middleware";
 import {postsService, PostType} from "../services/posts-service";
 import {PostsOutputType, postsQueryRepository} from "../repositories/queries/posts-query-repository";
@@ -88,7 +88,7 @@ postsRouter.post('/',
 
 postsRouter.post('/:id/comments',
     authJwt,
-    contentValidation,
+    contentCommentsValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const comment: CommentOutputType|null = await commentsService.createComment(req.params.id, req.body.content, req.user!,)

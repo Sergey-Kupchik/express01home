@@ -27,7 +27,11 @@ const contentValidation = body("content")
     .notEmpty().withMessage(`content  is required`)
     .isLength({max: 1000}).withMessage(`length is 30 max`);
 
-
+const contentCommentsValidation = body("content")
+    .isString().withMessage(`content should be string`)
+    .trim().withMessage(`content should be symbols string`)
+    .notEmpty().withMessage(`content  is required`)
+    .isLength({min:20 ,max: 300}).withMessage(`length in range min:20 ,max: 300`);
 
 const isValidBlogId: CustomValidator = async (value) => {
     const blog: BlogType | null = await blogsQueryRepository.getBlogById(value.toString());
@@ -43,4 +47,4 @@ const blogIdValidation = body('blogId')
 const urlBlogIdValidation = param('blogId')
     .isString().trim().notEmpty().isLength({min: 2}).custom(isValidBlogId);
 
-export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation, urlBlogIdValidation, descriptionValidation};
+export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation, urlBlogIdValidation, descriptionValidation, contentCommentsValidation};
