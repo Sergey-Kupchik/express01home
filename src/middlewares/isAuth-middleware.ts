@@ -21,9 +21,15 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     if (jwtToken) {
         const userId: string | null = await tokensService.verifyToken(jwtToken);
         if (userId) {
-            req.user = await usersService.findUserById(userId);
-            next()
-            return
+            const user = await usersService.findUserById(userId);
+            if(user){
+                req.user = user;
+                next()
+                return
+            } else {
+                return res.send(404)
+            }
+
         } else {
             return res.send(401)
         }
