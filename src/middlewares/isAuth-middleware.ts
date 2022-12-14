@@ -14,7 +14,7 @@ const isAuthT = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const authJwt = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers["authorization"]) {
+    if (!req.headers && !req.headers["authorization"]) {
         res.send(401)
     }
     const jwtToken = req.headers["authorization"]?.split(" ")[1]
