@@ -31,7 +31,7 @@ commentsRouter.get('/:id',
     async (req: Request, res: Response) => {
         const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
         if (!сomment){
-            return res.sendStatus(401)
+            return res.sendStatus(404)
         }
         return res.status(200).send({id:сomment.id,
             content:сomment.content,
