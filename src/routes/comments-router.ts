@@ -5,7 +5,7 @@ import {CommentOutputType, commentsService} from "../services/coments-service";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {postsService} from "../services/posts-service";
 import {
-    blogIdValidation,
+    blogIdValidation, contentCommentsValidation,
     contentValidation,
     shortDescriptionValidation,
     titleValidation
@@ -43,7 +43,7 @@ commentsRouter.get('/:id',
 commentsRouter.put('/:id',
     authJwt,
     authZ,
-    contentValidation,
+    contentCommentsValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const isUpdated: boolean = await commentsService.updateCommentById(req.params.id,  req.body.content,)
