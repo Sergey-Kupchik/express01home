@@ -30,9 +30,9 @@ const commentsService = {
                     createdAt: comment.createdAt,
                 };
             }
-            // else {
-            //     return null
-            // }
+            else {
+                return null
+            }
         }
         return null
 
