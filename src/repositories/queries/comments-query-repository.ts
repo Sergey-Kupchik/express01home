@@ -15,7 +15,7 @@ const commentsQueryRepository = {
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const comments = await dbCollections.comments.find(filterParam, {projection: {_id: 0}})
+        const comments = await dbCollections.comments.find(filterParam, {projection: {_id: 0, postId: 0}})
             .sort(sortBy, sortDirectionParam)
             .skip(skipItems)
             .limit(pageSize).toArray()

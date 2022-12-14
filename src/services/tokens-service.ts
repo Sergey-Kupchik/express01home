@@ -5,7 +5,7 @@ interface TokenInterface extends JwtPayload {
     };
 
 
-const secret: any = process.env.TOKEN_KEY
+const secret: string = process.env.TOKEN_KEY || "local"
 
 const tokensService = {
 
