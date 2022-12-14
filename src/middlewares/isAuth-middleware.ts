@@ -39,12 +39,19 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
 
 const authZ = async (req: Request, res: Response, next: NextFunction) => {
     const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
-    if (сomment && req.user!.id===сomment.userId) {
-        next()
+    if (сomment){
+        if (  req.user!.id===сomment.userId) {
+            next()
+        }
+        else {
+            return res.send(403)
+        }
     }
     else {
-        return res.send(403)
+        return res.send(404)
     }
 };
+
+
 
 export {isAuthT, authJwt, authZ};
