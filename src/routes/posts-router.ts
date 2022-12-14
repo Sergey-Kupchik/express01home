@@ -101,6 +101,11 @@ postsRouter.post('/:id/comments',
 
 postsRouter.get('/:id/comments',
     async (req: Request, res: Response) => {
+        const posts: PostType | null = await postsQueryRepository.getPostById(req.params.id.toString())
+        if (!posts) {
+            res.sendStatus(404)
+            return
+        }
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
