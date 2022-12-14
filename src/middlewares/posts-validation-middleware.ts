@@ -1,6 +1,8 @@
 import {body,param, CustomValidator} from "express-validator";
 import { BlogType} from "../services/blogs-service";
 import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
+import {UserDdType} from "../repositories/users-db-repository";
+import {usersService} from "../services/users-service";
 
 
 const titleValidation = body("title")
@@ -46,5 +48,6 @@ const blogIdValidation = body('blogId')
 
 const urlBlogIdValidation = param('blogId')
     .isString().trim().notEmpty().isLength({min: 2}).custom(isValidBlogId);
+
 
 export {blogIdValidation, titleValidation, shortDescriptionValidation, contentValidation, urlBlogIdValidation, descriptionValidation, contentCommentsValidation};
