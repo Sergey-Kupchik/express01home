@@ -3,22 +3,29 @@ import {currentDate, validateEmail} from "../utils/utils";
 import {UserDdType, usersRepository, UserType} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from "uuid";
 import {tokensService} from "./tokens-service";
+import add from 'date-fns/add';
 
 
 const usersService = {
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
         const newUser: UserDdType = {
-            id: uuidv4(),
-            login,
-            email:email.toLowerCase(),
-            hash: await this._hashPassword(password),
-            createdAt: currentDate(),
+            accountData: {
+                id: uuidv4(),
+                login,
+                email: email.toLowerCase(),
+                hash: await this._hashPassword(password),
+                createdAt: currentDate(),
+            },
+            emailConfirmation: {
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date, {
+                    hours: 5,
+                }),
+                isConfirmed: false
+            }
         }
         await usersRepository.createUser(newUser);
-        const user = await this.findUserById(newUser.id)
-        // if (user){
-        //     return await tokensService.createToken(newUser.id)
-        // }
+        const user = await this.findUserById(newUser.accountData.id)
         return user
     },
     async _hashPassword(password: string): Promise<string> {
@@ -33,24 +40,24 @@ const usersService = {
         const result = await usersRepository.findUserById(id);
         if (result) {
             const User: UserType = {
-                id: result.id,
-                login: result.login,
-                email: result.email,
-                createdAt: result.createdAt,
+                id: result.accountData.id,
+                login: result.accountData.login,
+                email: result.accountData.email,
+                createdAt: result.accountData.createdAt,
             }
             return User;
         } else {
             return result;
         }
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<string|null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<string | null> {
         let user = validateEmail(loginOrEmail) ? await this.findUserByEmail(loginOrEmail) : await this.findUserByLogin(loginOrEmail);
         if (user) {
-            const isPasswordValid = await this._comparePassword(password, user.hash)
-             if (isPasswordValid){
-                 return await tokensService.createToken(user.id)
-             }
-             return  null
+            const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
+            if (isPasswordValid) {
+                return await tokensService.createToken(user.accountData.id)
+            }
+            return null
         }
         return null
     },

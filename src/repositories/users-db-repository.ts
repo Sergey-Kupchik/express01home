@@ -1,12 +1,5 @@
 import {dbCollections} from "../server/db/conn";
 
-type UserType = {
-    id: string
-    login: string
-    email: string
-    createdAt: string
-}
-type UserDdType = UserType & { hash: string }
 
 const usersRepository = {
     async createUser(newUser: UserDdType): Promise<boolean> {
@@ -40,3 +33,25 @@ const usersRepository = {
 };
 
 export {usersRepository, UserDdType, UserType}
+
+
+type UserType = {
+    id: string
+    login: string
+    email: string
+    createdAt: string
+}
+type UserDdType = {
+    accountData: {
+        id: string
+        login: string
+        email: string
+        hash: string
+        createdAt: string
+    },
+    emailConfirmation: {
+        confirmationCode: string
+        expirationDate: Date
+        isConfirmed: boolean
+    }
+}
