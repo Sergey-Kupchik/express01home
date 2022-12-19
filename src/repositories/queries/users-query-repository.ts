@@ -29,7 +29,7 @@ const usersQueryRepository = {
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
         const users = await dbCollections.users.find(filter, {projection: {_id: 0, hash: 0}})
-            .sort(sortBy, sortDirectionParam)
+            .sort(`accountData.${sortBy}`, sortDirectionParam)
             .skip(skipItems)
             .limit(pageSize).toArray();
         const UsersOutput = {
