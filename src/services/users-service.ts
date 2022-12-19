@@ -81,6 +81,18 @@ const usersService = {
         const idConfirmed:boolean = await usersRepository.confirmUser(id);
         return idConfirmed
     },
+    async updateConfirmationCode(id: string,): Promise<string  | null> {
+        const emailConfirmation = {
+            confirmationCode: uuidv4(),
+            expirationDate: add(new Date, {
+                hours: 5,
+            }),
+            isConfirmed: false
+        }
+        const idUpdated:boolean = await usersRepository.updateConfirmationCode(id, emailConfirmation);
+        if (idUpdated) return emailConfirmation.confirmationCode 
+        return null
+    },
 }
 
 

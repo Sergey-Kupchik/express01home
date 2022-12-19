@@ -30,7 +30,9 @@ const registrationService = {
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         try {
-            await emailManager.sentConfirmationEmail(email, user.emailConfirmation.confirmationCode)
+            const confirmationCode = await usersService.updateConfirmationCode(user.accountData.id)
+            if (!confirmationCode) return false
+            await emailManager.sentConfirmationEmail(email, confirmationCode)
             return true
         } catch {
             await usersService.deleteUserById(user.accountData.id)

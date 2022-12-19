@@ -38,13 +38,21 @@ const usersRepository = {
         })
         return result.modifiedCount === 1;
     },
+    async updateConfirmationCode(id: string, emailConfirmation: emailConfirmationType): Promise<boolean> {
+        const result = await dbCollections.users.updateOne({"accountData.id": id}, {
+            $set: {
+                "emailConfirmation": emailConfirmation
+            }
+        })
+        return result.modifiedCount === 1;
+    },
     async deleteUserById(id: string): Promise<boolean> {
         const result = await dbCollections.users.deleteOne({"accountData.id": id})
         return result.deletedCount === 1
     },
 };
 
-export {usersRepository, UserDdType, UserType}
+export {usersRepository, UserDdType, UserType, emailConfirmationType}
 
 
 type UserType = {
@@ -52,6 +60,11 @@ type UserType = {
     login: string
     email: string
     createdAt: string
+}
+type emailConfirmationType ={
+    confirmationCode: string
+    expirationDate: Date
+    isConfirmed: boolean
 }
 type UserDdType = {
     accountData: {
@@ -61,9 +74,5 @@ type UserDdType = {
         hash: string
         createdAt: string
     },
-    emailConfirmation: {
-        confirmationCode: string
-        expirationDate: Date
-        isConfirmed: boolean
-    }
+    emailConfirmation: emailConfirmationType
 }
