@@ -21,6 +21,7 @@ const registrationService = {
         if (!user) return false
         if (compareDesc(new Date(), user.emailConfirmation.expirationDate) !== 1) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
+        if (user.emailConfirmation.isConfirmed) return false
         const idConfirmed: boolean = await usersService.confirmUser(user.accountData.id)
         return idConfirmed
     },

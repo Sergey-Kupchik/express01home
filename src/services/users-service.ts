@@ -78,9 +78,6 @@ const usersService = {
         return result
     },
     async confirmUser(id: string,): Promise<boolean> {
-        const user = await usersRepository.findUserById(id)
-        if (!user) return false
-        if (user.emailConfirmation.isConfirmed) return false
         const idConfirmed:boolean = await usersRepository.confirmUser(id);
         return idConfirmed
     },
