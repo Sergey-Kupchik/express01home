@@ -5,8 +5,8 @@ import {UserType} from "../repositories/users-db-repository";
 import registrationService from "../domain/registration-service";
 import {
     confirmationCodeValidation,
-    emailRequired,
-    loginRequired,
+    emailRequired, emailValidation,
+    loginRequired, loginValidation,
     passwordValidation
 } from "../middlewares/user-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
@@ -34,8 +34,8 @@ authRouter.get('/me',
 
 
 authRouter.post('/registration',
-    loginRequired,
-    emailRequired,
+    loginValidation,
+    emailValidation,
     passwordValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
