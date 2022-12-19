@@ -37,7 +37,12 @@ const usersQueryRepository = {
             page: pageNumber,
             pageSize,
             totalCount,
-            items: users
+            items: users.map(u => ({
+                id: u.accountData.id,
+                login: u.accountData.login,
+                email: u.accountData.email,
+                createdAt: u.accountData.createdAt,
+            }))
         }
         return UsersOutput;
     },
