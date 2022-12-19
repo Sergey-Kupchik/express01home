@@ -32,14 +32,34 @@ const emailValidation = body("email")
     .isEmail().withMessage("email be email format")
     .custom(isEmailUnique);
 
+const confirmationCodeValidation = body("code")
+    .isString().withMessage(`code should be string`)
+    .trim().withMessage(`code should be symbols string`)
+    .notEmpty().withMessage(`code is required`)
+
 const passwordValidation = body("password")
     .isString().withMessage(`password should be string`)
     .trim().withMessage(`password should be symbols string`)
     .notEmpty().withMessage(`password  is required`)
     .isLength({min: 6, max: 20}).withMessage(`length is 20 max and 6 min`);
 
+const emailRequired = body("email")
+    .isString().withMessage(`email should be string`)
+    .trim().withMessage(`email should be symbols string`)
+    .notEmpty().withMessage(`email  is required`)
+    .isEmail().withMessage("email be email format")
+
+const loginRequired = body("login")
+    .isString().withMessage(`login should be string`)
+    .trim().withMessage(`login should be symbols string`)
+    .notEmpty().withMessage(`login  is required`)
+    .isLength({min: 3, max: 10}).withMessage(`length is 10 max and 3 min`)
+
 export {
     loginValidation,
     emailValidation,
     passwordValidation,
+    confirmationCodeValidation,
+    emailRequired,
+    loginRequired
 }

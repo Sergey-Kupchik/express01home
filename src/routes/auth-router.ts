@@ -2,9 +2,14 @@ import {Request, Response, Router} from 'express';
 import {usersService} from "../services/users-service";
 import {authJwt} from "../middlewares/isAuth-middleware";
 import {UserType} from "../repositories/users-db-repository";
-import {tokensService} from "../services/tokens-service";
-import emailAdapter from "../adapters/email-adapter";
 import registrationService from "../domain/registration-service";
+import {
+    confirmationCodeValidation,
+    emailRequired,
+    loginRequired,
+    passwordValidation
+} from "../middlewares/user-middleware";
+import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 
 const authRouter = Router();
 
@@ -29,15 +34,33 @@ authRouter.get('/me',
 
 
 authRouter.post('/registration',
+    loginRequired,
+    emailRequired,
+    passwordValidation,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        try {
-            const result = await registrationService.registrationNewUser(req.body.login,req.body.email, req.body.password)
-            return res.sendStatus(204)
-        } catch {
-            return res.sendStatus(400)
-        }
+        const isEmailSent: boolean = await registrationService.registrationNewUser(req.body.login, req.body.email, req.body.password)
+        if (isEmailSent) return res.sendStatus( 204)
+        return res.sendStatus(400)
     });
 
+authRouter.post('/registration-confirmation',
+    confirmationCodeValidation,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const isEmailSent: boolean = await registrationService.confirmUser(req.body.code,)
+        if (isEmailSent) return res.sendStatus( 204)
+        return res.sendStatus(400)
+    });
+
+authRouter.post('/registration-email-resending',
+    emailRequired,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const isEmailSent: boolean = await registrationService.resentConfirmationEmail(req.body.email,)
+        if (isEmailSent) return res.sendStatus( 204)
+        return res.sendStatus(400)
+    });
 
 export {
     authRouter

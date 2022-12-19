@@ -19,11 +19,24 @@ const usersRepository = {
             {"accountData.email": email}, {projection: {_id: 0}});
         return result;
     },
+    async findUserByConfirmationCode(code: string,): Promise<UserDdType | null> {
+        const result = await dbCollections.users.findOne(
+            {"emailConfirmation.confirmationCode": code}, {projection: {_id: 0}});
+        return result;
+    },
     async findUserByLogin(login: string,): Promise<UserDdType | null> {
         const result = await dbCollections.users.findOne({
             "accountData.login": login
         }, {projection: {_id: 0}});
         return result;
+    },
+    async confirmUser(id: string,): Promise<boolean> {
+        const result = await dbCollections.users.updateOne({"accountData.id": id}, {
+            $set: {
+                "emailConfirmation.isConfirmed": true
+            }
+        })
+        return result.modifiedCount === 1;
     },
     async deleteUserById(id: string): Promise<boolean> {
         const result = await dbCollections.users.deleteOne({"accountData.id": id})

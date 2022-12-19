@@ -1,19 +1,39 @@
 import emailManager from "../managers/email-manager";
 import {usersService} from "../services/users-service";
+import compareDesc from 'date-fns/compareDesc';
 
 
 const registrationService = {
-    async registrationNewUser (login: string, email: string, password: string) {
-       const user = await usersService.findUserByLogin(login)
-       await emailManager.sentConfirmationEmail(email, user.emailConfirmation.confirmationCode)
-        // if conf email was sent return Ok resp
-        // if not delet user from db
+    async registrationNewUser(login: string, email: string, password: string): Promise<boolean> {
+        const user = await usersService.findUserByLogin(login)
+        if (!user) return false
+        try {
+            await emailManager.sentConfirmationEmail(email, user.emailConfirmation.confirmationCode)
+            return true
+        } catch {
+            await usersService.deleteUserById(user.accountData.id)
+            return false
+        }
     },
-    async confirmationUser () {
-
+    async confirmUser(code: string): Promise<boolean> {
+        const user = await usersService.findUserByConfirmationCode(code)
+        if (!user) return false
+        if (compareDesc(new Date(), user.emailConfirmation.expirationDate) !== 1) return false
+        if (user.emailConfirmation.confirmationCode !== code) return false
+        const idConfirmed: boolean = await usersService.confirmUser(user.accountData.id)
+        return idConfirmed
     },
-    async resentConfirmationEmail () {
-
+    async resentConfirmationEmail(email: string,) {
+        const user = await usersService.findUserByEmail(email)
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false
+        try {
+            await emailManager.sentConfirmationEmail(email, user.emailConfirmation.confirmationCode)
+            return true
+        } catch {
+            await usersService.deleteUserById(user.accountData.id)
+            return false
+        }
     }
 };
 
