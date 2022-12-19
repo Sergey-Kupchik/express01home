@@ -11,18 +11,17 @@ const usersRepository = {
         return result.deletedCount >= 0;
     },
     async findUserById(id: string,): Promise<UserDdType | null> {
-        const result = await dbCollections.users.findOne({id}, {projection: {_id: 0}});
+        const result = await dbCollections.users.findOne({"accountData.id": id}, {projection: {_id: 0}});
         return result;
     },
     async findUserByEmail(email: string,): Promise<UserDdType | null> {
-        const result = await dbCollections.users.findOne({
-            email
-        }, {projection: {_id: 0}});
+        const result = await dbCollections.users.findOne(
+            {"accountData.email": email}, {projection: {_id: 0}});
         return result;
     },
     async findUserByLogin(login: string,): Promise<UserDdType | null> {
         const result = await dbCollections.users.findOne({
-            login
+            "accountData.login": login
         }, {projection: {_id: 0}});
         return result;
     },
