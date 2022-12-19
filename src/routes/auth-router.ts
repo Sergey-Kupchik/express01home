@@ -67,7 +67,7 @@ authRouter.post('/registration-email-resending',
         return res.status(400).json({
             errorsMessages: [{
                 message: "Fail to confirm user",
-                field: "code"
+                field: "email"
             }]
         });
     });
