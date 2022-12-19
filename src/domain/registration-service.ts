@@ -5,6 +5,7 @@ import compareDesc from 'date-fns/compareDesc';
 
 const registrationService = {
     async registrationNewUser(login: string, email: string, password: string): Promise<boolean> {
+        await usersService.createUser(login,email, password)
         const user = await usersService.findUserByLogin(login)
         if (!user) return false
         try {
