@@ -50,7 +50,12 @@ authRouter.post('/registration-confirmation',
     async (req: Request, res: Response) => {
         const isEmailSent: boolean = await registrationService.confirmUser(req.body.code,)
         if (isEmailSent) return res.sendStatus( 204)
-        return res.status(400).send({"errorsMessages": [{ "message": "Fail to confirm user", "field": 400 }]})
+        return res.status(400).json({
+            errorsMessages: {
+                message: "Fail to confirm user",
+                field: 400
+            }
+        });
     });
 
 authRouter.post('/registration-email-resending',
@@ -59,8 +64,12 @@ authRouter.post('/registration-email-resending',
     async (req: Request, res: Response) => {
         const isEmailSent: boolean = await registrationService.resentConfirmationEmail(req.body.email,)
         if (isEmailSent) return res.sendStatus( 204)
-        return res.status(400).send({"errorsMessages": [{ "message": "Fail to resending email", "field": 400 }]})
-
+        return res.status(400).json({
+            errorsMessages: {
+                message: "Fail to confirm user",
+                field: 400
+            }
+        });
     });
 
 export {
