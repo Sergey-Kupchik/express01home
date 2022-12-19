@@ -7,14 +7,14 @@ const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | n
     if (searchLoginTerm && searchEmailTerm) {
         param = {
             $or: [
-                {login: {$regex: searchLoginTerm, '$options': 'i'}},
-                {email: {$regex: searchEmailTerm, '$options': 'i'}}
+                {"accountData.login": {$regex: searchLoginTerm, '$options': 'i'}},
+                {"accountData.email": {$regex: searchEmailTerm, '$options': 'i'}}
             ]
         }
     } else if (searchLoginTerm && !searchEmailTerm) {
-        param = {login: {$regex: searchLoginTerm, '$options': 'i'}}
+        param = {"accountData.login": {$regex: searchLoginTerm, '$options': 'i'}}
     } else if (!searchLoginTerm && searchEmailTerm) {
-        param = {email: {$regex: searchEmailTerm, '$options': 'i'}}
+        param = {"accountData.email": {$regex: searchEmailTerm, '$options': 'i'}}
     } else {
         param = {}
     }
