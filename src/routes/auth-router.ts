@@ -51,10 +51,10 @@ authRouter.post('/registration-confirmation',
         const isEmailSent: boolean = await registrationService.confirmUser(req.body.code,)
         if (isEmailSent) return res.sendStatus( 204)
         return res.status(400).json({
-            errorsMessages: {
+            errorsMessages: [{
                 message: "Fail to confirm user",
-                field: 400
-            }
+                field: "code"
+            }]
         });
     });
 
@@ -65,10 +65,10 @@ authRouter.post('/registration-email-resending',
         const isEmailSent: boolean = await registrationService.resentConfirmationEmail(req.body.email,)
         if (isEmailSent) return res.sendStatus( 204)
         return res.status(400).json({
-            errorsMessages: {
+            errorsMessages: [{
                 message: "Fail to confirm user",
-                field: 400
-            }
+                field: "code"
+            }]
         });
     });
 
