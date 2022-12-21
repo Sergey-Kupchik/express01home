@@ -9,6 +9,7 @@ import {connectToDatabase} from "./server/db/conn";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const port = process.env.PORT;
 const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
+app.use(cookieParser());
 
 app.use('/videos', videosRouter);
 app.use('/product', productsRouter);
@@ -29,7 +31,7 @@ app.use('/comments', commentsRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`12/21/22 at 10.17 am`)
+    res.send(`12/21/22 at 4.46 am`)
 })
 
 const startApp = async () => {

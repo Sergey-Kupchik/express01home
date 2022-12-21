@@ -5,8 +5,9 @@ import {v4 as uuidv4} from "uuid";
 import {tokensService} from "./tokens-service";
 import add from 'date-fns/add';
 
- const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal"
-const lifeTimeAccessToken: string = "24h"
+const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal"
+const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
+
 
 const usersService = {
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
@@ -52,12 +53,17 @@ const usersService = {
             return result;
         }
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<string | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<CheckCredentialsReturnType | null> {
         let user = validateEmail(loginOrEmail) ? await this.findUserByEmail(loginOrEmail) : await this.findUserByLogin(loginOrEmail);
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                return await tokensService.createToken(user.accountData.id, accessTokenSecret, lifeTimeAccessToken)
+                const accessToken = await tokensService.createToken(user.accountData.id, accessTokenSecret, "1000s");
+                const refreshToken = await tokensService.createToken(user.accountData.id, refreshTokenSecret, "2000s");
+                return {
+                    accessToken,
+                    refreshToken,
+                }
             }
             return null
         }
@@ -80,10 +86,10 @@ const usersService = {
         return result
     },
     async confirmUser(id: string,): Promise<boolean> {
-        const idConfirmed:boolean = await usersRepository.confirmUser(id);
+        const idConfirmed: boolean = await usersRepository.confirmUser(id);
         return idConfirmed
     },
-    async updateConfirmationCode(id: string,): Promise<string  | null> {
+    async updateConfirmationCode(id: string,): Promise<string | null> {
         const emailConfirmation = {
             confirmationCode: uuidv4(),
             expirationDate: add(new Date, {
@@ -91,11 +97,17 @@ const usersService = {
             }),
             isConfirmed: false
         }
-        const idUpdated:boolean = await usersRepository.updateConfirmationCode(id, emailConfirmation);
-        if (idUpdated) return emailConfirmation.confirmationCode 
+        const idUpdated: boolean = await usersRepository.updateConfirmationCode(id, emailConfirmation);
+        if (idUpdated) return emailConfirmation.confirmationCode
         return null
     },
 }
 
 
 export {usersService, accessTokenSecret}
+
+
+type CheckCredentialsReturnType = {
+    accessToken: string
+    refreshToken:string
+}
