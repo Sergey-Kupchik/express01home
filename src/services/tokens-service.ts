@@ -5,18 +5,17 @@ interface TokenInterface extends JwtPayload {
     };
 
 
-const secret: string = process.env.TOKEN_KEY || "local"
 
 const tokensService = {
 
-    async createToken(userId: string,): Promise<string> {
-        return jsonwebtoken.sign({userId}, secret, {
-            expiresIn: "24h",
+    async createToken(userId: string,secretWord: string, lifeTime: string): Promise<string> {
+        return jsonwebtoken.sign({userId}, secretWord, {
+            expiresIn: lifeTime,
         });
     },
-    async verifyToken(token: string,): Promise<string|null> {
+    async verifyToken(token: string,secretWord: string,): Promise<string|null> {
         try {
-            const {userId} = <TokenInterface>jsonwebtoken.verify(token, secret)
+            const {userId} = <TokenInterface>jsonwebtoken.verify(token, secretWord)
             return userId
         } catch (e) {
             return null

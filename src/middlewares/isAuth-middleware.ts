@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {tokensService} from "../services/tokens-service";
-import {usersService} from "../services/users-service";
+import {accessTokenSecret, usersService} from "../services/users-service";
 import {CommentOutputType} from "../services/coments-service";
 import {commentsQueryRepository} from "../repositories/queries/comments-query-repository";
 
@@ -19,7 +19,7 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     }
     const jwtToken = req.headers["authorization"]?.split(" ")[1]
     if (jwtToken) {
-        const userId: string | null = await tokensService.verifyToken(jwtToken);
+        const userId: string | null = await tokensService.verifyToken(jwtToken, accessTokenSecret);
         if (userId) {
             const user = await usersService.findUserById(userId);
             if(user){

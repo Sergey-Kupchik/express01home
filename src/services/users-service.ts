@@ -5,6 +5,8 @@ import {v4 as uuidv4} from "uuid";
 import {tokensService} from "./tokens-service";
 import add from 'date-fns/add';
 
+ const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal"
+const lifeTimeAccessToken: string = "24h"
 
 const usersService = {
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
@@ -55,7 +57,7 @@ const usersService = {
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                return await tokensService.createToken(user.accountData.id)
+                return await tokensService.createToken(user.accountData.id, accessTokenSecret, lifeTimeAccessToken)
             }
             return null
         }
@@ -96,4 +98,4 @@ const usersService = {
 }
 
 
-export {usersService}
+export {usersService, accessTokenSecret}
