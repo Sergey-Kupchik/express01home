@@ -73,6 +73,7 @@ type UserDdType = {
         email: string
         hash: string
         createdAt: string
+        invalidRefreshTokens: string[]
     },
     emailConfirmation: emailConfirmationType
 }

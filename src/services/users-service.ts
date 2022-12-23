@@ -18,6 +18,7 @@ const usersService = {
                 email: email.toLowerCase(),
                 hash: await this._hashPassword(password),
                 createdAt: currentDate(),
+                invalidRefreshTokens: []
             },
             emailConfirmation: {
                 confirmationCode: uuidv4(),
