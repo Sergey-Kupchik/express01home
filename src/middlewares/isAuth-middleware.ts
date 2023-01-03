@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import {tokensService} from "../services/tokens-service";
-import {accessTokenSecret, usersService} from "../services/users-service";
+import {accessTokenSecret, refreshTokenSecret, usersService} from "../services/users-service";
 import {CommentOutputType} from "../services/coments-service";
 import {commentsQueryRepository} from "../repositories/queries/comments-query-repository";
+import {usersRepository} from "../repositories/users-db-repository";
 
 const isAuthT = (req: Request, res: Response, next: NextFunction) => {
     const basicToken = req.headers["authorization"]
@@ -22,7 +23,7 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
         const userId: string | null = await tokensService.verifyToken(jwtToken, accessTokenSecret);
         if (userId) {
             const user = await usersService.findUserById(userId);
-            if(user){
+            if (user) {
                 req.user = user;
                 next()
                 return
@@ -37,21 +38,35 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const authZ = async (req: Request, res: Response, next: NextFunction) => {
-    const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
-    if (сomment){
-        if (  req.user!.id===сomment.userId) {
-            next()
-        }
-        else {
-            return res.send(403)
+const authRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.cookies?.jwt) {
+        const refreshToken = req.cookies.jwt;
+        const userId = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
+        if (userId) {
+            const user = await usersRepository.findUserById(userId)
+            if (user) {
+                if (!user.accountData.invalidRefreshTokens.includes(refreshToken)) {
+                    next()
+                }
+            }
         }
     }
-    else {
+    return res.sendStatus(401);
+};
+
+
+const authZ = async (req: Request, res: Response, next: NextFunction) => {
+    const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
+    if (сomment) {
+        if (req.user!.id === сomment.userId) {
+            next()
+        } else {
+            return res.send(403)
+        }
+    } else {
         return res.send(404)
     }
 };
-
 
 
 export {isAuthT, authJwt, authZ};

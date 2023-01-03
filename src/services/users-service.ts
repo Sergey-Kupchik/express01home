@@ -5,8 +5,8 @@ import {v4 as uuidv4} from "uuid";
 import {tokensService} from "./tokens-service";
 import add from 'date-fns/add';
 
-const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal"
-const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
+const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal";
+ const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
 
 
 const usersService = {
@@ -105,7 +105,7 @@ const usersService = {
 }
 
 
-export {usersService, accessTokenSecret}
+export {usersService, accessTokenSecret, refreshTokenSecret}
 
 
 type CheckCredentialsReturnType = {

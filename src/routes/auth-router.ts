@@ -30,6 +30,23 @@ authRouter.post('/login',
         return res.status(200).send({"accessToken": tokens.accessToken})
     });
 
+authRouter.post('/refresh-token',
+    passwordValidation,
+    loginOrEmailRequired,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const tokens = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
+        if (!tokens) {
+            return res.sendStatus(401)
+        }
+        console.log(`refreshToken: ${tokens.refreshToken}`)
+        res.cookie('jwt', tokens.refreshToken, {
+            httpOnly: true,
+            secure: true,
+        });
+        return res.status(200).send({"accessToken": tokens.accessToken})
+    });
+
 authRouter.get('/me',
     authJwt,
     async (req: Request, res: Response) => {
