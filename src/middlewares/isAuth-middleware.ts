@@ -22,7 +22,7 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     if (jwtToken) {
         const userId: string | null = await tokensService.verifyToken(jwtToken, accessTokenSecret);
         if (userId) {
-            const user = await usersService.findUserById(userId);
+            const user = await usersRepository.findUserById(userId)
             if (user) {
                 req.user = user;
                 next()
@@ -46,7 +46,9 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
             const user = await usersRepository.findUserById(userId)
             if (user) {
                 if (!user.accountData.invalidRefreshTokens.includes(refreshToken)) {
+                    req.user = user;
                     next()
+                    return
                 }
             }
         }
@@ -58,7 +60,7 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
 const authZ = async (req: Request, res: Response, next: NextFunction) => {
     const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
     if (сomment) {
-        if (req.user!.id === сomment.userId) {
+        if (req.user!.accountData.id === сomment.userId) {
             next()
         } else {
             return res.send(403)
@@ -69,4 +71,4 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 
-export {isAuthT, authJwt, authZ};
+export {isAuthT, authJwt, authZ, authRefreshToken};

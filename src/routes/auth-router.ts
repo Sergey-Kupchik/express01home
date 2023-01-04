@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {usersService} from "../services/users-service";
-import {authJwt} from "../middlewares/isAuth-middleware";
+import {authJwt, authRefreshToken} from "../middlewares/isAuth-middleware";
 import {UserType} from "../repositories/users-db-repository";
 import registrationService from "../domain/registration-service";
 import {
@@ -31,9 +31,7 @@ authRouter.post('/login',
     });
 
 authRouter.post('/refresh-token',
-    passwordValidation,
-    loginOrEmailRequired,
-    inputValidationMiddleware,
+    authRefreshToken,
     async (req: Request, res: Response) => {
         const tokens = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (!tokens) {
@@ -50,7 +48,7 @@ authRouter.post('/refresh-token',
 authRouter.get('/me',
     authJwt,
     async (req: Request, res: Response) => {
-        const user: UserType | null = await usersService.findUserById(req.user?.id!)
+        const user: UserType | null = await usersService.findUserById(req.user?.accountData.id!)
         if (!user) {
             return res.sendStatus(401)
         }

@@ -102,6 +102,9 @@ const usersService = {
         if (idUpdated) return emailConfirmation.confirmationCode
         return null
     },
+    // async accessTokenUpdate(id: string,): Promise<string | null> {
+    //
+    // }
 }
 
 

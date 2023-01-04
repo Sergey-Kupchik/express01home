@@ -91,7 +91,7 @@ postsRouter.post('/:id/comments',
     contentCommentsValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const comment: CommentOutputType|null = await commentsService.createComment(req.params.id, req.body.content, req.user!,)
+        const comment: CommentOutputType|null = await commentsService.createComment(req.params.id, req.body.content, req.user!.accountData,)
         if (!comment) {
             return res.sendStatus(404)
         }
