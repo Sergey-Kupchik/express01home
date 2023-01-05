@@ -40,8 +40,8 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
 
 const authRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
     const tets = req.cookies
-    if (req.cookies?.jwt) {
-        const refreshToken = req.cookies.jwt;
+    if (req.cookies?.refreshToken) {
+        const refreshToken = req.cookies.refreshToken;
         const userId = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
         if (userId) {
             const user = await usersRepository.findUserById(userId)

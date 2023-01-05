@@ -24,7 +24,7 @@ authRouter.post('/login',
             return res.sendStatus(401)
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
-        res.cookie('jwt', tokens.refreshToken, {
+        res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: true,
             secure: true,
             });
@@ -34,7 +34,7 @@ authRouter.post('/login',
 authRouter.post('/logout',
     authRefreshToken,
     async (req: Request, res: Response) => {
-        const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.jwt)
+        const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.refreshToken)
         if (!hasBeenRevoked) {
             return res.sendStatus(401)
         }
@@ -44,12 +44,12 @@ authRouter.post('/logout',
 authRouter.post('/refresh-token',
     authRefreshToken,
     async (req: Request, res: Response) => {
-        const tokens = await usersService.refreshTokens(req.user!.accountData.id, req.cookies.jwt)
+        const tokens = await usersService.refreshTokens(req.user!.accountData.id, req.cookies.refreshToken)
         if (!tokens) {
             return res.sendStatus(401)
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
-        res.cookie('jwt', tokens.refreshToken, {
+        res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: true,
             secure: true,
         });
