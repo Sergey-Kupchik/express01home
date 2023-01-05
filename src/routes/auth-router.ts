@@ -25,7 +25,6 @@ authRouter.post('/login',
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('jwt', tokens.refreshToken, {
-            expires: add(new Date, {seconds: 20,}),
             httpOnly: true,
             secure: true,
             });
@@ -51,7 +50,6 @@ authRouter.post('/refresh-token',
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('jwt', tokens.refreshToken, {
-            expires: add(new Date, {seconds: 20,}),
             httpOnly: true,
             secure: true,
         });

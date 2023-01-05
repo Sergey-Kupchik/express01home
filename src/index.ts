@@ -31,7 +31,7 @@ app.use('/comments', commentsRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/5/23 at 10.41 pm`)
+    res.send(`1/5/23 at 1.04 pm`)
 })
 
 const startApp = async () => {
