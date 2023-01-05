@@ -39,6 +39,7 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const authRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+    const tets = req.cookies
     if (req.cookies?.jwt) {
         const refreshToken = req.cookies.jwt;
         const userId = await tokensService.verifyToken(refreshToken, refreshTokenSecret);

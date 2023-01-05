@@ -1,4 +1,5 @@
 import {dbCollections} from "../server/db/conn";
+import {refreshTokenSecret} from "../services/users-service";
 
 
 const usersRepository = {
@@ -49,6 +50,10 @@ const usersRepository = {
     async deleteUserById(id: string): Promise<boolean> {
         const result = await dbCollections.users.deleteOne({"accountData.id": id})
         return result.deletedCount === 1
+    },
+    async revokeRefreshToken(id: string,  refreshToken:string ): Promise<boolean> {
+        const result = await dbCollections.users.updateOne({"accountData.id": id}, { $push: { "accountData.invalidRefreshTokens": refreshToken } });
+        return result.modifiedCount === 1;
     },
 };
 

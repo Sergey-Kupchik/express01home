@@ -54,13 +54,13 @@ const usersService = {
             return result;
         }
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<CheckCredentialsReturnType | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<TokensType | null> {
         let user = validateEmail(loginOrEmail) ? await this.findUserByEmail(loginOrEmail) : await this.findUserByLogin(loginOrEmail);
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
                 const accessToken = await tokensService.createToken(user.accountData.id, accessTokenSecret, "1000s");
-                const refreshToken = await tokensService.createToken(user.accountData.id, refreshTokenSecret, "2000s");
+                const refreshToken = await tokensService.createToken(user.accountData.id, refreshTokenSecret, "20000000000s");
                 return {
                     accessToken,
                     refreshToken,
@@ -102,16 +102,26 @@ const usersService = {
         if (idUpdated) return emailConfirmation.confirmationCode
         return null
     },
-    // async accessTokenUpdate(id: string,): Promise<string | null> {
-    //
-    // }
+    async revokeRefreshToken(id: string, refreshToken: string): Promise<boolean> {
+        const result = await usersRepository.revokeRefreshToken(id, refreshToken);
+        return result
+    },
+    async refreshTokens(id: string, oldToken: string): Promise<TokensType> {
+        const accessToken = await tokensService.createToken(id, accessTokenSecret, "10s");
+        const refreshToken = await tokensService.createToken(id, refreshTokenSecret, "20s");
+        await this.revokeRefreshToken(id, oldToken)
+        return {
+            accessToken,
+            refreshToken,
+        }
+    }
 }
 
 
 export {usersService, accessTokenSecret, refreshTokenSecret}
 
 
-type CheckCredentialsReturnType = {
+type TokensType = {
     accessToken: string
     refreshToken:string
 }

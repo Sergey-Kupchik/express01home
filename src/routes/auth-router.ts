@@ -10,6 +10,7 @@ import {
     passwordValidation
 } from "../middlewares/user-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
+import add from 'date-fns/add';
 
 const authRouter = Router();
 
@@ -24,21 +25,33 @@ authRouter.post('/login',
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('jwt', tokens.refreshToken, {
+            expires: add(new Date, {seconds: 20,}),
             httpOnly: true,
             secure: true,
             });
         return res.status(200).send({"accessToken": tokens.accessToken})
     });
 
+authRouter.post('/logout',
+    authRefreshToken,
+    async (req: Request, res: Response) => {
+        const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.jwt)
+        if (!hasBeenRevoked) {
+            return res.sendStatus(401)
+        }
+        return res.sendStatus(204)
+    });
+
 authRouter.post('/refresh-token',
     authRefreshToken,
     async (req: Request, res: Response) => {
-        const tokens = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
+        const tokens = await usersService.refreshTokens(req.user!.accountData.id, req.cookies.jwt)
         if (!tokens) {
             return res.sendStatus(401)
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('jwt', tokens.refreshToken, {
+            expires: add(new Date, {seconds: 20,}),
             httpOnly: true,
             secure: true,
         });
