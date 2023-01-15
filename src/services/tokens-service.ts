@@ -30,7 +30,7 @@ const tokensService = {
             ...deviceInfo
         }
         await refreshTokensRepo.addRefreshTokenInfo(userId, deviceInfo)
-        return jsonwebtoken.sign({tokenPayload}, secretWord, {
+        return jsonwebtoken.sign({...tokenPayload}, secretWord, {
             expiresIn: lifeTime,
         });
     },
