@@ -35,6 +35,7 @@ authRouter.post('/login',
 
 authRouter.post('/logout',
     authRefreshToken,
+    clientIp,
     async (req: Request, res: Response) => {
         const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.refreshToken)
         if (!hasBeenRevoked) {
