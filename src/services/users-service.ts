@@ -59,7 +59,7 @@ const usersService = {
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, "100000000000000000000000s");
+                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, "10s");
                 const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, "20s", clientIp);
                 return {
                     accessToken,
