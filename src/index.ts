@@ -10,6 +10,7 @@ import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
 import cookieParser from "cookie-parser";
+import {securityRouter} from "./routes/security-router";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
 app.use(cookieParser());
+app.set('trust proxy', true)
 
 app.use('/videos', videosRouter);
 app.use('/product', productsRouter);
@@ -28,10 +30,11 @@ app.use('/testing', testingRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/comments', commentsRouter);
+app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/5/23 at 2.17 pm`)
+    res.send(`1/15/23 at 4.53 pm`)
 })
 
 const startApp = async () => {

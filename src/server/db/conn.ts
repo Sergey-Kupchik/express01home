@@ -14,11 +14,13 @@ const postsCollName = 'posts';
 const blogsCollName = 'blogs';
 const usersCollName = 'users';
 const commentsCollName = 'comments';
+const refreshTokensCollName = 'refreshTokens';
 type dbCollectionsType = {
     posts: Collection<PostType>
     blogs: Collection<BlogType>
     users: Collection<UserDdType>
     comments: Collection<CommentType>
+    refreshTokens: Collection<RefreshTokensInfoType>
 }
 const dbCollections: dbCollectionsType = {} as dbCollectionsType;
 
@@ -30,10 +32,12 @@ async function connectToDatabase() {
         const blogsCollection: Collection<BlogType> = await client.db(dbName).collection(blogsCollName);
         const usersCollection: Collection<UserDdType> = await client.db(dbName).collection(usersCollName);
         const commentsCollection: Collection<CommentType> = await client.db(dbName).collection(commentsCollName);
+        const refreshTokensCollection: Collection<RefreshTokensInfoType> = await client.db(dbName).collection(refreshTokensCollName);
         dbCollections.posts = postsCollection;
         dbCollections.blogs = blogsCollection;
         dbCollections.users = usersCollection;
         dbCollections.comments = commentsCollection;
+        dbCollections.refreshTokens = refreshTokensCollection;
         console.log(`Connected to mongodb server`)
     } catch (error) {
         await client.close()
@@ -42,3 +46,15 @@ async function connectToDatabase() {
 }
 
 export {connectToDatabase, dbCollections}
+
+
+type RefreshTokensInfoType = {
+    userId: string,
+    refreshTokensInfo: Array<{
+        deviceId: string,
+        lastActiveDate: string,
+        ip: string,
+        title: string,
+        expiresIn: Date,
+    }>
+}

@@ -37,9 +37,14 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
         return res.send(401)
     }
 };
-
+const clientIp = async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore
+    const clientIp =(req.headers['x-forwarded-for'] || '').split(',').pop().trim() || req.socket.remoteAddress
+    req.clientIp = clientIp;
+    next()
+    return
+}
 const authRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
-    const tets = req.cookies
     if (req.cookies?.refreshToken) {
         const refreshToken = req.cookies.refreshToken;
         const userId = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
@@ -72,4 +77,4 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 
-export {isAuthT, authJwt, authZ, authRefreshToken};
+export {isAuthT, authJwt, authZ, authRefreshToken, clientIp};

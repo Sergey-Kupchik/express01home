@@ -80,5 +80,6 @@ type UserDdType = {
         createdAt: string
         invalidRefreshTokens: string[]
     },
-    emailConfirmation: emailConfirmationType
+    emailConfirmation: emailConfirmationType,
+
 }

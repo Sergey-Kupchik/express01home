@@ -54,13 +54,13 @@ const usersService = {
             return result;
         }
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<TokensType | null> {
+    async checkCredentials(loginOrEmail: string, password: string, clientIp: string): Promise<TokensType | null> {
         let user = validateEmail(loginOrEmail) ? await this.findUserByEmail(loginOrEmail) : await this.findUserByLogin(loginOrEmail);
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                const accessToken = await tokensService.createToken(user.accountData.id, accessTokenSecret, "10s");
-                const refreshToken = await tokensService.createToken(user.accountData.id, refreshTokenSecret, "20s");
+                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, "100000000000000000000000s");
+                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, "20s", clientIp);
                 return {
                     accessToken,
                     refreshToken,
@@ -106,9 +106,9 @@ const usersService = {
         const result = await usersRepository.revokeRefreshToken(id, refreshToken);
         return result
     },
-    async refreshTokens(id: string, oldToken: string): Promise<TokensType> {
-        const accessToken = await tokensService.createToken(id, accessTokenSecret, "10s");
-        const refreshToken = await tokensService.createToken(id, refreshTokenSecret, "20s");
+    async refreshTokens(id: string, oldToken: string,clientIp:string ): Promise<TokensType> {
+        const accessToken = await tokensService.createAccessToken(id, accessTokenSecret, "10s");
+        const refreshToken = await tokensService.createRefreshToken(id, refreshTokenSecret, "20s", clientIp);
         await this.revokeRefreshToken(id, oldToken)
         return {
             accessToken,
