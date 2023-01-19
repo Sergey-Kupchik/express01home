@@ -27,8 +27,8 @@ authRouter.post('/login',
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
+            // httpOnly: true,
+            // secure: true,
             });
         return res.status(200).send({"accessToken": tokens.accessToken})
     });
@@ -54,8 +54,8 @@ authRouter.post('/refresh-token',
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
+            // httpOnly: true,
+            // secure: true,
         });
         return res.status(200).send({"accessToken": tokens.accessToken})
     });

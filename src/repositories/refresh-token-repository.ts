@@ -62,7 +62,11 @@ const refreshTokensRepo = {
     async deleteTokensByDevicesId(userId:string,  deviceId:string,): Promise<boolean> {
         const result  = await dbCollections.refreshTokens.updateMany({userId,},{'$pull':{'refreshTokensInfo': {'deviceId': {'$in': [deviceId]} }}})
         return result.acknowledged;
-    }
+    },
+    async deleteAllTokens(): Promise<boolean> {
+        const result = await dbCollections.refreshTokens.deleteMany({})
+        return result.deletedCount >= 0
+    },
 
 
 }

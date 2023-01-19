@@ -7,7 +7,8 @@ import add from 'date-fns/add';
 
 const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal";
 const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
-
+const accessTokenLifeTime = "100000s"
+const refreshTokenLifeTime = "200000s"
 
 const usersService = {
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
@@ -60,8 +61,8 @@ const usersService = {
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, "10s");
-                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, "20s", clientIp, deviceTitle);
+                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, accessTokenLifeTime);
+                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, refreshTokenLifeTime, clientIp, deviceTitle);
                 return {
                     accessToken,
                     refreshToken,
@@ -108,8 +109,8 @@ const usersService = {
         return result
     },
     async refreshTokens(id: string, oldToken: string, deviceId: string,  clientIp:string): Promise<TokensType> {
-        const accessToken = await tokensService.createAccessToken(id, accessTokenSecret, "10s");
-        const refreshToken = await tokensService.updateRefreshToken(id, refreshTokenSecret,deviceId, "20s",  clientIp);
+        const accessToken = await tokensService.createAccessToken(id, accessTokenSecret, accessTokenLifeTime);
+        const refreshToken = await tokensService.updateRefreshToken(id, refreshTokenSecret,deviceId, refreshTokenLifeTime,  clientIp);
         await this.revokeRefreshToken(id, oldToken)
         return {
             accessToken,

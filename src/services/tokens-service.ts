@@ -16,35 +16,41 @@ const tokensService = {
             expiresIn: lifeTime,
         });
     },
-    async createRefreshToken(userId: string, secretWord: string, lifeTime: string, clientIp: string,  deviceTitle: string): Promise<string> {
-        const tokenPayload: TokenInterface = {
-            userId,
-            deviceId: uuidv4(),
+    async createRefreshToken(userId: string, secretWord: string, lifeTime: string, clientIp: string, deviceTitle: string): Promise<string> {
+        const userTokensInfo = await this.getAllTokensByUserId(userId)
+        const tokenInfo = userTokensInfo?.find((t) => t.ip === clientIp && t.title === deviceTitle)
+        if (tokenInfo) {
+            return this.updateRefreshToken(userId,secretWord,tokenInfo.deviceId,lifeTime, clientIp)
+        } else {
+            const tokenPayload: TokenInterface = {
+                userId,
+                deviceId: uuidv4(),
+            }
+            const deviceInfo: RefTokenInfoType = {
+                ip: clientIp,
+                title: deviceTitle,
+                expiresIn: lifeTime,
+                deviceId: tokenPayload.deviceId,
+                lastActiveDate: currentDate()
+            }
+            await this.saveRefreshTokenInfo(userId, deviceInfo)
+            return jsonwebtoken.sign({...tokenPayload}, secretWord, {
+                expiresIn: lifeTime,
+            });
         }
-        const deviceInfo: RefTokenInfoType = {
-            ip: clientIp,
-            title: deviceTitle,
-            expiresIn: lifeTime,
-            deviceId: tokenPayload.deviceId,
-            lastActiveDate: currentDate()
-        }
-        await this.saveRefreshTokenInfo(userId, deviceInfo)
-        return jsonwebtoken.sign({...tokenPayload}, secretWord, {
+    },
+    async updateRefreshToken(userId: string, secretWord: string, deviceId: string, lifeTime: string, clientIp: string): Promise<string> {
+        const lastActiveDate = currentDate();
+        await refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
+        return jsonwebtoken.sign({userId, deviceId}, secretWord, {
             expiresIn: lifeTime,
         });
     },
-    async updateRefreshToken(userId:string,  secretWord: string, deviceId:string, lifeTime: string, clientIp:string): Promise<string> {
-        const lastActiveDate = currentDate();
-        await refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
-            return jsonwebtoken.sign({userId, deviceId}, secretWord, {
-                expiresIn: lifeTime,
-            });
+    async saveRefreshTokenInfo(userId: string, refTokenInfo: RefTokenInfoType): Promise<boolean> {
+        const result = await refreshTokensRepo.addRefreshTokenInfo(userId, refTokenInfo)
+        return result
     },
-    async saveRefreshTokenInfo(userId:string, refTokenInfo:RefTokenInfoType): Promise<boolean> {
-        const result =  await refreshTokensRepo.addRefreshTokenInfo(userId, refTokenInfo)
-        return  result
-    },
-        async verifyToken(token: string, secretWord: string,): Promise<TokenInterface | null> {
+    async verifyToken(token: string, secretWord: string,): Promise<TokenInterface | null> {
         try {
             const tokenPayload = <TokenInterface>jsonwebtoken.verify(token, secretWord)
             return tokenPayload
@@ -62,11 +68,11 @@ const tokensService = {
         }))
         return null
     },
-    async deleteAllTokensExceptCurrent(userId:string,  deviceId:string,): Promise<boolean> {
+    async deleteAllTokensExceptCurrent(userId: string, deviceId: string,): Promise<boolean> {
         const result = await refreshTokensRepo.deleteAllTokensExceptCurrent(userId, deviceId)
         return result
     },
-    async deleteTokensByDevicesId(userId:string,  deviceId:string,): Promise<boolean> {
+    async deleteTokensByDevicesId(userId: string, deviceId: string,): Promise<boolean> {
         const result = await refreshTokensRepo.deleteTokensByDevicesId(userId, deviceId)
         return result
     },
