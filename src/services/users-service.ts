@@ -60,8 +60,8 @@ const usersService = {
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, "100000000000s");
-                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, "100000000000s", clientIp, deviceTitle);
+                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, "10s");
+                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, "20s", clientIp, deviceTitle);
                 return {
                     accessToken,
                     refreshToken,
@@ -108,8 +108,8 @@ const usersService = {
         return result
     },
     async refreshTokens(id: string, oldToken: string, deviceId: string,  clientIp:string): Promise<TokensType> {
-        const accessToken = await tokensService.createAccessToken(id, accessTokenSecret, "100000000000s");
-        const refreshToken = await tokensService.updateRefreshToken(id, refreshTokenSecret,deviceId, "100000000000s",  clientIp);
+        const accessToken = await tokensService.createAccessToken(id, accessTokenSecret, "10s");
+        const refreshToken = await tokensService.updateRefreshToken(id, refreshTokenSecret,deviceId, "20s",  clientIp);
         await this.revokeRefreshToken(id, oldToken)
         return {
             accessToken,
