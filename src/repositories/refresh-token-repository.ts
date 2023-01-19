@@ -13,14 +13,14 @@ const refreshTokensRepo = {
         } else {
             const newItem = await dbCollections.refreshTokens.insertOne({
                 userId,
-                refreshTokensInfo:[RefreshTokenPayload]
+                refreshTokensInfo: [RefreshTokenPayload]
             })
             result = newItem.acknowledged;
         }
         return result;
     },
     async getAllTokensByUserId(userId: string,): Promise<RefreshTokenPayloadType[] | null> {
-        const user = await dbCollections.refreshTokens.findOne({userId},{projection: {_id: 0}})
+        const user = await dbCollections.refreshTokens.findOne({userId}, {projection: {_id: 0}})
         if (user) return user.refreshTokensInfo
         return null;
     },
@@ -29,11 +29,11 @@ const refreshTokensRepo = {
             "userId": userId,
             refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
         }, {projection: {_id: 0, userId: 0}})
-        const tokenInfo = result?.refreshTokensInfo.find(t=>t.deviceId===deviceId)
-        return  tokenInfo
-        
+        const tokenInfo = result?.refreshTokensInfo.find(t => t.deviceId === deviceId)
+        return tokenInfo
+
     },
-    async updateRefreshTokenDateInfo(userId: string, deviceId: string, lastActiveDate: Date,): Promise<boolean> {
+    async updateRefreshTokenDateInfo(userId: string, deviceId: string, lastActiveDate: string, clientIp: string): Promise<boolean> {
         let result = false
         const isRefreshTokenExist = await this.findRefreshTokenInfoByDeviceId(userId, deviceId)
         if (isRefreshTokenExist) {
@@ -42,7 +42,12 @@ const refreshTokensRepo = {
                     "userId": userId,
                     refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
                 },
-                {$set: {"refreshTokensInfo.$.lastActiveDate": lastActiveDate}}
+                {
+                    $set: {
+                        "refreshTokensInfo.$.lastActiveDate": lastActiveDate,
+                        "refreshTokensInfo.$.ip": clientIp,
+                    },
+                }
             )
             if (updateToken.modifiedCount === 1) {
                 result = true
@@ -50,9 +55,17 @@ const refreshTokensRepo = {
         }
         return result;
     },
+    async deleteAllTokensExceptCurrent(userId:string,  deviceId:string,): Promise<boolean> {
+        const result  = await dbCollections.refreshTokens.updateMany({userId,},{'$pull':{'refreshTokensInfo': {'deviceId': {'$nin': [deviceId]} }}})
+        return result.acknowledged;
+    },
+    async deleteTokensByDevicesId(userId:string,  deviceId:string,): Promise<boolean> {
+        const result  = await dbCollections.refreshTokens.updateMany({userId,},{'$pull':{'refreshTokensInfo': {'deviceId': {'$in': [deviceId]} }}})
+        return result.acknowledged;
+    }
+
 
 }
-
 
 
 type RefreshTokenPayloadType = {
@@ -60,7 +73,7 @@ type RefreshTokenPayloadType = {
     lastActiveDate: string,
     ip: string,
     title: string,
-    expiresIn: Date,
+    expiresIn: string,
 }
 
 export {

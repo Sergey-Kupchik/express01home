@@ -6,6 +6,8 @@ declare global{
         export interface Request {
             user:UserDdType|null
             clientIp: string
+            deviceTitle: string
+            deviceId: string,
         }
     }
 }

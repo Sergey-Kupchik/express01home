@@ -55,6 +55,6 @@ type RefreshTokensInfoType = {
         lastActiveDate: string,
         ip: string,
         title: string,
-        expiresIn: Date,
+        expiresIn: string,
     }>
 }

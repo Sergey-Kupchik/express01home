@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {usersService} from "../services/users-service";
-import {authJwt, authRefreshToken, clientIp} from "../middlewares/isAuth-middleware";
+import {authJwt, authRefreshToken, clientIp, deviceTitle} from "../middlewares/isAuth-middleware";
 import {UserType} from "../repositories/users-db-repository";
 import registrationService from "../domain/registration-service";
 import {
@@ -18,17 +18,17 @@ authRouter.post('/login',
     passwordValidation,
     loginOrEmailRequired,
     clientIp,
+    deviceTitle,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-
-        const tokens = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password, req.clientIp)
+        const tokens = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password, req.clientIp, req.deviceTitle)
         if (!tokens) {
             return res.sendStatus(401)
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
+            // httpOnly: true,
+            // secure: true,
             });
         return res.status(200).send({"accessToken": tokens.accessToken})
     });
@@ -48,14 +48,14 @@ authRouter.post('/refresh-token',
     authRefreshToken,
     clientIp,
     async (req: Request, res: Response) => {
-        const tokens = await usersService.refreshTokens(req.user!.accountData.id, req.cookies.refreshToken, req.clientIp)
+        const tokens = await usersService.refreshTokens(req.user!.accountData.id, req.cookies.refreshToken, req.deviceId, req.clientIp)
         if (!tokens) {
             return res.sendStatus(401)
         }
         console.log(`refreshToken: ${tokens.refreshToken}`)
         res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: true,
+            // httpOnly: true,
+            // secure: true,
         });
         return res.status(200).send({"accessToken": tokens.accessToken})
     });

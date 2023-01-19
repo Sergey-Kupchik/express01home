@@ -6,6 +6,7 @@ import add from "date-fns/add";
 
 interface TokenInterface extends JwtPayload {
     userId: string;
+    deviceId: string;
 };
 
 
@@ -15,35 +16,44 @@ const tokensService = {
             expiresIn: lifeTime,
         });
     },
-    async createRefreshToken(userId: string, secretWord: string, lifeTime: string, clientIp: string,): Promise<string> {
-        const deviceInfo: RefreshTokenDeviceInfoType = {
-            deviceId: uuidv4(),
-            lastActiveDate: currentDate(),
-            ip: clientIp,
-            title: " title string",
-            expiresIn: add(new Date, {
-                seconds: 20,
-            }),
-        }
-        const tokenPayload: RefreshTokenPayloadInfoType = {
+    async createRefreshToken(userId: string, secretWord: string, lifeTime: string, clientIp: string,  deviceTitle: string): Promise<string> {
+        const tokenPayload: TokenInterface = {
             userId,
-            ...deviceInfo
+            deviceId: uuidv4(),
         }
-        await refreshTokensRepo.addRefreshTokenInfo(userId, deviceInfo)
+        const deviceInfo: RefTokenInfoType = {
+            ip: clientIp,
+            title: deviceTitle,
+            expiresIn: lifeTime,
+            deviceId: tokenPayload.deviceId,
+            lastActiveDate: currentDate()
+        }
+        await this.saveRefreshTokenInfo(userId, deviceInfo)
         return jsonwebtoken.sign({...tokenPayload}, secretWord, {
             expiresIn: lifeTime,
         });
     },
-    async verifyToken(token: string, secretWord: string,): Promise<string | null> {
+    async updateRefreshToken(userId:string,  secretWord: string, deviceId:string, lifeTime: string, clientIp:string): Promise<string> {
+        const lastActiveDate = currentDate();
+        await refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
+            return jsonwebtoken.sign({userId, deviceId}, secretWord, {
+                expiresIn: lifeTime,
+            });
+    },
+    async saveRefreshTokenInfo(userId:string, refTokenInfo:RefTokenInfoType): Promise<boolean> {
+        const result =  await refreshTokensRepo.addRefreshTokenInfo(userId, refTokenInfo)
+        return  result
+    },
+        async verifyToken(token: string, secretWord: string,): Promise<TokenInterface | null> {
         try {
-            const {userId} = <TokenInterface>jsonwebtoken.verify(token, secretWord)
-            return userId
+            const tokenPayload = <TokenInterface>jsonwebtoken.verify(token, secretWord)
+            return tokenPayload
         } catch (e) {
             return null
         }
     },
-    async getAllTokensByUserId(id: string): Promise<RefreshTokenPayloadOutputType[] | null> {
-        const tokensInfo = await refreshTokensRepo.getAllTokensByUserId(id)
+    async getAllTokensByUserId(userId: string): Promise<RefreshTokenPayloadOutputType[] | null> {
+        const tokensInfo = await refreshTokensRepo.getAllTokensByUserId(userId)
         if (tokensInfo) return tokensInfo.map((t) => ({
             deviceId: t.deviceId,
             lastActiveDate: t.lastActiveDate,
@@ -51,18 +61,25 @@ const tokensService = {
             title: t.title,
         }))
         return null
-    }
+    },
+    async deleteAllTokensExceptCurrent(userId:string,  deviceId:string,): Promise<boolean> {
+        const result = await refreshTokensRepo.deleteAllTokensExceptCurrent(userId, deviceId)
+        return result
+    },
+    async deleteTokensByDevicesId(userId:string,  deviceId:string,): Promise<boolean> {
+        const result = await refreshTokensRepo.deleteTokensByDevicesId(userId, deviceId)
+        return result
+    },
+
+
 }
-type RefreshTokenDeviceInfoType = {
+type RefTokenInfoType = {
     deviceId: string,
     lastActiveDate: string,
     ip: string,
     title: string,
-    expiresIn: Date,
+    expiresIn: string,
 
 }
-type RefreshTokenPayloadOutputType = Omit<RefreshTokenDeviceInfoType, "expiresIn">;
-
-type RefreshTokenPayloadInfoType = RefreshTokenDeviceInfoType & { userId: string }
-
+type RefreshTokenPayloadOutputType = Omit<RefTokenInfoType, "expiresIn">;
 export {tokensService}

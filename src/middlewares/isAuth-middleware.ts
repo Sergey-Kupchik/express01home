@@ -5,6 +5,7 @@ import {CommentOutputType} from "../services/coments-service";
 import {commentsQueryRepository} from "../repositories/queries/comments-query-repository";
 import {usersRepository} from "../repositories/users-db-repository";
 
+
 const isAuthT = (req: Request, res: Response, next: NextFunction) => {
     const basicToken = req.headers["authorization"]
     if (basicToken === "Basic YWRtaW46cXdlcnR5") {
@@ -20,9 +21,9 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     }
     const jwtToken = req.headers["authorization"]?.split(" ")[1]
     if (jwtToken) {
-        const userId: string | null = await tokensService.verifyToken(jwtToken, accessTokenSecret);
-        if (userId) {
-            const user = await usersRepository.findUserById(userId)
+        const tokenPayload = await tokensService.verifyToken(jwtToken, accessTokenSecret);
+        if (tokenPayload?.userId) {
+            const user = await usersRepository.findUserById(tokenPayload.userId)
             if (user) {
                 req.user = user;
                 next()
@@ -37,30 +38,48 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
         return res.send(401)
     }
 };
+
+
 const clientIp = async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
-    const clientIp =(req.headers['x-forwarded-for'] || '').split(',').pop().trim() || req.socket.remoteAddress
+    const clientIp = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || req.socket.remoteAddress
     req.clientIp = clientIp;
     next()
     return
 }
+
+const deviceTitle = async (req: Request, res: Response, next: NextFunction) => {
+    const deviceTitle = req.headers['user-agent'] || ""
+    req.deviceTitle = deviceTitle;
+    next()
+    return
+}
+
 const authRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
-    if (req.cookies?.refreshToken) {
-        const refreshToken = req.cookies.refreshToken;
-        const userId = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
-        if (userId) {
-            const user = await usersRepository.findUserById(userId)
-            if (user) {
-                if (!user.accountData.invalidRefreshTokens.includes(refreshToken)) {
-                    req.user = user;
-                    next()
-                    return
+        if (req.cookies?.refreshToken) {
+            const refreshToken = req.cookies.refreshToken;
+            const tokenPayload = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
+            if (tokenPayload) {
+                const tokens = await tokensService.getAllTokensByUserId(tokenPayload.userId);
+                const tokenData = tokens?.find((t) => t.deviceId === tokenPayload.deviceId)
+                if (tokenData) {
+                    req.deviceId = tokenData.deviceId;
+                } else {
+                    return res.send(401)
+                }
+                const user = await usersRepository.findUserById(tokenPayload.userId)
+                if (user) {
+                    if (!user.accountData.invalidRefreshTokens.includes(refreshToken)) {
+                        req.user = user;
+                        next()
+                        return
+                    }
                 }
             }
         }
+        return res.sendStatus(401);
     }
-    return res.sendStatus(401);
-};
+;
 
 
 const authZ = async (req: Request, res: Response, next: NextFunction) => {
@@ -77,4 +96,4 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 
-export {isAuthT, authJwt, authZ, authRefreshToken, clientIp};
+export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle};
