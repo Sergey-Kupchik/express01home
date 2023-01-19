@@ -2,7 +2,12 @@ import jsonwebtoken, {JwtPayload} from "jsonwebtoken";
 import {refreshTokensRepo} from "../repositories/refresh-token-repository";
 import {currentDate} from "../utils/utils";
 import {v4 as uuidv4} from "uuid";
-import add from "date-fns/add";
+
+
+const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal";
+const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
+const accessTokenLifeTime = "10s"
+const refreshTokenLifeTime = "20s"
 
 interface TokenInterface extends JwtPayload {
     userId: string;
@@ -11,16 +16,16 @@ interface TokenInterface extends JwtPayload {
 
 
 const tokensService = {
-    async createAccessToken(userId: string, secretWord: string, lifeTime: string,): Promise<string> {
-        return jsonwebtoken.sign({userId}, secretWord, {
-            expiresIn: lifeTime,
+    async createAccessToken(userId: string,): Promise<string> {
+        return jsonwebtoken.sign({userId}, accessTokenSecret, {
+            expiresIn: accessTokenLifeTime,
         });
     },
-    async createRefreshToken(userId: string, secretWord: string, lifeTime: string, clientIp: string, deviceTitle: string): Promise<string> {
+    async createRefreshToken(userId: string, clientIp: string, deviceTitle: string): Promise<string> {
         const userTokensInfo = await this.getAllTokensByUserId(userId)
         const tokenInfo = userTokensInfo?.find((t) => t.ip === clientIp && t.title === deviceTitle)
         if (tokenInfo) {
-            return this.updateRefreshToken(userId,secretWord,tokenInfo.deviceId,lifeTime, clientIp)
+            return this.updateRefreshToken(userId,tokenInfo.deviceId,clientIp)
         } else {
             const tokenPayload: TokenInterface = {
                 userId,
@@ -29,21 +34,21 @@ const tokensService = {
             const deviceInfo: RefTokenInfoType = {
                 ip: clientIp,
                 title: deviceTitle,
-                expiresIn: lifeTime,
+                expiresIn: refreshTokenLifeTime,
                 deviceId: tokenPayload.deviceId,
                 lastActiveDate: currentDate()
             }
             await this.saveRefreshTokenInfo(userId, deviceInfo)
-            return jsonwebtoken.sign({...tokenPayload}, secretWord, {
-                expiresIn: lifeTime,
+            return jsonwebtoken.sign({...tokenPayload}, refreshTokenSecret, {
+                expiresIn: refreshTokenLifeTime,
             });
         }
     },
-    async updateRefreshToken(userId: string, secretWord: string, deviceId: string, lifeTime: string, clientIp: string): Promise<string> {
+    async updateRefreshToken(userId: string,  deviceId: string, clientIp: string): Promise<string> {
         const lastActiveDate = currentDate();
         await refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
-        return jsonwebtoken.sign({userId, deviceId}, secretWord, {
-            expiresIn: lifeTime,
+        return jsonwebtoken.sign({userId, deviceId}, refreshTokenSecret, {
+            expiresIn: refreshTokenLifeTime,
         });
     },
     async saveRefreshTokenInfo(userId: string, refTokenInfo: RefTokenInfoType): Promise<boolean> {

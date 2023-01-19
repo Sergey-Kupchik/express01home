@@ -5,11 +5,6 @@ import {v4 as uuidv4} from "uuid";
 import {tokensService} from "./tokens-service";
 import add from 'date-fns/add';
 
-const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal";
-const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
-const accessTokenLifeTime = "100000s"
-const refreshTokenLifeTime = "200000s"
-
 const usersService = {
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
         const newUser: UserDdType = {
@@ -61,8 +56,8 @@ const usersService = {
         if (user) {
             const isPasswordValid = await this._comparePassword(password, user.accountData.hash)
             if (isPasswordValid) {
-                const accessToken = await tokensService.createAccessToken(user.accountData.id, accessTokenSecret, accessTokenLifeTime);
-                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, refreshTokenSecret, refreshTokenLifeTime, clientIp, deviceTitle);
+                const accessToken = await tokensService.createAccessToken(user.accountData.id,);
+                const refreshToken = await tokensService.createRefreshToken(user.accountData.id, clientIp, deviceTitle);
                 return {
                     accessToken,
                     refreshToken,
@@ -109,8 +104,8 @@ const usersService = {
         return result
     },
     async refreshTokens(id: string, oldToken: string, deviceId: string,  clientIp:string): Promise<TokensType> {
-        const accessToken = await tokensService.createAccessToken(id, accessTokenSecret, accessTokenLifeTime);
-        const refreshToken = await tokensService.updateRefreshToken(id, refreshTokenSecret,deviceId, refreshTokenLifeTime,  clientIp);
+        const accessToken = await tokensService.createAccessToken(id);
+        const refreshToken = await tokensService.updateRefreshToken(id,deviceId,clientIp);
         await this.revokeRefreshToken(id, oldToken)
         return {
             accessToken,
@@ -120,7 +115,7 @@ const usersService = {
 }
 
 
-export {usersService, accessTokenSecret, refreshTokenSecret}
+export {usersService}
 
 
 type TokensType = {

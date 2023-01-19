@@ -1,6 +1,4 @@
 import {dbCollections} from "../server/db/conn";
-import {refreshTokenSecret} from "../services/users-service";
-
 
 const usersRepository = {
     async createUser(newUser: UserDdType): Promise<boolean> {

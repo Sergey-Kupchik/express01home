@@ -11,7 +11,7 @@ securityRouter.get('/devices',
     authJwt,
     async (req: Request, res: Response) => {
         const tokensInfo = await tokensService.getAllTokensByUserId(req.user!.accountData.id)
-        res.send(tokensInfo)
+        res.status(200).send(tokensInfo)
         return
     });
 
