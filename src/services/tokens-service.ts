@@ -93,4 +93,4 @@ type RefTokenInfoType = {
 
 }
 type RefreshTokenPayloadOutputType = Omit<RefTokenInfoType, "expiresIn">;
-export {tokensService}
+export {tokensService, accessTokenSecret, refreshTokenSecret}

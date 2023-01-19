@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {tokensService} from "../services/tokens-service";
-import {accessTokenSecret, refreshTokenSecret, usersService} from "../services/users-service";
+import {accessTokenSecret, refreshTokenSecret, tokensService} from "../services/tokens-service";
 import {CommentOutputType} from "../services/coments-service";
 import {commentsQueryRepository} from "../repositories/queries/comments-query-repository";
 import {usersRepository} from "../repositories/users-db-repository";
