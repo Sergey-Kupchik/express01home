@@ -15,7 +15,6 @@ const blogsCollName = 'blogs';
 const usersCollName = 'users';
 const commentsCollName = 'comments';
 const refreshTokensCollName = 'refreshTokens';
-const requestsInfoName = 'requestsInfo';
 
 type dbCollectionsType = {
     posts: Collection<PostType>
@@ -23,7 +22,6 @@ type dbCollectionsType = {
     users: Collection<UserDdType>
     comments: Collection<CommentType>
     refreshTokens: Collection<RefreshTokensInfoType>
-    requestsInfo: Collection<RequestsInfoType>
 }
 const dbCollections: dbCollectionsType = {} as dbCollectionsType;
 
@@ -36,13 +34,11 @@ async function connectToDatabase() {
         const usersCollection: Collection<UserDdType> = await client.db(dbName).collection(usersCollName);
         const commentsCollection: Collection<CommentType> = await client.db(dbName).collection(commentsCollName);
         const refreshTokensCollection: Collection<RefreshTokensInfoType> = await client.db(dbName).collection(refreshTokensCollName);
-        const requestsInfoCollection: Collection<RequestsInfoType> = await client.db(dbName).collection(requestsInfoName);
         dbCollections.posts = postsCollection;
         dbCollections.blogs = blogsCollection;
         dbCollections.users = usersCollection;
         dbCollections.comments = commentsCollection;
         dbCollections.refreshTokens = refreshTokensCollection;
-        dbCollections.requestsInfo = requestsInfoCollection;
         console.log(`Connected to mongodb server`)
     } catch (error) {
         await client.close()
@@ -64,7 +60,3 @@ type RefreshTokensInfoType = {
     }>
 }
 
-type RequestsInfoType = {
-    ip: string,
-    requestsTime: Date[]
-}
