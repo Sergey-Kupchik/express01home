@@ -11,6 +11,14 @@ import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
 import cookieParser from "cookie-parser";
 import {securityRouter} from "./routes/security-router";
+import rateLimit from 'express-rate-limit'
+
+const limiter = rateLimit({
+    windowMs: 10000, // 10 sec
+    max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
 
 dotenv.config();
 
@@ -20,6 +28,7 @@ const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
 app.use(cookieParser());
+app.use(limiter)
 app.set('trust proxy', true)
 
 app.use('/videos', videosRouter);
@@ -34,7 +43,7 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/18/23 at 9.50 pm`)
+    res.send(`1/19/23 at 1.35 pm`)
 })
 
 const startApp = async () => {

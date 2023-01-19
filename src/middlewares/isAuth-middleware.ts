@@ -95,5 +95,19 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+const requestsLimitByIp = async (req: Request, res: Response, next: NextFunction) => {
+    const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
+    if (сomment) {
+        if (req.user!.accountData.id === сomment.userId) {
+            next()
+        } else {
+            return res.send(403)
+        }
+    } else {
+        return res.send(404)
+    }
+};
+
+
 
 export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle};
