@@ -31,13 +31,17 @@ securityRouter.delete('/devices',
 securityRouter.delete('/devices/:devicesId',
     authRefreshToken,
     async (req: Request, res: Response) => {
-        req.params.devicesId
-        const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
-        if (!isDeleted) {
+        if (req.params.devicesId === req.deviceId) {
+            const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
+            if (!isDeleted) {
+                res.sendStatus(404)
+                return
+            }
+            res.sendStatus(204)
+            return
+        } else {
             res.sendStatus(404)
             return
         }
-        res.sendStatus(204)
-        return
     });
 export {securityRouter};

@@ -44,7 +44,7 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/22/23 at 12.08 pm`)
+    res.send(`1/22/23 at 12.40 pm`)
 })
 
 const startApp = async () => {
