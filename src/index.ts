@@ -26,10 +26,26 @@ const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
 app.use(cookieParser());
-app.use('/auth/login', limiter)
-app.use('/auth/registration-confirmation', limiter)
-app.use('/auth/registration', limiter)
-app.use('/auth/registration-email-resending', limiter)
+app.use('/auth/login', rateLimit({
+        windowMs: 10000, // 10 sec
+        max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    })
+)
+app.use('/auth/registration-confirmation', rateLimit({
+        windowMs: 10000, // 10 sec
+        max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    })
+)
+app.use('/auth/registration', rateLimit({
+        windowMs: 10000, // 10 sec
+        max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    })
+)
+app.use('/auth/registration-email-resending', rateLimit({
+        windowMs: 10000, // 10 sec
+        max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    })
+)
 app.set('trust proxy', true)
 
 app.use('/videos', videosRouter);
@@ -44,7 +60,7 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/22/23 at 2.08 pm`)
+    res.send(`1/22/23 at 2.16 pm`)
 })
 
 const startApp = async () => {
