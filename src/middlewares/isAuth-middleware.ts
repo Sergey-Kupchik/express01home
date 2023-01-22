@@ -63,9 +63,10 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
                 const tokenData = tokens?.find((t) => t.deviceId === tokenPayload.deviceId && t.lastActiveDate===tokenPayload.lastActiveDate)
                 if (tokenData) {
                     req.deviceId = tokenData.deviceId;
-                } else {
-                    return res.send(401)
                 }
+                // else {
+                //     return res.send(401)
+                // }
                 const user = await usersRepository.findUserById(tokenPayload.userId)
                 if (user) {
                     if (!user.accountData.invalidRefreshTokens.includes(refreshToken)) {
