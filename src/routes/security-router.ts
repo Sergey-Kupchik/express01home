@@ -8,7 +8,6 @@ import {postsService} from "../services/posts-service";
 const securityRouter = Router();
 
 securityRouter.get('/devices',
-    authJwt,
     authRefreshToken,
     async (req: Request, res: Response) => {
         const tokensInfo = await tokensService.getAllTokensByUserId(req.user!.accountData.id)

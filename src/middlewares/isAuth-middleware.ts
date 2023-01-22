@@ -60,7 +60,7 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
             const tokenPayload = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
             if (tokenPayload) {
                 const tokens = await tokensService.getAllTokensByUserId(tokenPayload.userId);
-                const tokenData = tokens?.find((t) => t.deviceId === tokenPayload.deviceId)
+                const tokenData = tokens?.find((t) => t.deviceId === tokenPayload.deviceId && t.lastActiveDate===tokenPayload.lastActiveDate)
                 if (tokenData) {
                     req.deviceId = tokenData.deviceId;
                 } else {
@@ -73,6 +73,9 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
                         next()
                         return
                     }
+                }
+                else {
+                    return res.send(401)
                 }
             }
         }
@@ -94,18 +97,6 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const requestsLimitByIp = async (req: Request, res: Response, next: NextFunction) => {
-    const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
-    if (сomment) {
-        if (req.user!.accountData.id === сomment.userId) {
-            next()
-        } else {
-            return res.send(403)
-        }
-    } else {
-        return res.send(404)
-    }
-};
 
 
 

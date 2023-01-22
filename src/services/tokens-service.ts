@@ -12,6 +12,7 @@ const refreshTokenLifeTime = "20s"
 interface TokenInterface extends JwtPayload {
     userId: string;
     deviceId: string;
+    lastActiveDate: string;
 };
 
 
@@ -30,13 +31,14 @@ const tokensService = {
             const tokenPayload: TokenInterface = {
                 userId,
                 deviceId: uuidv4(),
+                lastActiveDate: currentDate()
             }
             const deviceInfo: RefTokenInfoType = {
                 ip: clientIp,
                 title: deviceTitle,
                 expiresIn: refreshTokenLifeTime,
                 deviceId: tokenPayload.deviceId,
-                lastActiveDate: currentDate()
+                lastActiveDate: tokenPayload.lastActiveDate
             }
             await this.saveRefreshTokenInfo(userId, deviceInfo)
             return jsonwebtoken.sign({...tokenPayload}, refreshTokenSecret, {
@@ -47,7 +49,7 @@ const tokensService = {
     async updateRefreshToken(userId: string,  deviceId: string, clientIp: string): Promise<string> {
         const lastActiveDate = currentDate();
         await refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
-        return jsonwebtoken.sign({userId, deviceId}, refreshTokenSecret, {
+        return jsonwebtoken.sign({userId, deviceId, lastActiveDate}, refreshTokenSecret, {
             expiresIn: refreshTokenLifeTime,
         });
     },
