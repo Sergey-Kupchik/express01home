@@ -79,8 +79,8 @@ const tokensService = {
         const result = await refreshTokensRepo.deleteAllTokensExceptCurrent(userId, deviceId)
         return result
     },
-    async deleteTokensByDevicesId(userId: string, deviceId: string,): Promise<boolean> {
-        const result = await refreshTokensRepo.deleteTokensByDevicesId(userId, deviceId)
+    async deleteTokenByDevicesId(userId: string, deviceId: string,): Promise<boolean> {
+        const result = await refreshTokensRepo.deleteTokenByDevicesId(userId, deviceId)
         return result
     },
 

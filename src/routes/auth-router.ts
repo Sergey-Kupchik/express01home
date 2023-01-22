@@ -11,6 +11,7 @@ import {
 } from "../middlewares/user-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import add from 'date-fns/add';
+import {tokensService} from "../services/tokens-service";
 
 const authRouter = Router();
 
@@ -37,7 +38,8 @@ authRouter.post('/logout',
     authRefreshToken,
     clientIp,
     async (req: Request, res: Response) => {
-        const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.refreshToken)
+        // const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.refreshToken)
+        const hasBeenRevoked = await tokensService.deleteTokenByDevicesId(req.user!.accountData.id,req.deviceId)
         if (!hasBeenRevoked) {
             return res.sendStatus(401)
         }
