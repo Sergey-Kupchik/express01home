@@ -83,6 +83,28 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
     }
 ;
 
+const devicesId = async (req: Request, res: Response, next: NextFunction) => {
+        if (req.cookies?.refreshToken) {
+            const refreshToken = req.cookies.refreshToken;
+            const tokenPayload = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
+            if (tokenPayload) {
+                const tokens = await tokensService.getAllTokensByUserId(tokenPayload.userId);
+                const tokenData = tokens?.find((t) => t.deviceId === req.params.devicesId && t.lastActiveDate===tokenPayload.lastActiveDate)
+                if (tokenData) {
+                    req.deviceId = req.params.devicesId;
+                    next()
+                    return
+                } else {
+                    return res.send(403)
+                }
+            } else {
+                return res.sendStatus(401);
+            }
+        }
+        return res.sendStatus(401);
+    }
+;
+
 
 const authZ = async (req: Request, res: Response, next: NextFunction) => {
     const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
@@ -100,4 +122,4 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
 
 
 
-export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle};
+export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId};

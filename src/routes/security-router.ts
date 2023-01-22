@@ -1,5 +1,5 @@
 import {Request, Response, Router} from 'express';
-import {authJwt, authRefreshToken, isAuthT} from "../middlewares/isAuth-middleware";
+import {authJwt, authRefreshToken, devicesId, isAuthT} from "../middlewares/isAuth-middleware";
 import {tokensService} from "../services/tokens-service";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {postsService} from "../services/posts-service";
@@ -29,9 +29,9 @@ securityRouter.delete('/devices',
     });
 
 securityRouter.delete('/devices/:devicesId',
+    devicesId,
     authRefreshToken,
     async (req: Request, res: Response) => {
-        if (req.params.devicesId === req.deviceId) {
             const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
             if (!isDeleted) {
                 res.sendStatus(404)
@@ -39,9 +39,6 @@ securityRouter.delete('/devices/:devicesId',
             }
             res.sendStatus(204)
             return
-        } else {
-            res.sendStatus(404)
-            return
-        }
+
     });
 export {securityRouter};
