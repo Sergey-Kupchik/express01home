@@ -16,8 +16,6 @@ import rateLimit from 'express-rate-limit'
 const limiter = rateLimit({
     windowMs: 10000, // 10 sec
     max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
 dotenv.config();
@@ -43,7 +41,7 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/22/23 at 11.44 pm`)
+    res.send(`1/22/23 at 11.58 pm`)
 })
 
 const startApp = async () => {
