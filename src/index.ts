@@ -26,7 +26,10 @@ const parsesMiddleware = express.json()
 
 app.use(parsesMiddleware);
 app.use(cookieParser());
-app.use('/auth', limiter)
+app.use('/auth/login', limiter)
+app.use('/auth/registration-confirmation', limiter)
+app.use('/auth/registration', limiter)
+app.use('/auth/registration-email-resending', limiter)
 app.set('trust proxy', true)
 
 app.use('/videos', videosRouter);
@@ -41,7 +44,7 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/22/23 at 11.58 pm`)
+    res.send(`1/22/23 at 12.08 pm`)
 })
 
 const startApp = async () => {
