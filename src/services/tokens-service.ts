@@ -6,8 +6,8 @@ import {v4 as uuidv4} from "uuid";
 
 const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal";
 const refreshTokenSecret: string = process.env.REFRESH_TOKEN_KEY || "RefreshTokenSecretLocal"
-const accessTokenLifeTime = "10000s"
-const refreshTokenLifeTime = "20000s"
+const accessTokenLifeTime = "10s"
+const refreshTokenLifeTime = "20s"
 
 interface TokenInterface extends JwtPayload {
     userId: string;
