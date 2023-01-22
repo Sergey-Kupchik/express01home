@@ -40,7 +40,7 @@ securityRouter.delete('/devices/:devicesId',
             res.sendStatus(204)
             return
         } else {
-            res.sendStatus(403)
+            res.sendStatus(404)
             return
         }
     });

@@ -42,6 +42,11 @@ const loginOrEmailRequired = body("loginOrEmail")
     .trim().withMessage(`loginOrEmail should be symbols string`)
     .notEmpty().withMessage(`loginOrEmail is required`)
 
+const deviceIdRequired = body("deviceId")
+    .isString().withMessage(`deviceId should be string`)
+    .trim().withMessage(`deviceId should be symbols string`)
+    .notEmpty().withMessage(`deviceId is required`)
+
 const passwordValidation = body("password")
     .isString().withMessage(`password should be string`)
     .trim().withMessage(`password should be symbols string`)
@@ -67,5 +72,5 @@ export {
     confirmationCodeValidation,
     emailRequired,
     loginRequired,
-    loginOrEmailRequired
+    loginOrEmailRequired,
 }
