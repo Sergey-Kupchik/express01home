@@ -1,5 +1,5 @@
 import jsonwebtoken, {JwtPayload} from "jsonwebtoken";
-import {refreshTokensRepo} from "../repositories/refresh-token-repository";
+import {RefreshTokensInfo, refreshTokensRepo} from "../repositories/refresh-token-repository";
 import {currentDate} from "../utils/utils";
 import {v4 as uuidv4} from "uuid";
 
@@ -26,7 +26,7 @@ const tokensService = {
         const userTokensInfo = await this.getAllTokensByUserId(userId)
         const tokenInfo = userTokensInfo?.find((t) => t.ip === clientIp && t.title === deviceTitle)
         if (tokenInfo) {
-            return this.updateRefreshToken(userId,tokenInfo.deviceId,clientIp)
+            return this.updateRefreshToken(userId, tokenInfo.deviceId, clientIp)
         } else {
             const tokenPayload: TokenInterface = {
                 userId,
@@ -46,7 +46,7 @@ const tokensService = {
             });
         }
     },
-    async updateRefreshToken(userId: string,  deviceId: string, clientIp: string): Promise<string> {
+    async updateRefreshToken(userId: string, deviceId: string, clientIp: string): Promise<string> {
         const lastActiveDate = currentDate();
         await refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
         return jsonwebtoken.sign({userId, deviceId, lastActiveDate}, refreshTokenSecret, {
@@ -83,6 +83,10 @@ const tokensService = {
         const result = await refreshTokensRepo.deleteTokenByDevicesId(userId, deviceId)
         return result
     },
+    async findRefreshTokenInfoByDeviceId(deviceId: string,): Promise<RefreshTokensInfo | null> {
+        const result = await refreshTokensRepo.findRefreshTokenInfoByDeviceId(deviceId)
+        return result
+    }
 
 
 }
@@ -94,5 +98,6 @@ type RefTokenInfoType = {
     expiresIn: string,
 
 }
+
 type RefreshTokenPayloadOutputType = Omit<RefTokenInfoType, "expiresIn">;
 export {tokensService, accessTokenSecret, refreshTokenSecret}

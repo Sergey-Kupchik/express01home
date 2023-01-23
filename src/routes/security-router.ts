@@ -32,13 +32,12 @@ securityRouter.delete('/devices/:devicesId',
     authRefreshToken,
     async (req: Request, res: Response) => {
         if (req.params.devicesId !== req.deviceId) {
-            if (!req.params.devicesId) {
+            const tokenInfo =  await tokensService.findRefreshTokenInfoByDeviceId(req.params.devicesId)
+            if (tokenInfo===null) {
                 res.sendStatus(404)
                 return
             }
-            const tokens = await tokensService.getAllTokensByUserId(req.user!.accountData.id);
-            const tokenData = tokens?.find((t) => t.deviceId === req.params.devicesId)
-            if (!tokenData) {
+            if (tokenInfo.userId!==req.deviceId) {
                 res.sendStatus(403)
                 return
             }

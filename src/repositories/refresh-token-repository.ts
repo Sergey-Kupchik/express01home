@@ -24,7 +24,7 @@ const refreshTokensRepo = {
         if (user) return user.refreshTokensInfo
         return null;
     },
-    async findRefreshTokenInfoByDeviceId(userId: string, deviceId: string,): Promise<RefreshTokenPayloadType | undefined> {
+    async findRefreshTokenInfoByUserIdAndDeviceId(userId: string, deviceId: string,): Promise<RefreshTokenPayloadType | undefined> {
         const result = await dbCollections.refreshTokens.findOne({
             "userId": userId,
             refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
@@ -33,9 +33,23 @@ const refreshTokensRepo = {
         return tokenInfo
 
     },
+    async findRefreshTokenInfoByDeviceId(deviceId: string,): Promise<RefreshTokensInfo | null> {
+        const tokens = await dbCollections.refreshTokens.findOne({
+            refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
+        }, {projection: {_id: 0,}})
+        if (tokens){
+            return {
+                userId: tokens.userId,
+                refreshTokenInfo: tokens.refreshTokensInfo.find(t => t.deviceId === deviceId)
+            }
+        }
+        return null
+
+    },
+    
     async updateRefreshTokenDateInfo(userId: string, deviceId: string, lastActiveDate: string, clientIp: string): Promise<boolean> {
         let result = false
-        const isRefreshTokenExist = await this.findRefreshTokenInfoByDeviceId(userId, deviceId)
+        const isRefreshTokenExist = await this.findRefreshTokenInfoByUserIdAndDeviceId(userId, deviceId)
         if (isRefreshTokenExist) {
             const updateToken = await dbCollections.refreshTokens.updateOne(
                 {
@@ -80,8 +94,12 @@ type RefreshTokenPayloadType = {
     expiresIn: string,
 }
 
+type RefreshTokensInfo = {
+    userId:string,
+    refreshTokenInfo: RefreshTokenPayloadType | undefined
+}
 export {
-    refreshTokensRepo,
+    refreshTokensRepo,RefreshTokensInfo
 }
 
 
