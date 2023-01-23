@@ -39,7 +39,7 @@ securityRouter.delete('/devices/:devicesId',
             const tokens = await tokensService.getAllTokensByUserId(req.user!.accountData.id);
             const tokenData = tokens?.find((t) => t.deviceId === req.params.devicesId)
             if (!tokenData) {
-                res.sendStatus(403)
+                res.sendStatus(404)
                 return
             }
         } else {
