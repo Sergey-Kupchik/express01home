@@ -41,7 +41,7 @@ securityRouter.delete('/devices/:devicesId',
                 res.sendStatus(403)
                 return
             } else {
-                const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.params.devicesId)
+                const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
                 if (!isDeleted) {
                     res.sendStatus(404)
                     return
