@@ -37,7 +37,7 @@ securityRouter.delete('/devices/:devicesId',
                 res.sendStatus(404)
                 return
             }
-            if (tokenInfo.userId!==req.deviceId) {
+            if (tokenInfo.userId!==req.user!.accountData.id) {
                 res.sendStatus(403)
                 return
             }
