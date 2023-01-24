@@ -36,11 +36,20 @@ securityRouter.delete('/devices/:devicesId',
             if (tokenInfo===null) {
                 res.sendStatus(404)
                 return
-            }
+            } else if (tokenInfo.userId!==req.user!.accountData.id) {
                 res.sendStatus(403)
                 return
+            } else {
+                const isDeleted: boolean = await tokensService.deleteTokenByDevicesId(req.user!.accountData.id, req.params.devicesId )
+                if (!isDeleted) {
+                    res.sendStatus(404)
+                    return
+                }
+                res.sendStatus(204)
+                return
+            }
         } else {
-            const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
+            const isDeleted: boolean = await tokensService.deleteTokenByDevicesId(req.user!.accountData.id, req.deviceId)
             if (!isDeleted) {
                 res.sendStatus(404)
                 return
