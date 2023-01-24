@@ -37,18 +37,8 @@ securityRouter.delete('/devices/:devicesId',
                 res.sendStatus(404)
                 return
             }
-            else if (tokenInfo.userId!==req.user!.accountData.id){
                 res.sendStatus(403)
                 return
-            } else {
-                const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
-                if (!isDeleted) {
-                    res.sendStatus(404)
-                    return
-                }
-                res.sendStatus(204)
-                return
-            }
         } else {
             const isDeleted: boolean = await tokensService.deleteAllTokensExceptCurrent(req.user!.accountData.id, req.deviceId)
             if (!isDeleted) {
