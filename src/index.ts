@@ -5,7 +5,7 @@ import {productsRouter} from "./routes/products-router";
 import {blogsRouter} from "./routes/blogs-router";
 import {postsRouter} from "./routes/posts-router";
 import {testingRouter} from "./routes/testing-router";
-import {connectToDatabase} from "./server/db/conn";
+import {connectToDatabase, connectToDb} from "./server/db/conn";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
 import {commentsRouter} from "./routes/comments-router";
@@ -60,11 +60,12 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/22/23 at 10.12 pm`)
+    res.send(`1/30/23 at 4.16 pm`)
 })
 
 const startApp = async () => {
     await connectToDatabase()
+    await connectToDb()
     app.listen(port, () => {
         console.log(`Example app listening on port ${port}`)
     })

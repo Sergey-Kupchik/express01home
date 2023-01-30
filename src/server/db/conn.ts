@@ -3,13 +3,38 @@ import {PostType} from "../../services/posts-service";
 import {BlogType} from "../../services/blogs-service";
 import {UserDdType} from "../../repositories/users-db-repository";
 import {CommentType} from "../../services/coments-service";
+import mongoose, {model, connect} from 'mongoose';
 import * as dotenv from 'dotenv'
+import {blogSchema, commentSchema, postSchema, refreshTokensInfoSchema, userSchema} from "./schemas";
+import {BlogDbType, CommentDbType, PostDbType, RefreshTokensInfoDbType, UserDbType} from "./types";
+
 dotenv.config()
 
-const url = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017';
-const client = new MongoClient(process.env.MONGO_URL!);
+const mongoUrl = process.env.MONGO_URL;
+const mongooseUrl = process.env.MONGOOSE_URL;
+const dbName = 'second?retryWrites=true&w=majority';
+const client = new MongoClient(mongoUrl!);
+mongoose.set("strictQuery", false);
 
-const dbName = 'first';
+async function connectToDb() {
+    try {
+        await connect(`${mongooseUrl}/${dbName}`);
+        console.log(`Connected to mongodb server used Mongoose`)
+    } catch (e) {
+        console.error(`Failed  to connect to Database` + e);
+    }
+}
+
+const User = model<UserDbType>('Users', userSchema);
+const Post = model<PostDbType>('Posts', postSchema);
+const Blog = model<BlogDbType>('Blogs', blogSchema);
+const Comment = model<CommentDbType>('Comments', commentSchema);
+const RefreshTokenInfo = model<RefreshTokensInfoDbType>('RefreshTokensInfo', refreshTokensInfoSchema);
+
+
+export {connectToDb, User, Post, Blog, Comment, RefreshTokenInfo}
+
+
 const postsCollName = 'posts';
 const blogsCollName = 'blogs';
 const usersCollName = 'users';

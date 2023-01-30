@@ -24,6 +24,7 @@ const usersService = {
                 isConfirmed: false
             }
         }
+        console.log(`emailConfirmation: ${newUser.emailConfirmation.confirmationCode}`)
         await usersRepository.createUser(newUser);
         const user = await this.findUserById(newUser.accountData.id)
         return user

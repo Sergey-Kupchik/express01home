@@ -1,57 +1,52 @@
-import {dbCollections} from "../server/db/conn";
+import {dbCollections, User} from "../server/db/conn";
+import {UserDbType} from "../server/db/types";
 
 const usersRepository = {
     async createUser(newUser: UserDdType): Promise<boolean> {
-        const result = await dbCollections.users.insertOne(newUser)
-        return result.acknowledged;
-    },
-    async deleteAllUser(): Promise<boolean> {
-        const result = await dbCollections.users.deleteMany({})
-        return result.deletedCount >= 0;
+        // const result = await dbCollections.users.insertOne(newUser)
+        const user = new User(newUser);
+        const savedDoc = await user.save();
+        return savedDoc.accountData.id === newUser.accountData.id;
     },
     async findUserById(id: string,): Promise<UserDdType | null> {
-        const result = await dbCollections.users.findOne({"accountData.id": id}, {projection: {_id: 0}});
+        // const result = await dbCollections.users.findOne({"accountData.id": id}, {projection: {_id: 0}});
+        const result = await User.findOne({"accountData.id": id}).select('accountData emailConfirmation')
         return result;
     },
     async findUserByEmail(email: string,): Promise<UserDdType | null> {
-        const result = await dbCollections.users.findOne(
-            {"accountData.email": email}, {projection: {_id: 0}});
+        // const result = await dbCollections.users.findOne({"accountData.email": email}, {projection: {_id: 0}});
+        const result = await User.findOne({"accountData.email": email}).select('accountData emailConfirmation').lean()
         return result;
     },
     async findUserByConfirmationCode(code: string,): Promise<UserDdType | null> {
-        const result = await dbCollections.users.findOne(
-            {"emailConfirmation.confirmationCode": code}, {projection: {_id: 0}});
-        return result;
+        // const result = await dbCollections.users.findOne({"emailConfirmation.confirmationCode": code}, {projection: {_id: 0}});
+        const result = await User.findOne({"emailConfirmation.confirmationCode": code}, '-_id  -__v').lean();
+        return result
     },
     async findUserByLogin(login: string,): Promise<UserDdType | null> {
-        const result = await dbCollections.users.findOne({
-            "accountData.login": login
-        }, {projection: {_id: 0}});
+        // const result = await dbCollections.users.findOne({ "accountData.login": login}, {projection: {_id: 0}});
+        const result = User.findOne({"accountData.login": login}, '-_id  -__v').lean();
         return result;
     },
     async confirmUser(id: string,): Promise<boolean> {
-        const result = await dbCollections.users.updateOne({"accountData.id": id}, {
-            $set: {
-                "emailConfirmation.isConfirmed": true
-            }
-        })
-        return result.modifiedCount === 1;
+        // const result = await dbCollections.users.updateOne({"accountData.id": id}, { $set: {"emailConfirmation.isConfirmed": true}})
+        const user = await User.findOneAndUpdate({"accountData.id": id}, {"emailConfirmation.isConfirmed": true}, {new: true});
+        return user!.emailConfirmation.isConfirmed;
     },
     async updateConfirmationCode(id: string, emailConfirmation: emailConfirmationType): Promise<boolean> {
-        const result = await dbCollections.users.updateOne({"accountData.id": id}, {
-            $set: {
-                "emailConfirmation": emailConfirmation
-            }
-        })
-        return result.modifiedCount === 1;
+        // const result = await dbCollections.users.updateOne({"accountData.id": id}, { $set: {"emailConfirmation": emailConfirmation}})
+        await User.findOneAndUpdate({"accountData.id": id}, {"emailConfirmation": emailConfirmation}, {new: true});
+        return true;
     },
     async deleteUserById(id: string): Promise<boolean> {
-        const result = await dbCollections.users.deleteOne({"accountData.id": id})
+        // const result = await dbCollections.users.deleteOne({"accountData.id": id})
+        const result = await User.deleteOne({"accountData.id": id});
         return result.deletedCount === 1
     },
-    async revokeRefreshToken(id: string,  refreshToken:string ): Promise<boolean> {
-        const result = await dbCollections.users.updateOne({"accountData.id": id}, { $push: { "accountData.invalidRefreshTokens": refreshToken } });
-        return result.modifiedCount === 1;
+    async revokeRefreshToken(id: string, refreshToken: string): Promise<boolean> {
+        // const result = await dbCollections.users.updateOne({"accountData.id": id}, {$push: {"accountData.invalidRefreshTokens": refreshToken}});
+        await User.findOneAndUpdate({"accountData.id": id}, {$push: {"accountData.invalidRefreshTokens": refreshToken}}, {new: true});
+        return true;
     },
 };
 
@@ -64,7 +59,7 @@ type UserType = {
     email: string
     createdAt: string
 }
-type emailConfirmationType ={
+type emailConfirmationType = {
     confirmationCode: string
     expirationDate: Date
     isConfirmed: boolean
@@ -79,5 +74,4 @@ type UserDdType = {
         invalidRefreshTokens: string[]
     },
     emailConfirmation: emailConfirmationType,
-
 }

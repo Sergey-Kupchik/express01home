@@ -1,4 +1,4 @@
-import {dbCollections} from "../../server/db/conn";
+import {dbCollections, User} from "../../server/db/conn";
 import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
 import {UserType} from "../users-db-repository";
 
@@ -24,14 +24,20 @@ const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | n
 const usersQueryRepository = {
     async getAllUser(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType, searchLoginTerm: string | null, searchEmailTerm: string | null,): Promise<UsersOutputType> {
         const filter = filterParam(searchLoginTerm, searchEmailTerm)
-        const totalCount: number = await dbCollections.users.find(filter, {projection: {_id: 0}}).count()
+        // const totalCount: number = await dbCollections.users.find(filter, {projection: {_id: 0}}).count()
+        const totalCount: number = await User.find(filter, {projection: {_id: 0}}).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
+        const nameByStr = `accountData.${sortBy}`;
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const users = await dbCollections.users.find(filter, {projection: {_id: 0, hash: 0}})
-            .sort(`accountData.${sortBy}`, sortDirectionParam)
+        // const users = await dbCollections.users.find(filter, {projection: {_id: 0, hash: 0}})
+        //     .sort(`accountData.${sortBy}`, sortDirectionParam)
+        //     .skip(skipItems)
+        //     .limit(pageSize).toArray();
+        const users = await User.find(filter, {projection: {_id: 0, hash: 0}})
+            .sort({nameByStr: sortDirectionParam})
             .skip(skipItems)
-            .limit(pageSize).toArray();
+            .limit(pageSize);
         const UsersOutput = {
             pagesCount,
             page: pageNumber,
@@ -47,8 +53,9 @@ const usersQueryRepository = {
         return UsersOutput;
     },
     async deleteAllUser(): Promise<boolean> {
-        const result = await dbCollections.users.deleteMany({})
-        return result.deletedCount >= 0;
+        // const result = await dbCollections.users.deleteMany({})
+        const resultDoc = await User.deleteMany()
+        return resultDoc.acknowledged;
     },
 };
 
