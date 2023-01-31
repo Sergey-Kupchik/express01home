@@ -1,26 +1,34 @@
-import {dbCollections} from "../../server/db/conn";
+import {dbCollections, Post, User} from "../../server/db/conn";
 import {PostType} from "../../services/posts-service";
 import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
 
 
 const postsQueryRepository = {
     async getAllPosts(): Promise<PostType[]> {
-        return await dbCollections.posts.find({}, {projection: {_id: 0}}).toArray();
+        const result = await Post.find({}, '-_id  -__v').lean();
+        return result;
+        // return await dbCollections.posts.find({}, {projection: {_id: 0}}).toArray();
     },
     async getPostById(id: string): Promise<PostType | null> {
-        const searchResult = await dbCollections.posts.findOne({id}, {projection: {_id: 0}})
-        return searchResult;
+        // const searchResult = await dbCollections.posts.findOne({id}, {projection: {_id: 0}})
+        const result = await Post.findOne({id}, '-_id  -__v').lean();
+        return result;
     },
     async getAllPostsFor1Blog(blogId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
         const filterParam = {blogId}
-        const totalCount: number = await dbCollections.posts.find(filterParam).count()
+        // const totalCount: number = await dbCollections.posts.find(filterParam).count()
+        const totalCount: number = await Post.find(filterParam).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const posts: PostType[] = await dbCollections.posts.find(filterParam, {projection: {_id: 0}})
-            .sort(sortBy, sortDirectionParam)
+        // const posts: PostType[] = await dbCollections.posts.find(filterParam, {projection: {_id: 0}})
+        //     .sort(sortBy, sortDirectionParam)
+        //     .skip(skipItems)
+        //     .limit(pageSize).toArray()
+        const posts: PostType[] = await Post.find(filterParam, '-_id  -__v')
+            .sort({sortBy: sortDirectionParam})
             .skip(skipItems)
-            .limit(pageSize).toArray()
+            .limit(pageSize)
         const PostsOutput = {
             pagesCount,
             page: pageNumber,
@@ -32,14 +40,19 @@ const postsQueryRepository = {
     },
     async getFilteredPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
         const filterParam = {}
-        const totalCount: number = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}}).count()
+        // const totalCount: number = await dbCollections.blogs.find(filterParam, {projection:{_id: 0, __v:0}}).count()
+        const totalCount: number = await Post.find(filterParam, '-_id  -__v').count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const posts = await dbCollections.posts.find(filterParam, {projection: {_id: 0}})
-            .sort(sortBy, sortDirectionParam)
+        // const posts = await dbCollections.posts.find(filterParam, {projection: {_id: 0}})
+        //     .sort(sortBy, sortDirectionParam)
+        //     .skip(skipItems)
+        //     .limit(pageSize).toArray()
+        const posts = await Post.find(filterParam, '-_id  -__v')
+            .sort({sortBy: sortDirectionParam})
             .skip(skipItems)
-            .limit(pageSize).toArray()
+            .limit(pageSize).lean()
         const PostsOutput = {
             pagesCount,
             page: pageNumber,
