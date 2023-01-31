@@ -1,5 +1,4 @@
-import {body, param, validationResult} from "express-validator";
-import {NextFunction, Request, Response} from "express";
+import {body, param} from "express-validator";
 
 const nameValidation = body('name')
     .isString().withMessage('name should be string')

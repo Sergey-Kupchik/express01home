@@ -1,16 +1,9 @@
 import {Request, Response, Router} from 'express';
-import {authJwt, authZ, isAuthT} from "../middlewares/isAuth-middleware";
+import {authJwt, authZ} from "../middlewares/isAuth-middleware";
 import {commentsQueryRepository} from "../repositories/queries/comments-query-repository";
 import {CommentOutputType, commentsService} from "../services/coments-service";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import {postsService} from "../services/posts-service";
-import {
-    blogIdValidation, contentCommentsValidation,
-    contentValidation,
-    shortDescriptionValidation,
-    titleValidation
-} from "../middlewares/posts-validation-middleware";
-import {postsRouter} from "./posts-router";
+import {contentCommentsValidation} from "../middlewares/posts-validation-middleware";
 
 const commentsRouter = Router();
 

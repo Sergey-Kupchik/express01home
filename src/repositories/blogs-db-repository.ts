@@ -1,4 +1,4 @@
-import {Blog, dbCollections, Post} from "../server/db/conn";
+import {Blog} from "../server/db/conn";
 import {BlogType} from "../services/blogs-service";
 
 

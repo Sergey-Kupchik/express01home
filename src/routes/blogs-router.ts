@@ -1,9 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {isAuthT} from "../middlewares/isAuth-middleware";
-import {
-    nameValidation,
-    websiteUrlValidation
-} from "../middlewares/blogs-validation-middleware";
+import { nameValidation,websiteUrlValidation} from "../middlewares/blogs-validation-middleware";
 import {inputValidationMiddleware, inputValidationMiddleware2} from "../middlewares/validation-middleware";
 import {blogsService, BlogType} from "../services/blogs-service";
 import {BlogOutputType, blogsQueryRepository, sortDirectionEnum} from "../repositories/queries/blogs-query-repository";

@@ -5,7 +5,6 @@ import {isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {emailValidation, loginValidation, passwordValidation} from "../middlewares/user-middleware";
 import {UserType} from "../repositories/users-db-repository";
-import {tokensService} from "../services/tokens-service";
 
 
 const usersRouter = Router();

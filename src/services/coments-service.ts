@@ -1,4 +1,3 @@
-import {dbCollections} from "../server/db/conn";
 import {commentsRepository} from "../repositories/comments-db-repository";
 import {UserType} from "../repositories/users-db-repository";
 import {currentDate} from "../utils/utils";

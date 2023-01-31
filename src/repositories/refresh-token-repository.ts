@@ -1,4 +1,4 @@
-import {dbCollections, RefreshTokenInfo, User} from "../server/db/conn";
+import {RefreshTokenInfo} from "../server/db/conn";
 
 
 const refreshTokensRepo = {
@@ -8,35 +8,22 @@ const refreshTokensRepo = {
         if (isUserExist) {
             const addToken = await RefreshTokenInfo.findOneAndUpdate({"userId": userId}, {$push: {"refreshTokensInfo": RefreshTokenPayload}}, {new: true});
             result = true
-            // const addToken = await dbCollections.refreshTokens.updateOne({userId}, {$push: {"refreshTokensInfo": RefreshTokenPayload}});
-            // if (addToken.modifiedCount === 1) {
-            //     result = true
-            // }
         } else {
             const newItem = new RefreshTokenInfo({
                 userId,
                 refreshTokensInfo: [RefreshTokenPayload]
             });
             const savedDoc = await newItem.save();
-            // const newItem = await dbCollections.refreshTokens.insertOne({
-            //     userId,
-            //     refreshTokensInfo: [RefreshTokenPayload]
-            // })
             result = savedDoc.id === userId;
         }
         return result;
     },
     async getAllTokensByUserId(userId: string,): Promise<RefreshTokenPayloadType[] | null> {
-        // const user = await dbCollections.refreshTokens.findOne({userId}, {projection: {_id: 0}})
         const user = await RefreshTokenInfo.findOne({"userId": userId}, '-_id  -__v').lean()
         if (user) return user.refreshTokensInfo
         return null;
     },
     async findRefreshTokenInfoByUserIdAndDeviceId(userId: string, deviceId: string,): Promise<RefreshTokenPayloadType | undefined> {
-        // const result = await dbCollections.refreshTokens.findOne({
-        //     "userId": userId,
-        //     refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
-        // }, {projection: {_id: 0, userId: 0}})
         const result = await RefreshTokenInfo.findOne({
             "userId": userId,
             refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
@@ -46,9 +33,6 @@ const refreshTokensRepo = {
 
     },
     async findRefreshTokenInfoByDeviceId(deviceId: string,): Promise<RefreshTokensInfo | null> {
-        // const tokens = await dbCollections.refreshTokens.findOne({
-        //     refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
-        // }, {projection: {_id: 0,}})
         const tokens = await RefreshTokenInfo.findOne({
             refreshTokensInfo: {$elemMatch: {"deviceId": deviceId}}
         }, '-_id  -__v').lean()

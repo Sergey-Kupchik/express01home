@@ -5,12 +5,13 @@ import {UserType} from "../repositories/users-db-repository";
 import registrationService from "../domain/registration-service";
 import {
     confirmationCodeValidation,
-    emailRequired, emailValidation, loginOrEmailRequired,
-    loginRequired, loginValidation,
+    emailRequired,
+    emailValidation,
+    loginOrEmailRequired,
+    loginValidation,
     passwordValidation
 } from "../middlewares/user-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import add from 'date-fns/add';
 import {tokensService} from "../services/tokens-service";
 
 const authRouter = Router();

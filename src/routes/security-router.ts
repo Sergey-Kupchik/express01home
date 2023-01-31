@@ -1,8 +1,6 @@
 import {Request, Response, Router} from 'express';
-import {authJwt, authRefreshToken, isAuthT} from "../middlewares/isAuth-middleware";
+import {authRefreshToken} from "../middlewares/isAuth-middleware";
 import {tokensService} from "../services/tokens-service";
-import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import {postsService} from "../services/posts-service";
 
 
 const securityRouter = Router();

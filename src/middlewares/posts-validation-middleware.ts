@@ -1,8 +1,6 @@
-import {body,param, CustomValidator} from "express-validator";
-import { BlogType} from "../services/blogs-service";
+import {body, CustomValidator, param} from "express-validator";
+import {BlogType} from "../services/blogs-service";
 import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
-import {UserDdType} from "../repositories/users-db-repository";
-import {usersService} from "../services/users-service";
 
 
 const titleValidation = body("title")
