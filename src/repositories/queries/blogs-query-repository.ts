@@ -1,26 +1,33 @@
-import {dbCollections} from "../../server/db/conn";
+import {Blog, dbCollections, User} from "../../server/db/conn";
 import {BlogType} from "../../services/blogs-service";
 
 
 const blogsQueryRepository = {
     async getAllBlogs(): Promise<BlogType[]> {
-        const blogs = await dbCollections.blogs.find({}, {projection: {_id: 0}}).toArray()
+        // const blogs = await dbCollections.blogs.find({}, {projection: {_id: 0}}).toArray()
+        const blogs = await Blog.find({},'-_id  -__v').lean()
         return blogs;
     },
     async getBlogById(id: string): Promise<BlogType | null> {
-        const result = await dbCollections.blogs.findOne({id}, {projection: {_id: 0}})
-        return result;
+        // const result = await dbCollections.blogs.findOne({id}, {projection: {_id: 0}})
+        const blog = await Blog.findOne({"id": id},'-_id  -__v').lean()
+        return blog;
     },
     async getFilteredBlogs(searchNameTerm: string| null, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<BlogOutputType> {
         const filterParam = searchNameTerm?({"name" : { $regex: searchNameTerm, '$options' : 'i'} }):{}
-        const totalCount: number = await dbCollections.blogs.find(filterParam).count()
+        // const totalCount: number = await dbCollections.blogs.find(filterParam).count()
+        const totalCount: number = await Blog.find(filterParam).count()
         const pagesCount: number = Math.ceil(totalCount / pageSize);
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
-        const blogs: BlogType[] = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}})
-            .sort(sortBy,sortDirectionParam)
+        // const blogs: BlogType[] = await dbCollections.blogs.find(filterParam, {projection: {_id: 0}})
+        //     .sort(sortBy,sortDirectionParam)
+        //     .skip(skipItems)
+        //     .limit(pageSize).toArray()
+        const blogs: BlogType[] = await Blog.find(filterParam, '-_id  -__v')
+            .sort({sortBy:sortDirectionParam})
             .skip(skipItems)
-            .limit(pageSize).toArray()
+            .limit(pageSize)
         const BlogOutput = {
             pagesCount,
             page: pageNumber,

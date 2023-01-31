@@ -10,12 +10,12 @@ const usersRepository = {
     },
     async findUserById(id: string,): Promise<UserDdType | null> {
         // const result = await dbCollections.users.findOne({"accountData.id": id}, {projection: {_id: 0}});
-        const result = await User.findOne({"accountData.id": id}).select('accountData emailConfirmation')
+        const result = await User.findOne({"accountData.id": id},'-_id  -__v').lean()
         return result;
     },
     async findUserByEmail(email: string,): Promise<UserDdType | null> {
         // const result = await dbCollections.users.findOne({"accountData.email": email}, {projection: {_id: 0}});
-        const result = await User.findOne({"accountData.email": email}).select('accountData emailConfirmation').lean()
+        const result = await User.findOne({"accountData.email": email},'-_id  -__v').lean()
         return result;
     },
     async findUserByConfirmationCode(code: string,): Promise<UserDdType | null> {
