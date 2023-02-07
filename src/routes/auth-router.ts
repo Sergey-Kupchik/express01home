@@ -6,10 +6,13 @@ import registrationService from "../domain/registration-service";
 import {
     confirmationCodeValidation,
     emailRequired,
-    emailValidation,
+    emailSimpleValidator,
+    emailValidator,
     loginOrEmailRequired,
     loginValidation,
-    passwordValidation
+    passwordValidation,
+    passwordValidator,
+    recoveryCodeValidator
 } from "../middlewares/user-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {tokensService} from "../services/tokens-service";
@@ -31,7 +34,7 @@ authRouter.post('/login',
         res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: true,
             secure: true,
-            });
+        });
         return res.status(200).send({"accessToken": tokens.accessToken})
     });
 
@@ -40,7 +43,7 @@ authRouter.post('/logout',
     clientIp,
     async (req: Request, res: Response) => {
         // const hasBeenRevoked = await usersService.revokeRefreshToken(req.user!.accountData.id, req.cookies.refreshToken)
-        const hasBeenRevoked = await tokensService.deleteTokenByDevicesId(req.user!.accountData.id,req.deviceId)
+        const hasBeenRevoked = await tokensService.deleteTokenByDevicesId(req.user!.accountData.id, req.deviceId)
         if (!hasBeenRevoked) {
             return res.sendStatus(401)
         }
@@ -73,15 +76,34 @@ authRouter.get('/me',
         return res.status(200).send({email: user.email, login: user.login, userId: user.id,})
     });
 
+authRouter.post('/password-recovery',
+    emailSimpleValidator,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        await registrationService.sentPasswordRecovery(req.body.email)
+        return res.sendStatus(204)
+    });
+
+authRouter.post('/new-password',
+    passwordValidator,
+    recoveryCodeValidator,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const hasBeenCreate:boolean =  await usersService.createNewPassword(req.body.newPassword, req.body.recoveryCode,)
+        if (hasBeenCreate) return res.sendStatus(204)
+        return res.sendStatus(400)
+
+    });
+
 
 authRouter.post('/registration',
     loginValidation,
-    emailValidation,
+    emailValidator,
     passwordValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const isEmailSent: boolean = await registrationService.registrationNewUser(req.body.login, req.body.email, req.body.password)
-        if (isEmailSent) return res.sendStatus( 204)
+        if (isEmailSent) return res.sendStatus(204)
         return res.sendStatus(400)
     });
 
@@ -90,7 +112,7 @@ authRouter.post('/registration-confirmation',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const isEmailSent: boolean = await registrationService.confirmUser(req.body.code,)
-        if (isEmailSent) return res.sendStatus( 204)
+        if (isEmailSent) return res.sendStatus(204)
         return res.status(400).json({
             errorsMessages: [{
                 message: "Fail to confirm user",
@@ -104,7 +126,7 @@ authRouter.post('/registration-email-resending',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const isEmailSent: boolean = await registrationService.resentConfirmationEmail(req.body.email,)
-        if (isEmailSent) return res.sendStatus( 204)
+        if (isEmailSent) return res.sendStatus(204)
         return res.status(400).json({
             errorsMessages: [{
                 message: "Fail to confirm user",

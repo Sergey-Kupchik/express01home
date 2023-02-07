@@ -11,6 +11,8 @@ type UserDbType = WithId<{
         invalidRefreshTokens: string[]
     },
     emailConfirmation: EmailConfirmationType,
+    resetPasswordHash?: string,
+    // resetPasswordExpires?: string
 }>;
 
 type EmailConfirmationType ={

@@ -1,4 +1,5 @@
 import {RefreshTokenInfo} from "../server/db/conn";
+import {RefreshTokensInfoDbType} from "../server/db/types";
 
 
 const refreshTokensRepo = {
@@ -43,7 +44,6 @@ const refreshTokensRepo = {
             }
         }
         return null
-
     },
 
     async updateRefreshTokenDateInfo(userId: string, deviceId: string, lastActiveDate: string, clientIp: string): Promise<boolean> {
@@ -97,7 +97,13 @@ const refreshTokensRepo = {
         const resultDoc = await RefreshTokenInfo.deleteMany()
         return resultDoc.acknowledged;
     },
-
+    async deleteAllTokensByUserId(userId:string): Promise<boolean> {
+        const tokensInstance  = await RefreshTokenInfo.findOne({userId})
+        if (!tokensInstance) return false
+        tokensInstance.refreshTokensInfo = [];
+        await tokensInstance.save();
+        return true
+    }
 
 }
 

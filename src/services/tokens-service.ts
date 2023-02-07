@@ -13,6 +13,7 @@ interface TokenInterface extends JwtPayload {
     userId: string;
     deviceId: string;
     lastActiveDate: string;
+    email?:string;
 };
 
 
@@ -81,6 +82,10 @@ const tokensService = {
     },
     async deleteTokenByDevicesId(userId: string, deviceId: string,): Promise<boolean> {
         const result = await refreshTokensRepo.deleteTokenByDevicesId(userId, deviceId)
+        return result
+    },
+    async deleteAllTokensByUserId(userId: string): Promise<boolean> {
+        const result = await refreshTokensRepo.deleteAllTokensByUserId(userId)
         return result
     },
     async findRefreshTokenInfoByDeviceId(deviceId: string,): Promise<RefreshTokensInfo | null> {

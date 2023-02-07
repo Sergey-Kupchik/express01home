@@ -1,6 +1,9 @@
 import {body, CustomValidator} from "express-validator";
-import {UserDdType} from "../repositories/users-db-repository";
+import {UserDdType, usersRepository} from "../repositories/users-db-repository";
 import {usersService} from "../services/users-service";
+import compareDesc from 'date-fns/compareDesc';
+import {NextFunction, Request, Response} from "express";
+import {accessTokenSecret, tokensService} from "../services/tokens-service";
 
 const isEmailUnique: CustomValidator = async (value) => {
     const user: UserDdType | null = await usersService.findUserByEmail(value.toLowerCase());
@@ -10,6 +13,7 @@ const isEmailUnique: CustomValidator = async (value) => {
         return Promise.reject('we already have a user with this email, please use a different email ');
     }
 };
+
 const isLoginUnique: CustomValidator = async (value) => {
     const user: UserDdType | null = await usersService.findUserByLogin(value);
     if (user === null) {
@@ -25,12 +29,29 @@ const loginValidation = body("login")
     .isLength({min: 3, max: 10}).withMessage(`length is 10 max and 3 min`)
     .custom(isLoginUnique);
 
-const emailValidation = body("email")
+const emailValidator = body("email")
     .isString().withMessage(`email should be string`)
     .trim().withMessage(`email should be symbols string`)
     .notEmpty().withMessage(`email  is required`)
     .isEmail().withMessage("email be email format")
     .custom(isEmailUnique);
+
+const passwordValidator = body("newPassword")
+    .isString().withMessage(`newPassword should be string`)
+    .trim().withMessage(`newPassword should be symbols string`)
+    .notEmpty().withMessage(`newPassword  is required`)
+    .isLength({min: 6, max: 20}).withMessage(`length is 20 max and 6 min`)
+
+const recoveryCodeValidator = body("recoveryCode")
+    .isString().withMessage(`recoveryCode should be string`)
+    .trim().withMessage(`recoveryCode should be symbols string`)
+    .notEmpty().withMessage(`recoveryCode  is required`)
+
+const emailSimpleValidator = body("email")
+    .isString().withMessage(`email should be string`)
+    .trim().withMessage(`email should be symbols string`)
+    .notEmpty().withMessage(`email  is required`)
+    .isEmail().withMessage("email be email format");
 
 const confirmationCodeValidation = body("code")
     .isString().withMessage(`code should be string`)
@@ -67,10 +88,12 @@ const loginRequired = body("login")
 
 export {
     loginValidation,
-    emailValidation,
+    emailValidator,
     passwordValidation,
     confirmationCodeValidation,
     emailRequired,
     loginRequired,
     loginOrEmailRequired,
+    emailSimpleValidator,
+    passwordValidator, recoveryCodeValidator,
 }

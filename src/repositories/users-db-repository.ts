@@ -7,15 +7,19 @@ const usersRepository = {
         return savedDoc.accountData.id === newUser.accountData.id;
     },
     async findUserById(id: string,): Promise<UserDdType | null> {
-        const result = await User.findOne({"accountData.id": id},'-_id  -__v').lean()
+        const result = await User.findOne({"accountData.id": id}, '-_id  -__v').lean()
         return result;
     },
     async findUserByEmail(email: string,): Promise<UserDdType | null> {
-        const result = await User.findOne({"accountData.email": email},'-_id  -__v').lean()
+        const result = await User.findOne({"accountData.email": email}, '-_id  -__v').lean()
         return result;
     },
     async findUserByConfirmationCode(code: string,): Promise<UserDdType | null> {
         const result = await User.findOne({"emailConfirmation.confirmationCode": code}, '-_id  -__v').lean();
+        return result
+    },
+    async findUserByPasswordRecoveryHashCode(hash: string,): Promise<UserDdType | null> {
+        const result = await User.findOne({"accountData.resetPasswordHash": hash}, '-_id  -__v').lean();
         return result
     },
     async findUserByLogin(login: string,): Promise<UserDdType | null> {
@@ -38,9 +42,26 @@ const usersRepository = {
         await User.findOneAndUpdate({"accountData.id": id}, {$push: {"accountData.invalidRefreshTokens": refreshToken}}, {new: true});
         return true;
     },
+    async addResetPasswordHash(id: string, resetPasswordHash: string,): Promise<boolean> {
+        const user = await User.findOneAndUpdate({"accountData.id": id}, {
+            "accountData.resetPasswordHash": resetPasswordHash,
+        }, {new: true});
+        return true;
+    },
+    async passwordHashChange(id: string,newPasswordHash: string,): Promise<boolean> {
+        const user = await User.findOneAndUpdate({"accountData.id": id}, {"accountData.hash": newPasswordHash}, {new: true});
+        return true;
+    },
+    async deleteResetPasswordHashByUserId(id: string,): Promise<boolean> {
+        const userInstance = await User.findOne({"accountData.id": id});
+        if (!userInstance) return false
+        userInstance.resetPasswordHash =undefined;
+        await userInstance.save()
+        return true;
+    },
 };
 
-export {usersRepository, UserDdType, UserType, emailConfirmationType}
+export {usersRepository, UserDdType, UserType,UserHashInfoType, emailConfirmationType}
 
 
 type UserType = {
@@ -49,6 +70,15 @@ type UserType = {
     email: string
     createdAt: string
 }
+type UserHashInfoType = {
+    id: string
+    login: string
+    email: string
+    createdAt: string
+    resetPasswordHash: string,
+    resetPasswordExpires: Date
+}
+
 type emailConfirmationType = {
     confirmationCode: string
     expirationDate: Date
@@ -62,6 +92,8 @@ type UserDdType = {
         hash: string
         createdAt: string
         invalidRefreshTokens: string[]
+        resetPasswordHash?: string
+        resetPasswordExpires?: Date
     },
     emailConfirmation: emailConfirmationType,
 }

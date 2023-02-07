@@ -1,11 +1,16 @@
 import emailManager from "../managers/email-manager";
 import {usersService} from "../services/users-service";
 import compareDesc from 'date-fns/compareDesc';
+import {v4 as uuidv4} from 'uuid';
+import add from "date-fns/add";
+import jsonwebtoken from "jsonwebtoken";
+import {accessTokenSecret} from "../services/tokens-service";
 
+const recoverCodeLifeTime = "200000s";
 
 const registrationService = {
     async registrationNewUser(login: string, email: string, password: string): Promise<boolean> {
-        await usersService.createUser(login,email, password)
+        await usersService.createUser(login, email, password)
         const user = await usersService.findUserByLogin(login)
         if (!user) return false
         try {
@@ -36,6 +41,21 @@ const registrationService = {
             return true
         } catch {
             await usersService.deleteUserById(user.accountData.id)
+            return false
+        }
+    },
+    async sentPasswordRecovery(email: string): Promise<boolean> {
+        const resetPasswordExpires = add(new Date, { hours: 5,});
+        const recoverCode =  jsonwebtoken.sign({email}, accessTokenSecret, {
+            expiresIn: recoverCodeLifeTime,
+        });
+        console.log(`recoverCode from sentPasswordRecovery: ${recoverCode}`)
+        console.log(`resetPasswordExpires from sentPasswordRecovery: ${resetPasswordExpires}`)
+        try {
+            await emailManager.sentPasswordRecoveryEmail(email, recoverCode)
+            await usersService.addResetPasswordByEmail(email, recoverCode)
+            return true
+        } catch {
             return false
         }
     }

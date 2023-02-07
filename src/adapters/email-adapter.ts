@@ -32,7 +32,6 @@ const emailAdapter = {
             text: textMessage,
             html: html,
         });
-        console.log(info)
         return info.response
     }
 }

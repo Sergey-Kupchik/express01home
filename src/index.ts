@@ -46,6 +46,12 @@ app.use('/auth/registration-email-resending', rateLimit({
         max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
     })
 )
+app.use('/auth/password-recovery', rateLimit({
+        windowMs: 10000, // 10 sec
+        max: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    })
+)
+
 app.set('trust proxy', true)
 
 app.use('/videos', videosRouter);
@@ -60,7 +66,7 @@ app.use('/security', securityRouter);
 
 
 app.get('/', (req: Request, res: Response) => {
-    res.send(`1/31/23 at 2.39 am`)
+    res.send(`2/6/23 at 10.00 am`)
 })
 
 const startApp = async () => {

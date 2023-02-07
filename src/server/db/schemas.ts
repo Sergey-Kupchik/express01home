@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema<UserDbType>({
         email: {type: String, required: true, },
         hash: {type: String, required: true, },
         createdAt: {type: String, required: true, },
-        invalidRefreshTokens: [{type: String, required: true, },]
+        invalidRefreshTokens: [{type: String, required: true, },],
+        resetPasswordHash: {type: String,required: false},
+        // resetPasswordExpires: {type: String, required: false},
     },
     emailConfirmation: {
         confirmationCode: {type: String, required: true, },

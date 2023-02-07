@@ -3,7 +3,7 @@ import {usersService} from "../services/users-service";
 import {UsersOutputType, usersQueryRepository} from "../repositories/queries/users-query-repository";
 import {isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import {emailValidation, loginValidation, passwordValidation} from "../middlewares/user-middleware";
+import {emailValidator, loginValidation, passwordValidation} from "../middlewares/user-middleware";
 import {UserType} from "../repositories/users-db-repository";
 
 
@@ -12,7 +12,7 @@ const usersRouter = Router();
 usersRouter.post('/',
     isAuthT,
     loginValidation,
-    emailValidation,
+    emailValidator,
     passwordValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
