@@ -16,7 +16,6 @@ import {
 } from "../middlewares/user-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {tokensService} from "../services/tokens-service";
-
 const authRouter = Router();
 
 authRouter.post('/login',
@@ -91,8 +90,7 @@ authRouter.post('/new-password',
     async (req: Request, res: Response) => {
         const hasBeenCreate:boolean =  await usersService.createNewPassword(req.body.newPassword, req.body.recoveryCode,)
         if (hasBeenCreate) return res.sendStatus(204)
-        return res.sendStatus(400)
-
+        return res.status(400).send({ errorsMessages: [{ message: "incorrect recoveryCode", field: "recoveryCode" }] })
     });
 
 
