@@ -1,6 +1,8 @@
 import {body, CustomValidator, param} from "express-validator";
 import {BlogType} from "../services/blogs-service";
-import {blogsQueryRepository} from "../repositories/queries/blogs-query-repository";
+import {BlogsQueryRepository} from "../repositories/queries/blogs-query-repository";
+
+const blogsQueryRepository = new BlogsQueryRepository()
 
 
 const titleValidation = body("title")

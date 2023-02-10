@@ -1,8 +1,9 @@
 import {v4 as uuidv4} from 'uuid';
 import {currentDate} from "../../utils/utils";
 import {PostType} from "../../services/posts-service";
-import {blogsQueryRepository} from "../queries/blogs-query-repository";
+import {BlogsQueryRepository} from "../queries/blogs-query-repository";
 
+const blogsQueryRepository = new BlogsQueryRepository()
 
 const posts: PostType[] = [
     {

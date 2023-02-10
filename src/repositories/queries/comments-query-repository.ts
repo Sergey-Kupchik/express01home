@@ -2,12 +2,11 @@ import {Comment} from "../../server/db/conn";
 import {CommentOutputType, CommentType} from "../../services/coments-service";
 import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
 
-
-const commentsQueryRepository = {
+class CommentsQueryRepo {
     async getCommentById(commentId: string): Promise<CommentType | null> {
         const comment = await Comment.findOne({id:commentId},'-_id  -__v').lean()
         return comment;
-    },
+    }
     async getComments4Post(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType, postId: string): Promise<CommentGroupType> {
         const filterParam = {postId}
         const totalCount: number = await Comment.find(filterParam).count()
@@ -26,16 +25,16 @@ const commentsQueryRepository = {
             items: comments
         }
         return comments4Return;
-    },
+    }
     async deleteCommentById(id: string): Promise<boolean> {
         const result = await Comment.deleteOne({"id": id});
         return result.deletedCount === 1
-    },
+    }
     async deleteAllComments(): Promise<boolean> {
         const result = await Comment.deleteMany({})
         return result.acknowledged;
-    },
-};
+    }
+}
 
 
 type CommentGroupType = {
@@ -47,5 +46,5 @@ type CommentGroupType = {
 }
 
 export {
-    commentsQueryRepository, CommentGroupType
+     CommentGroupType, CommentsQueryRepo
 }

@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 
-
-const emailAdapter = {
+class EmailAdapter {
     async _addTransport() {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -11,7 +10,7 @@ const emailAdapter = {
             }
         });
         return transporter
-    },
+    }
     async sentConfirmationEmail(email: string,html:string) {
         const transporter = await this._addTransport()
         const info = await transporter.sendMail({
@@ -22,7 +21,7 @@ const emailAdapter = {
             html: "<a href=\"https://www.w3schools.com\">Confirm</a> ${html}",
         });
         return info.response
-    },
+    }
     async sentEmail(email: string,subject: string,textMessage:string, html:string) {
         const transporter = await this._addTransport()
         const info = await transporter.sendMail({
@@ -36,5 +35,4 @@ const emailAdapter = {
     }
 }
 
-
-export default emailAdapter;
+export default EmailAdapter;

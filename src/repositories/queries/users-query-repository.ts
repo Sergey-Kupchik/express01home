@@ -21,7 +21,7 @@ const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | n
     return param
 }
 
-const usersQueryRepository = {
+class UsersQueryRepo {
     async getAllUser(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType, searchLoginTerm: string | null, searchEmailTerm: string | null,): Promise<UsersOutputType> {
         const filter = filterParam(searchLoginTerm, searchEmailTerm)
         const totalCount: number = await User.find(filter, {projection: {_id: 0}}).count()
@@ -46,12 +46,12 @@ const usersQueryRepository = {
             }))
         }
         return UsersOutput;
-    },
+    }
     async deleteAllUser(): Promise<boolean> {
         const resultDoc = await User.deleteMany()
         return resultDoc.acknowledged;
-    },
-};
+    }
+}
 
 type UsersOutputType = {
     "pagesCount": number,
@@ -62,5 +62,5 @@ type UsersOutputType = {
 }
 
 export {
-    usersQueryRepository, UsersOutputType
+     UsersOutputType, UsersQueryRepo
 }

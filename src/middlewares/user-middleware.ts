@@ -1,9 +1,8 @@
 import {body, CustomValidator} from "express-validator";
-import {UserDdType, usersRepository} from "../repositories/users-db-repository";
-import {usersService} from "../services/users-service";
-import compareDesc from 'date-fns/compareDesc';
-import {NextFunction, Request, Response} from "express";
-import {accessTokenSecret, tokensService} from "../services/tokens-service";
+import {UserDdType} from "../repositories/users-db-repository";
+import {UsersServ} from "../services/users-service";
+
+const usersService = new UsersServ();
 
 const isEmailUnique: CustomValidator = async (value) => {
     const user: UserDdType | null = await usersService.findUserByEmail(value.toLowerCase());

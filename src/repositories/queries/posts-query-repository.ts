@@ -2,16 +2,17 @@ import {Post} from "../../server/db/conn";
 import {PostType} from "../../services/posts-service";
 import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
 
-
-const postsQueryRepository = {
+class PostsQueryRepo {
     async getAllPosts(): Promise<PostType[]> {
         const result = await Post.find({}, '-_id  -__v').lean();
         return result;
-    },
+    }
+
     async getPostById(id: string): Promise<PostType | null> {
         const result = await Post.findOne({id}, '-_id  -__v').lean();
         return result;
-    },
+    }
+
     async getAllPostsFor1Blog(blogId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
         const filterParam = {blogId}
         const totalCount: number = await Post.find(filterParam).count()
@@ -30,7 +31,8 @@ const postsQueryRepository = {
             items: posts
         }
         return PostsOutput;
-    },
+    }
+
     async getFilteredPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType): Promise<PostsOutputType> {
         const filterParam = {}
         const totalCount: number = await Post.find(filterParam, '-_id  -__v').count()
@@ -49,9 +51,8 @@ const postsQueryRepository = {
             items: posts
         }
         return PostsOutput;
-    },
-
-};
+    }
+}
 
 type PostsOutputType = {
     "pagesCount": number,
@@ -70,5 +71,5 @@ type PostsOutputType = {
 }
 
 export {
-    postsQueryRepository, PostsOutputType
+    PostsOutputType, PostsQueryRepo
 }

@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from "uuid";
 import {currentDate} from "../utils/utils";
-import {blogsRepository} from "../repositories/blogs-db-repository";
+import {BlogsRepo} from "../repositories/blogs-db-repository";
 
 type BlogType = {
     id: string
@@ -9,7 +9,11 @@ type BlogType = {
     createdAt: string
     description: string
 }
-const blogsService = {
+class BlogsService {
+    private blogsRepository: BlogsRepo;
+    constructor() {
+        this.blogsRepository = new BlogsRepo();
+    }
     async createBlog(name: string, websiteUrl: string, description: string): Promise<string|null> {
         const newBlog: BlogType = {
             id: uuidv4(),
@@ -18,27 +22,26 @@ const blogsService = {
             createdAt: currentDate(),
             description
         }
-        const resp = await blogsRepository.createBlog(newBlog)
+        const resp = await this.blogsRepository.createBlog(newBlog)
         if (resp) {
             return newBlog.id;
         } else {
             return null
         }
 
-    },
+    }
     async updateBlog(id: string, name: string, websiteUrl: string, description: string): Promise<boolean> {
-        const result = await blogsRepository.updateBlog(id, name, websiteUrl, description)
+        const result = await this.blogsRepository.updateBlog(id, name, websiteUrl, description)
         return result;
-    },
+    }
     async deleteBlogById(id: string): Promise<boolean> {
-        const result = await blogsRepository.deleteBlogById(id)
+        const result = await this.blogsRepository.deleteBlogById(id)
         return result;
-    },
+    }
     async deleteAllBlogs(): Promise<boolean> {
-        const result = await blogsRepository.deleteAllBlogs()
+        const result = await this.blogsRepository.deleteAllBlogs()
         return result;
     }
 }
 
-
-export {blogsService, BlogType}
+export { BlogType, BlogsService}
