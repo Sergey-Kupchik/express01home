@@ -1,12 +1,7 @@
 import {NextFunction, Request, Response} from "express";
-import {accessTokenSecret, refreshTokenSecret, TokensService} from "../services/tokens-service";
+import {accessTokenSecret, refreshTokenSecret} from "../services/tokens-service";
 import {CommentOutputType} from "../services/coments-service";
-import {CommentsQueryRepo} from "../repositories/queries/comments-query-repository";
-import {UsersRepo} from "../repositories/users-db-repository";
-
-const commentsQueryRepository = new CommentsQueryRepo();
-const usersRepository = new UsersRepo();
-const tokensService = new TokensService();
+import {commentsQueryRepository, tokensService, usersRepository} from "../composition-root";
 
 
 const isAuthT = (req: Request, res: Response, next: NextFunction) => {

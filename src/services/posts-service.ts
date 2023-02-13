@@ -18,14 +18,11 @@ type PostType = {
 type PostInfoType = Omit<PostType, "id" | "createdAt">;
 
 class PostsService {
-    private postsRepository: PostsRepo;
-    private blogsRepository: BlogsRepo;
-    private blogsQueryRepository: BlogsQueryRepository;
 
-    constructor() {
-        this.postsRepository = new PostsRepo()
-        this.blogsRepository = new BlogsRepo()
-        this.blogsQueryRepository = new BlogsQueryRepository()
+    constructor(protected postsRepository: PostsRepo,
+                protected blogsRepository: BlogsRepo,
+                protected blogsQueryRepository: BlogsQueryRepository) {
+
     }
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string,): Promise<string | null> {

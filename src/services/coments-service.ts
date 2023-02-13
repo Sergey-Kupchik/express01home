@@ -7,14 +7,10 @@ import {PostsQueryRepo} from "../repositories/queries/posts-query-repository";
 import {PostType} from "./posts-service";
 
 class CommentsService {
-    private postsQueryRepository: PostsQueryRepo;
-    private commentsQueryRepository: CommentsQueryRepo;
-    private commentsRepository: CommentsRepo;
 
-    constructor() {
-        this.postsQueryRepository = new PostsQueryRepo()
-        this.commentsQueryRepository = new CommentsQueryRepo()
-        this.commentsRepository = new CommentsRepo()
+    constructor(protected postsQueryRepository: PostsQueryRepo,
+                protected commentsQueryRepository: CommentsQueryRepo,
+                protected commentsRepository: CommentsRepo,) {
     }
 
     async createComment(postId: string, content: string, user: UserType): Promise<CommentOutputType | null> {
@@ -68,6 +64,6 @@ type CommentOutputType = {
     userLogin: string
     createdAt: string
 }
-export { CommentType, CommentOutputType, CommentsService}
+export {CommentType, CommentOutputType, CommentsService}
 
 

@@ -1,10 +1,8 @@
 import EmailAdapter from "../adapters/email-adapter";
 
 class EmailManager {
-    private emailAdapter: EmailAdapter;
 
-    constructor() {
-        this.emailAdapter = new EmailAdapter()
+    constructor(protected emailAdapter: EmailAdapter) {
     }
 
     async sentConfirmationEmail(email: string, confirmationCode: string) {

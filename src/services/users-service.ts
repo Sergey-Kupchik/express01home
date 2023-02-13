@@ -6,14 +6,9 @@ import {accessTokenSecret, TokensService} from "./tokens-service";
 import add from 'date-fns/add';
 import {RefreshTokensRepo} from "../repositories/refresh-token-repository";
 
-class UsersServ {
-    private usersRepository: UsersRepo;
-    private tokensService: TokensService;
-    private refreshTokensRepo: RefreshTokensRepo;
-    constructor() {
-        this.usersRepository = new UsersRepo();
-        this.tokensService = new TokensService();
-        this.refreshTokensRepo = new RefreshTokensRepo();
+class UsersService {
+
+    constructor(protected usersRepository:UsersRepo,  protected tokensService: TokensService, protected refreshTokensRepo: RefreshTokensRepo) {
     }
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
         const newUser: UserDdType = {
@@ -166,7 +161,7 @@ class UsersServ {
 }
 
 
-export { UsersServ}
+export {UsersService}
 
 
 type TokensType = {

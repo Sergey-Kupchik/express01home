@@ -9,12 +9,13 @@ type BlogType = {
     createdAt: string
     description: string
 }
+
 class BlogsService {
-    private blogsRepository: BlogsRepo;
-    constructor() {
-        this.blogsRepository = new BlogsRepo();
+    constructor(protected blogsRepository: BlogsRepo
+    ) {
     }
-    async createBlog(name: string, websiteUrl: string, description: string): Promise<string|null> {
+
+    async createBlog(name: string, websiteUrl: string, description: string): Promise<string | null> {
         const newBlog: BlogType = {
             id: uuidv4(),
             name,
@@ -30,18 +31,21 @@ class BlogsService {
         }
 
     }
+
     async updateBlog(id: string, name: string, websiteUrl: string, description: string): Promise<boolean> {
         const result = await this.blogsRepository.updateBlog(id, name, websiteUrl, description)
         return result;
     }
+
     async deleteBlogById(id: string): Promise<boolean> {
         const result = await this.blogsRepository.deleteBlogById(id)
         return result;
     }
+
     async deleteAllBlogs(): Promise<boolean> {
         const result = await this.blogsRepository.deleteAllBlogs()
         return result;
     }
 }
 
-export { BlogType, BlogsService}
+export {BlogType, BlogsService}

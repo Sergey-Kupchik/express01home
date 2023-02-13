@@ -1,5 +1,5 @@
 import EmailManager from "../managers/email-manager";
-import {UsersServ} from "../services/users-service";
+import { UsersService} from "../services/users-service";
 import compareDesc from 'date-fns/compareDesc';
 import add from "date-fns/add";
 import jsonwebtoken from "jsonwebtoken";
@@ -8,13 +8,8 @@ import {accessTokenSecret} from "../services/tokens-service";
 const recoverCodeLifeTime = "200000s";
 
 class RegistrationService {
-    private usersService: UsersServ;
-    private emailManager: EmailManager;
-
-    constructor() {
-        this.usersService = new UsersServ();
-        this.emailManager = new EmailManager();
-
+    constructor(protected usersService: UsersService,
+                protected emailManager: EmailManager) {
     }
 
     async registrationNewUser(login: string, email: string, password: string): Promise<boolean> {

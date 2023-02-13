@@ -17,12 +17,8 @@ interface TokenInterface extends JwtPayload {
 };
 
 class TokensService {
-    private refreshTokensRepo: RefreshTokensRepo;
-
-    constructor() {
-        this.refreshTokensRepo = new RefreshTokensRepo()
+    constructor(protected refreshTokensRepo: RefreshTokensRepo) {
     }
-
     async createAccessToken(userId: string,): Promise<string> {
         return jsonwebtoken.sign({userId}, accessTokenSecret, {
             expiresIn: accessTokenLifeTime,
@@ -118,4 +114,4 @@ type RefTokenInfoType = {
 }
 
 type RefreshTokenPayloadOutputType = Omit<RefTokenInfoType, "expiresIn">;
-export { accessTokenSecret, refreshTokenSecret, TokensService}
+export {accessTokenSecret, refreshTokenSecret, TokensService}
