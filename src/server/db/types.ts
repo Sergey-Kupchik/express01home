@@ -47,6 +47,13 @@ type CommentDbType = WithId<{
     createdAt: string
     postId: string
 }>;
+type LikeDbType = WithId<{
+    userId: string
+    comments: {
+        like: Array<string>,
+        dislike: Array<string>,
+    }
+}>;
 
 type RefreshTokensInfoDbType = WithId<{
     userId: string,
@@ -59,4 +66,4 @@ type RefreshTokensInfoDbType = WithId<{
     }>
 }>;
 
-export {UserDbType, PostDbType, BlogDbType, CommentDbType, RefreshTokensInfoDbType}
+export {UserDbType, PostDbType, BlogDbType, CommentDbType, RefreshTokensInfoDbType, LikeDbType}

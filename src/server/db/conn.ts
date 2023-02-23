@@ -1,7 +1,7 @@
 import mongoose, {connect, model} from 'mongoose';
 import * as dotenv from 'dotenv'
-import {blogSchema, commentSchema, postSchema, refreshTokensInfoSchema, userSchema} from "./schemas";
-import {BlogDbType, CommentDbType, PostDbType, RefreshTokensInfoDbType, UserDbType} from "./types";
+import {blogSchema, commentSchema, likeSchema, postSchema, refreshTokensInfoSchema, userSchema} from "./schemas";
+import {BlogDbType, CommentDbType, LikeDbType, PostDbType, RefreshTokensInfoDbType, UserDbType} from "./types";
 
 dotenv.config()
 
@@ -18,6 +18,7 @@ async function connectToDb() {
     }
 }
 
+const Like = model<LikeDbType>('Likes', likeSchema);
 const User = model<UserDbType>('Users', userSchema);
 const Post = model<PostDbType>('Posts', postSchema);
 const Blog = model<BlogDbType>('Blogs', blogSchema);
@@ -25,6 +26,6 @@ const Comment = model<CommentDbType>('Comments', commentSchema);
 const RefreshTokenInfo = model<RefreshTokensInfoDbType>('RefreshTokensInfo', refreshTokensInfoSchema);
 
 
-export {connectToDb, User, Post, Blog, Comment, RefreshTokenInfo}
+export {connectToDb, User, Post, Blog, Comment, RefreshTokenInfo, Like}
 
 
