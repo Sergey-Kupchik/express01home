@@ -2,7 +2,7 @@ import {Like} from "../server/db/conn";
 
 
 class LikeRepo {
-    async createLikeInstance(userId: string,) {
+    async createInstance(userId: string,):Promise<boolean> {
         const instance = new Like({
             userId,
             comments: {
@@ -10,6 +10,9 @@ class LikeRepo {
                 dislike: [],
             }
         });
+        await instance.save()
+        if (instance) return true
+        return false
     }
 
     async addLike(userId: string, commentId: string): Promise<boolean> {

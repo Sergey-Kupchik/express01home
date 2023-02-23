@@ -24,6 +24,7 @@ import EmailAdapter from "./adapters/email-adapter";
 import EmailManager from "./managers/email-manager";
 import {LikeQueryRepo} from "./repositories/queries/likes-query-repository";
 import {LikeRepo} from "./repositories/likes-db-repository";
+import {LikesService} from "./services/likes-service";
 
 //Utils
 const emailAdapter:EmailAdapter = new EmailAdapter();
@@ -47,8 +48,9 @@ const likesRepository: LikeRepo = new LikeRepo()
 
 
 //Services
+const likesService: LikesService = new LikesService(likesRepository)
 export const tokensService: TokensService = new TokensService(refreshTokensRepository)
-export const usersService: UsersService = new UsersService(usersRepository, tokensService, refreshTokensRepository)
+export const usersService: UsersService = new UsersService(usersRepository, tokensService, refreshTokensRepository, likesService)
 const commentsService: CommentsService = new CommentsService(postsQueryRepository, commentsQueryRepository, commentsRepository)
 const blogsService: BlogsService = new BlogsService(blogsRepository)
 const postsService: PostsService = new PostsService(postsRepository, blogsRepository, blogsQueryRepository)

@@ -5,10 +5,15 @@ import {v4 as uuidv4} from "uuid";
 import {accessTokenSecret, TokensService} from "./tokens-service";
 import add from 'date-fns/add';
 import {RefreshTokensRepo} from "../repositories/refresh-token-repository";
+import {LikesService} from "./likes-service";
 
 class UsersService {
 
-    constructor(protected usersRepository:UsersRepo,  protected tokensService: TokensService, protected refreshTokensRepo: RefreshTokensRepo) {
+    constructor(protected usersRepository:UsersRepo,
+                protected tokensService: TokensService,
+                protected refreshTokensRepo: RefreshTokensRepo,
+                protected likesService: LikesService
+    ) {
     }
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
         const newUser: UserDdType = {
@@ -29,6 +34,7 @@ class UsersService {
             }
         }
         await this.usersRepository.createUser(newUser);
+        await  this.likesService.createInstance(newUser.accountData.id)
         const user = await this.findUserById(newUser.accountData.id)
         return user
     }
