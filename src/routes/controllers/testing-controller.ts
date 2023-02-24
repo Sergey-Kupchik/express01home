@@ -4,6 +4,7 @@ import {UsersQueryRepo} from "../../repositories/queries/users-query-repository"
 import {CommentsQueryRepo} from "../../repositories/queries/comments-query-repository";
 import {RefreshTokensRepo} from "../../repositories/refresh-token-repository";
 import {Request, Response} from "express";
+import {LikeQueryRepo} from "../../repositories/queries/likes-query-repository";
 
 export class TestingController {
     constructor(
@@ -12,6 +13,7 @@ export class TestingController {
         protected usersQueryRepository: UsersQueryRepo,
         protected commentsQueryRepository: CommentsQueryRepo,
         protected refreshTokensRepo: RefreshTokensRepo,
+        protected likesQueryRepository: LikeQueryRepo,
     ) {
     }
 
@@ -21,6 +23,7 @@ export class TestingController {
         await this.usersQueryRepository.deleteAllUser()
         await this.commentsQueryRepository.deleteAllComments()
         await this.refreshTokensRepo.deleteAllTokens()
+        await this.likesQueryRepository.deleteAllInstance()
         res.sendStatus(204)
         return
     }

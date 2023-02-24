@@ -28,7 +28,7 @@ productsRouter.put('/:id',
             const product = productsRepository.findProductById(req.params.id)
             return  res.status(201).send(product)
         } else {
-            return   res.send(404)
+            return   res.sendStatus(404)
         }
     })
 
@@ -39,16 +39,16 @@ productsRouter.get('/:productId',
         if (product) {
             return    res.send(product)
         } else {
-            return res.send(404)
+            return res.sendStatus(404)
         }
     })
 
 productsRouter.delete('/:productId', (req: Request, res: Response) => {
     const isProductDeleted = productsRepository.deleteProductById(req.params.productId)
     if (isProductDeleted) {
-        return res.send(204)
+        return res.sendStatus(204)
     } else {
-        return res.send(404)
+        return res.sendStatus(404)
     }
 })
 

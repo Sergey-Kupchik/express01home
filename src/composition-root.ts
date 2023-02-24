@@ -33,7 +33,7 @@ const emailManager:EmailManager = new EmailManager(emailAdapter);
 // QueryRepositories
 const userQueryRepository: UsersQueryRepo = new UsersQueryRepo()
 export const commentsQueryRepository: CommentsQueryRepo = new CommentsQueryRepo()
-const blogsQueryRepository: BlogsQueryRepository = new BlogsQueryRepository()
+export const blogsQueryRepository: BlogsQueryRepository = new BlogsQueryRepository()
 const postsQueryRepository: PostsQueryRepo = new PostsQueryRepo()
 const likesQueryRepository: LikeQueryRepo = new LikeQueryRepo()
 
@@ -60,7 +60,7 @@ const registrationService: RegistrationService = new RegistrationService(usersSe
 //Controllers
 export const securityController: SecurityController = new SecurityController(tokensService)
 export const usersController = new UsersController(usersService, userQueryRepository)
-export const commentsController = new CommentsController(commentsQueryRepository, commentsService);
+export const commentsController = new CommentsController(commentsQueryRepository, commentsService, likesService);
 export const blogsController = new BlogsController(postsQueryRepository, postsService, blogsQueryRepository, blogsService)
 export const postsController = new PostsController(postsQueryRepository, postsService, commentsService, commentsQueryRepository)
 export const authController = new AuthController(tokensService, usersService, registrationService)
@@ -68,4 +68,4 @@ export const authController = new AuthController(tokensService, usersService, re
 
 
 
-export const testingController = new TestingController(postsRepository, blogsRepository, userQueryRepository, commentsQueryRepository, refreshTokensRepository);
+export const testingController = new TestingController(postsRepository, blogsRepository, userQueryRepository, commentsQueryRepository, refreshTokensRepository, likesQueryRepository);

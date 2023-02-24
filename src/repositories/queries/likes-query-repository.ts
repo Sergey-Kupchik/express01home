@@ -18,6 +18,10 @@ class LikeQueryRepo {
         const countInfo = {likesCount,dislikesCount}
         return countInfo
     }
+    async deleteAllInstance(): Promise<boolean> {
+        const resultDoc = await Like.deleteMany()
+        return resultDoc.acknowledged;
+    }
 }
 
 type LikesCountType = {

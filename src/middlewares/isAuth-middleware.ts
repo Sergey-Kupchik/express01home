@@ -9,13 +9,13 @@ const isAuthT = (req: Request, res: Response, next: NextFunction) => {
     if (basicToken === "Basic YWRtaW46cXdlcnR5") {
         next()
     } else {
-        res.send(401)
+        res.sendStatus(401)
     }
 };
 
 const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers && !req.headers["authorization"]) {
-        res.send(401)
+        res.sendStatus(401)
     }
     const jwtToken = req.headers["authorization"]?.split(" ")[1]
     if (jwtToken) {
@@ -27,13 +27,13 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
                 next()
                 return
             } else {
-                return res.send(404)
+                return res.sendStatus(404)
             }
         } else {
-            return res.send(401)
+            return res.sendStatus(401)
         }
     } else {
-        return res.send(401)
+        return res.sendStatus(401)
     }
 };
 
@@ -75,7 +75,7 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
                     }
                 }
                 else {
-                    return res.send(401)
+                    return res.sendStatus(401)
                 }
             }
         }
@@ -95,7 +95,7 @@ const devicesId = async (req: Request, res: Response, next: NextFunction) => {
                     next()
                     return
                 } else {
-                    return res.send(403)
+                    return res.sendStatus(403)
                 }
             } else {
                 return res.sendStatus(401);
@@ -112,14 +112,19 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
         if (req.user!.accountData.id === сomment.userId) {
             next()
         } else {
-            return res.send(403)
+            return res.sendStatus(403)
         }
     } else {
-        return res.send(404)
+        return res.sendStatus(404)
     }
+};
+
+const commentIdValidation = async (req: Request, res: Response, next: NextFunction) => {
+    const item= await commentsQueryRepository.getCommentById(req.params.id)
+    if (item) next()
+    return res.sendStatus(404)
 };
 
 
 
-
-export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId};
+export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId, commentIdValidation};

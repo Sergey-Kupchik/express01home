@@ -1,7 +1,7 @@
 import {Router} from 'express';
-import {authJwt, authZ} from "../middlewares/isAuth-middleware";
+import {authJwt, authZ, commentIdValidation} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import {contentCommentsValidation} from "../middlewares/posts-validation-middleware";
+import {contentCommentsValidation, likeStatusValidation} from "../middlewares/posts-validation-middleware";
 import {commentsController} from "../composition-root";
 
 const commentsRouter = Router();
@@ -21,6 +21,13 @@ commentsRouter.put('/:id',
     contentCommentsValidation,
     inputValidationMiddleware,
     commentsController.updateCommentById.bind(commentsController)
+);
+commentsRouter.put('/:id/like-status',
+    authJwt,
+    commentIdValidation,
+    likeStatusValidation,
+    inputValidationMiddleware,
+    commentsController.likeDislike.bind(commentsController)
 );
 
 export {
