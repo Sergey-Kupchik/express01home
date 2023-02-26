@@ -87,17 +87,25 @@ export class PostsController {
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
         const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "desc";
-        const commentsWithNoLikesInfo: CommentGroupType = await this.commentsQueryRepository.getComments4Post(pageNumber, pageSize, sortBy, sortDirection, req.params.id)
+        const commentsWithNoLikesInfo = await this.commentsQueryRepository.getComments4Post(pageNumber, pageSize, sortBy, sortDirection, req.params.id)
         const itemsWithLikeInfo:CommentOutputType[] =
             await Promise.all(commentsWithNoLikesInfo.items.map(async (comment): Promise<CommentOutputType> => {
                 const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(comment.id)
                 const myStatus = await this.likesQueryRepository.getLikeStatus4User(req.user!.accountData.id, comment.id)
-                const likesInfo = {
-                    likesCount: likesCountInfo.likesCount,
-                    dislikesCount: likesCountInfo.dislikesCount,
-                    myStatus: myStatus
-                }
-                return {...comment, likesInfo}
+                return {
+                    id: comment.id,
+                    content: comment.content,
+                    commentatorInfo: {
+                        userId: comment.userId,
+                        userLogin: comment.userLogin,
+                    },
+                    createdAt: comment.createdAt,
+                    likesInfo: {
+                        likesCount: likesCountInfo.likesCount,
+                        dislikesCount: likesCountInfo.dislikesCount,
+                        myStatus: myStatus
+                    },
+                };
             }));
         const comments = {
             pagesCount: commentsWithNoLikesInfo.pagesCount,

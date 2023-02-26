@@ -4,9 +4,10 @@ import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
 
 class CommentsQueryRepo {
     async getCommentById(commentId: string): Promise<CommentType | null> {
-        const comment = await Comment.findOne({id:commentId},'-_id  -__v').lean()
+        const comment = await Comment.findOne({id: commentId}, '-_id  -__v').lean()
         return comment;
     }
+
     async getComments4Post(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType, postId: string): Promise<CommentGroupType> {
         const filterParam = {postId}
         const totalCount: number = await Comment.find(filterParam).count()
@@ -26,10 +27,12 @@ class CommentsQueryRepo {
         }
         return comments4Return;
     }
+
     async deleteCommentById(id: string): Promise<boolean> {
         const result = await Comment.deleteOne({"id": id});
         return result.deletedCount === 1
     }
+
     async deleteAllComments(): Promise<boolean> {
         const result = await Comment.deleteMany({})
         return result.acknowledged;
@@ -42,11 +45,11 @@ type CommentGroupType = {
     "page": number,
     "pageSize": number,
     "totalCount": number,
-    "items": Array<CommentOutputNoLikesInfoType>
+    "items": Array<{ id: string; content: string; createdAt: string; userId: string; userLogin: string; }>
 }
 
 type CommentOutputNoLikesInfoType = Omit<CommentOutputType, "likesInfo">;
 
 export {
-     CommentGroupType, CommentsQueryRepo
+    CommentGroupType, CommentsQueryRepo
 }
