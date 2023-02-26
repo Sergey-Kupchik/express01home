@@ -35,13 +35,15 @@ export class CommentsController {
         return res.status(200).send({
             id: сomment.id,
             content: сomment.content,
-            userId: сomment.userId,
-            userLogin: сomment.userLogin,
+            commentatorInfo: {
+                userId: сomment.userId,
+                userLogin: сomment.userLogin,
+            },
             createdAt: сomment.createdAt,
             likesInfo: {
                 likesCount: likesCountInfo.likesCount,
                 dislikesCount: likesCountInfo.dislikesCount,
-                myStatus:myStatus
+                myStatus: myStatus
             }
         })
     }
