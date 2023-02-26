@@ -13,6 +13,8 @@ commentsRouter.delete('/:id',
 );
 
 commentsRouter.get('/:id',
+    authJwt,
+    commentIdValidation,
     commentsController.getCommentById.bind(commentsController)
 );
 commentsRouter.put('/:id',

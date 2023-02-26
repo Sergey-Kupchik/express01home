@@ -16,18 +16,22 @@ class LikeRepo {
     }
 
     async addLike(userId: string, commentId: string): Promise<boolean> {
-        const instance = await Like.findOne({userId}, '-_id  -__v');
-        if (!instance) return false
-        instance.comments.like.push(commentId);
-        await instance.save()
+        // const instance = await Like.findOne({userId}, '-_id  -__v');
+        // if (!instance) return false
+        // instance.comments.like.push(commentId);
+        // await instance.save()
+        const instance = await Like.findOneAndUpdate({"userId": userId}, {$push: {"comments.like": commentId}}, {new: true});
+        if (!instance) {return false}
         return true
     }
 
     async addDislike(userId: string, commentId: string): Promise<boolean> {
-        const instance = await Like.findOne({userId}, '-_id  -__v');
+        const instance = await Like.findOneAndUpdate({"userId": userId}, {$push: {"comments.dislike": commentId}}, {new: true});
         if (!instance) return false
-        instance.comments.dislike.push(commentId);
-        await instance.save()
+        // instance.comments.dislike.push(commentId);
+        // const savedDoc = await instance.save();
+
+        // await instance.save()
         return true
     }
 

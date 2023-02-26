@@ -31,10 +31,10 @@ export class UsersController {
     async deleteUserById(req: Request, res: Response) {
         const isDeleted: boolean = await this.usersService.deleteUserById(req.params.id,)
         if (!isDeleted) {
-            res.sendStatus(404)
-            return
+            return res.sendStatus(404)
+
         }
-        res.sendStatus(204)
-        return
+        return res.sendStatus(204)
+
     }
 }

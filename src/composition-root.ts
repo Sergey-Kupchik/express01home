@@ -48,10 +48,10 @@ const likesRepository: LikeRepo = new LikeRepo()
 
 
 //Services
-const likesService: LikesService = new LikesService(likesRepository)
+const likesService: LikesService = new LikesService(likesRepository, likesQueryRepository)
 export const tokensService: TokensService = new TokensService(refreshTokensRepository)
 export const usersService: UsersService = new UsersService(usersRepository, tokensService, refreshTokensRepository, likesService)
-const commentsService: CommentsService = new CommentsService(postsQueryRepository, commentsQueryRepository, commentsRepository)
+const commentsService: CommentsService = new CommentsService(postsQueryRepository, commentsQueryRepository, commentsRepository, likesQueryRepository)
 const blogsService: BlogsService = new BlogsService(blogsRepository)
 const postsService: PostsService = new PostsService(postsRepository, blogsRepository, blogsQueryRepository)
 const registrationService: RegistrationService = new RegistrationService(usersService, emailManager);
@@ -60,9 +60,9 @@ const registrationService: RegistrationService = new RegistrationService(usersSe
 //Controllers
 export const securityController: SecurityController = new SecurityController(tokensService)
 export const usersController = new UsersController(usersService, userQueryRepository)
-export const commentsController = new CommentsController(commentsQueryRepository, commentsService, likesService);
+export const commentsController = new CommentsController(commentsQueryRepository, commentsService, likesService, likesQueryRepository);
 export const blogsController = new BlogsController(postsQueryRepository, postsService, blogsQueryRepository, blogsService)
-export const postsController = new PostsController(postsQueryRepository, postsService, commentsService, commentsQueryRepository)
+export const postsController = new PostsController(postsQueryRepository, postsService, commentsService, commentsQueryRepository, likesQueryRepository)
 export const authController = new AuthController(tokensService, usersService, registrationService)
 
 

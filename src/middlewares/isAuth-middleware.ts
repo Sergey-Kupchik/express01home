@@ -107,7 +107,7 @@ const devicesId = async (req: Request, res: Response, next: NextFunction) => {
 
 
 const authZ = async (req: Request, res: Response, next: NextFunction) => {
-    const сomment: CommentOutputType | null = await commentsQueryRepository.getCommentById(req.params.id)
+    const сomment = await commentsQueryRepository.getCommentById(req.params.id)
     if (сomment) {
         if (req.user!.accountData.id === сomment.userId) {
             next()
@@ -121,8 +121,12 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
 
 const commentIdValidation = async (req: Request, res: Response, next: NextFunction) => {
     const item= await commentsQueryRepository.getCommentById(req.params.id)
-    if (item) next()
-    return res.sendStatus(404)
+    if (item) {
+        next()
+        return
+    }
+     res.sendStatus(404)
+    return
 };
 
 

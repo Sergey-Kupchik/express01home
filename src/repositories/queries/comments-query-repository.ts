@@ -42,8 +42,10 @@ type CommentGroupType = {
     "page": number,
     "pageSize": number,
     "totalCount": number,
-    "items": Array<CommentOutputType>
+    "items": Array<CommentOutputNoLikesInfoType>
 }
+
+type CommentOutputNoLikesInfoType = Omit<CommentOutputType, "likesInfo">;
 
 export {
      CommentGroupType, CommentsQueryRepo

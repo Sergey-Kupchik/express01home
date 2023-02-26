@@ -4,7 +4,7 @@ import {blogsQueryRepository} from "../composition-root";
 
 
 const likeStatusType: CustomValidator = async (value) => {
-    if (value === LikeStatusEnum.Like || value === LikeStatusEnum.None || value === LikeStatusEnum.Like) {
+    if (value === LikeStatusEnum.Like || value === LikeStatusEnum.None || value === LikeStatusEnum.Dislike) {
         return true;
     } else {
         return Promise.reject('invalid likeStatus');

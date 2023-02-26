@@ -53,7 +53,8 @@ postsRouter.post('/:id/comments',
 );
 
 postsRouter.get('/:id/comments',
-    postsController.getPostById.bind(postsController)
+    authJwt,
+    postsController.getComments4Post.bind(postsController)
 );
 
 export {postsRouter};
