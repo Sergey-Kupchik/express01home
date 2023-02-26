@@ -69,7 +69,7 @@ export class PostsController {
     }
 
     async createComment(req: Request, res: Response) {
-        const comment: CommentOutputType | null = await this.commentsService.createComment(req.params.id, req.body.content, req.user!.accountData,)
+        const comment = await this.commentsService.createComment(req.params.id, req.body.content, req.user!.accountData,)
         if (!comment) {
             return res.sendStatus(404)
         }

@@ -12,8 +12,8 @@ class CommentsService {
     constructor(protected postsQueryRepository: PostsQueryRepo,
                 protected commentsQueryRepository: CommentsQueryRepo,
                 protected commentsRepository: CommentsRepo,
-                protected likesQueryRepository:LikeQueryRepo
-                ) {
+                protected likesQueryRepository: LikeQueryRepo
+    ) {
     }
 
     async createComment(postId: string, content: string, user: UserType): Promise<CommentOutputType | null> {
@@ -32,18 +32,19 @@ class CommentsService {
             if (isCommentCreated && comment) {
                 const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(comment.id)
                 const myStatus = await this.likesQueryRepository.getLikeStatus4User(user.id, comment.id)
-                const likesInfo = {
-                    likesCount: likesCountInfo.likesCount,
-                    dislikesCount: likesCountInfo.dislikesCount,
-                    myStatus: myStatus
-                }
                 return {
                     id: comment.id,
                     content: comment.content,
-                    userId: comment.userId,
-                    userLogin: comment.userLogin,
+                    commentatorInfo: {
+                        userId: comment.userId,
+                        userLogin: comment.userLogin,
+                    },
                     createdAt: comment.createdAt,
-                    likesInfo
+                    likesInfo: {
+                        likesCount: likesCountInfo.likesCount,
+                        dislikesCount: likesCountInfo.dislikesCount,
+                        myStatus: myStatus
+                    },
                 };
             } else {
                 return null
@@ -69,11 +70,26 @@ type CommentType = {
     postId: string
 }
 
+// type CommentOutputType = {
+//     id: string
+//     content: string
+//     userId: string
+//     userLogin: string
+//     createdAt: string
+//     likesInfo: {
+//         likesCount: number,
+//         dislikesCount: number,
+//         myStatus: LikeQueryRepoEnum
+//     }
+// }
+
 type CommentOutputType = {
     id: string
     content: string
-    userId: string
-    userLogin: string
+    commentatorInfo: {
+        userId: string
+        userLogin: string
+    },
     createdAt: string
     likesInfo: {
         likesCount: number,
@@ -82,11 +98,13 @@ type CommentOutputType = {
     }
 }
 
+
 enum LikeQueryRepoEnum {
     None = "None",
     Like = "Like",
     Dislike = "Dislike"
 }
+
 export {CommentType, CommentOutputType, CommentsService}
 
 
