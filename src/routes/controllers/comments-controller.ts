@@ -31,7 +31,6 @@ export class CommentsController {
             return
         }
         const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(req.params.id)
-        const myStatus = await this.likesQueryRepository.getLikeStatus4User(сomment.userId, req.params.id)
         return res.status(200).send({
             id: сomment.id,
             content: сomment.content,
@@ -43,7 +42,7 @@ export class CommentsController {
             likesInfo: {
                 likesCount: likesCountInfo.likesCount,
                 dislikesCount: likesCountInfo.dislikesCount,
-                myStatus: myStatus
+                myStatus: "None"
             }
         })
     }
