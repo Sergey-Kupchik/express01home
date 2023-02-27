@@ -86,7 +86,7 @@ export class PostsController {
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1;
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
-        const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "desc";
+        const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "asc";
         const commentsWithNoLikesInfo = await this.commentsQueryRepository.getComments4Post(pageNumber, pageSize, sortBy, sortDirection, req.params.id)
         const itemsWithLikeInfo:CommentOutputType[] =
             await Promise.all(commentsWithNoLikesInfo.items.map(async (comment): Promise<CommentOutputType> => {
