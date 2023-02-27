@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {authJwt, authZ, commentIdValidation} from "../middlewares/isAuth-middleware";
+import {authJwt, authJwtNoError, authZ, commentIdValidation} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {contentCommentsValidation, likeStatusValidation} from "../middlewares/posts-validation-middleware";
 import {commentsController} from "../composition-root";
@@ -13,7 +13,7 @@ commentsRouter.delete('/:id',
 );
 
 commentsRouter.get('/:id',
-    // authJwt,
+    authJwtNoError,
     // commentIdValidation,
     commentsController.getCommentById.bind(commentsController)
 );

@@ -37,6 +37,33 @@ const authJwt = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+const authJwtNoError = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.headers && !req.headers["authorization"]) {
+        next()
+        return
+    }
+    const jwtToken = req.headers["authorization"]?.split(" ")[1]
+    if (jwtToken) {
+        const tokenPayload = await tokensService.verifyToken(jwtToken, accessTokenSecret);
+        if (tokenPayload?.userId) {
+            const user = await usersRepository.findUserById(tokenPayload.userId)
+            if (user) {
+                req.user = user;
+                next()
+                return
+            } else {
+                next()
+                return
+            }
+        } else {
+            next()
+            return
+        }
+    } else {
+        next()
+        return
+    }
+};
 
 const clientIp = async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
@@ -59,7 +86,7 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
             const tokenPayload = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
             if (tokenPayload) {
                 const tokens = await tokensService.getAllTokensByUserId(tokenPayload.userId);
-                const tokenData = tokens?.find((t) => t.deviceId === tokenPayload.deviceId && t.lastActiveDate===tokenPayload.lastActiveDate)
+                const tokenData = tokens?.find((t) => t.deviceId === tokenPayload.deviceId && t.lastActiveDate === tokenPayload.lastActiveDate)
                 if (tokenData) {
                     req.deviceId = tokenData.deviceId;
                 }
@@ -73,8 +100,7 @@ const authRefreshToken = async (req: Request, res: Response, next: NextFunction)
                         next()
                         return
                     }
-                }
-                else {
+                } else {
                     return res.sendStatus(401)
                 }
             }
@@ -89,7 +115,7 @@ const devicesId = async (req: Request, res: Response, next: NextFunction) => {
             const tokenPayload = await tokensService.verifyToken(refreshToken, refreshTokenSecret);
             if (tokenPayload) {
                 const tokens = await tokensService.getAllTokensByUserId(tokenPayload.userId);
-                const tokenData = tokens?.find((t) => t.deviceId === req.params.devicesId && t.lastActiveDate===tokenPayload.lastActiveDate)
+                const tokenData = tokens?.find((t) => t.deviceId === req.params.devicesId && t.lastActiveDate === tokenPayload.lastActiveDate)
                 if (tokenData) {
                     req.deviceId = req.params.devicesId;
                     next()
@@ -120,15 +146,14 @@ const authZ = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const commentIdValidation = async (req: Request, res: Response, next: NextFunction) => {
-    const item= await commentsQueryRepository.getCommentById(req.params.id)
+    const item = await commentsQueryRepository.getCommentById(req.params.id)
     if (item) {
         next()
         return
     }
-     res.sendStatus(404)
+    res.sendStatus(404)
     return
 };
 
 
-
-export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId, commentIdValidation};
+export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId, commentIdValidation, authJwtNoError};

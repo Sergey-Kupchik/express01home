@@ -31,7 +31,11 @@ export class CommentsController {
             return
         }
         const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(req.params.id)
-        const myStatus = await this.likesQueryRepository.getLikeStatus4User(сomment.userId, req.params.id)
+        let myStatus = "None";
+        if (req.user?.accountData.id) {
+            myStatus = await this.likesQueryRepository.getLikeStatus4User(req.user?.accountData.id, req.params.id)
+        }
+
         return res.status(200).send({
             id: сomment.id,
             content: сomment.content,
