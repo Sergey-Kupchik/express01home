@@ -15,7 +15,7 @@ class CommentsQueryRepo {
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
         const comments = await Comment.find(filterParam, '-_id  -__v')
-            .sort({sortBy: sortDirectionParam})
+            .sort({[sortBy]: sortDirectionParam})
             .skip(skipItems)
             .limit(pageSize).lean()
         const comments4Return: CommentGroupType = {
