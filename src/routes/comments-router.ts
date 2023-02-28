@@ -29,7 +29,7 @@ commentsRouter.put('/:id/like-status',
     commentIdValidation,
     likeStatusValidation,
     inputValidationMiddleware,
-    commentsController.likeDislike.bind(commentsController)
+    commentsController.likeDislikeComment.bind(commentsController)
 );
 
 export {

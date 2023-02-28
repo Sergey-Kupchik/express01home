@@ -15,51 +15,51 @@ class LikesService {
         return false
     }
 
-    async likeDislike(userId: string, commentId: string, actionType: LikeActionEnum): Promise<boolean> {
+    async likeDislikeComment(userId: string, commentId: string, actionType: LikeActionEnum): Promise<boolean> {
         let hasBeenUp = false
-        const currentStatus = await this.likesQueryRepository.getLikeStatus4User(userId, commentId)
+        const currentStatus = await this.likesQueryRepository.getCommentLikeStatus4User(userId, commentId)
         // @ts-ignore
         if (actionType === currentStatus) {
             hasBeenUp = true
         } else {
             if (actionType === LikeActionEnum.Like) {
-                await this._removeDislike(userId, commentId)
-                hasBeenUp = await this._addLike(userId, commentId)
+                await this._removeCommentDislike(userId, commentId)
+                hasBeenUp = await this._addCommentLike(userId, commentId)
             }
             if (actionType === LikeActionEnum.Dislike) {
-                await this._removeLike(userId, commentId)
-                hasBeenUp = await this._addDislike(userId, commentId)
+                await this._removeCommentLike(userId, commentId)
+                hasBeenUp = await this._addCommentDislike(userId, commentId)
             }
             if (actionType === LikeActionEnum.None) {
-                await this._removeLike(userId, commentId)
-                await this._removeDislike(userId, commentId)
+                await this._removeCommentLike(userId, commentId)
+                await this._removeCommentDislike(userId, commentId)
                 hasBeenUp = true
             }
         }
         return hasBeenUp
     }
 
-    async _removeLike(userId: string, commentId: string): Promise<boolean> {
-        const instance = await this.likesRepository.removeLike(userId, commentId)
+    async _removeCommentLike(userId: string, commentId: string): Promise<boolean> {
+        const instance = await this.likesRepository.removeCommentLike(userId, commentId)
         if (instance) return true
         return false
     }
 
-    async _removeDislike(userId: string, commentId: string): Promise<boolean> {
-        const instance = await this.likesRepository.removeDislike(userId, commentId)
+    async _removeCommentDislike(userId: string, commentId: string): Promise<boolean> {
+        const instance = await this.likesRepository.removeCommentDislike(userId, commentId)
         if (instance) return true
         return false
     }
 
-    async _addLike(userId: string, commentId: string): Promise<boolean> {
-        const instance = await this.likesRepository.addLike(userId, commentId)
+    async _addCommentLike(userId: string, commentId: string): Promise<boolean> {
+        const instance = await this.likesRepository.addCommentLike(userId, commentId)
         if (instance) return true
         return false
     }
 
-    async _addDislike(userId: string, commentId: string): Promise<boolean> {
-        await this._removeLike(userId, commentId)
-        const instance = await this.likesRepository.addDislike(userId, commentId)
+    async _addCommentDislike(userId: string, commentId: string): Promise<boolean> {
+        await this._removeCommentLike(userId, commentId)
+        const instance = await this.likesRepository.addCommentDislike(userId, commentId)
         if (instance) return true
         return false
     }

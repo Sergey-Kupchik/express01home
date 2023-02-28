@@ -1,7 +1,7 @@
 import {Like} from "../../server/db/conn";
 
 class LikeQueryRepo {
-    async getLikeStatus4User(userId: string, commentId: string): Promise<LikeQueryRepoEnum> {
+    async getCommentLikeStatus4User(userId: string, commentId: string): Promise<LikeQueryRepoEnum> {
         let status = LikeQueryRepoEnum.None
         const likeInstance = await Like.findOne({userId, "comments.like": {'$in': [commentId]}}, '-_id  -__v').lean()
         if (likeInstance) status = LikeQueryRepoEnum.Like

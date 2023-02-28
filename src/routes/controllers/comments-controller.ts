@@ -33,7 +33,7 @@ export class CommentsController {
         const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(req.params.id)
         let myStatus = "None";
         if (req.user?.accountData.id) {
-            myStatus = await this.likesQueryRepository.getLikeStatus4User(req.user?.accountData.id, req.params.id)
+            myStatus = await this.likesQueryRepository.getCommentLikeStatus4User(req.user?.accountData.id, req.params.id)
         }
 
         return res.status(200).send({
@@ -63,8 +63,8 @@ export class CommentsController {
 
     }
 
-    async likeDislike(req: Request, res: Response) {
-        const isUpdated: boolean = await this.likesService.likeDislike(req.user!.accountData.id, req.params.id, req.body.likeStatus,)
+    async likeDislikeComment(req: Request, res: Response) {
+        const isUpdated: boolean = await this.likesService.likeDislikeComment(req.user!.accountData.id, req.params.id, req.body.likeStatus,)
         if (isUpdated) {
             res.sendStatus(204)
             return

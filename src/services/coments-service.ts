@@ -31,7 +31,7 @@ class CommentsService {
             const comment: CommentType | null = await this.commentsQueryRepository.getCommentById(newComment.id)
             if (isCommentCreated && comment) {
                 const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(comment.id)
-                const myStatus = await this.likesQueryRepository.getLikeStatus4User(user.id, comment.id)
+                const myStatus = await this.likesQueryRepository.getCommentLikeStatus4User(user.id, comment.id)
                 return {
                     id: comment.id,
                     content: comment.content,

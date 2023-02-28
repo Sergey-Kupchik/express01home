@@ -91,7 +91,7 @@ export class PostsController {
         const itemsWithLikeInfo:CommentOutputType[] =
             await Promise.all(commentsWithNoLikesInfo.items.map(async (comment): Promise<CommentOutputType> => {
                 const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(comment.id)
-                const myStatus = await this.likesQueryRepository.getLikeStatus4User(req.user!.accountData.id, comment.id)
+                const myStatus = await this.likesQueryRepository.getCommentLikeStatus4User(req.user!.accountData.id, comment.id)
                 return {
                     id: comment.id,
                     content: comment.content,
