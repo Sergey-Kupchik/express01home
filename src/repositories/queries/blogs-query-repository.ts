@@ -1,6 +1,8 @@
-import {Blog} from "../../server/db/conn";
-import {BlogType} from "../../services/blogs-service";
+import { injectable } from "inversify";
+import { Blog } from "../../server/db/conn";
+import { BlogType } from "../../services/blogs-service";
 
+@injectable()
 class BlogsQueryRepository {
     async getAllBlogs(): Promise<BlogType[]> {
         const blogs = await Blog.find({}, '-_id  -__v').lean()
@@ -54,8 +56,8 @@ type BlogOutputType = {
     }>
 }
 export {
-     BlogOutputType, sortDirectionType, sortDirectionEnum, BlogsQueryRepository
-}
+    BlogOutputType, sortDirectionType, sortDirectionEnum, BlogsQueryRepository
+};
 
 
 

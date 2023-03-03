@@ -1,27 +1,16 @@
-import {v4 as uuidv4} from 'uuid';
-import {currentDate} from '../utils/utils';
-import {PostsRepo} from "../repositories/posts-db-repository";
-import {BlogsRepo} from "../repositories/blogs-db-repository";
-import {BlogsQueryRepository} from "../repositories/queries/blogs-query-repository";
+import { injectable, inject } from "inversify";
+import { v4 as uuidv4 } from 'uuid';
+import { currentDate } from '../utils/utils';
+import { PostsRepo } from "../repositories/posts-db-repository";
+import { BlogsRepo } from "../repositories/blogs-db-repository";
+import { BlogsQueryRepository } from "../repositories/queries/blogs-query-repository";
 
-
-type PostType = {
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string
-    createdAt: string
-};
-
-type PostInfoType = Omit<PostType, "id" | "createdAt">;
-
+@injectable()
 class PostsService {
 
-    constructor(protected postsRepository: PostsRepo,
-                protected blogsRepository: BlogsRepo,
-                protected blogsQueryRepository: BlogsQueryRepository) {
+    constructor(@inject(PostsRepo) protected postsRepository: PostsRepo,
+        @inject(BlogsRepo) protected blogsRepository: BlogsRepo,
+        @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository) {
 
     }
 
@@ -69,4 +58,16 @@ class PostsService {
 }
 
 
-export {PostType, PostInfoType, PostsService}
+type PostType = {
+    id: string
+    title: string
+    shortDescription: string
+    content: string
+    blogId: string
+    blogName: string
+    createdAt: string
+};
+
+type PostInfoType = Omit<PostType, "id" | "createdAt">;
+
+export { PostType, PostInfoType, PostsService }

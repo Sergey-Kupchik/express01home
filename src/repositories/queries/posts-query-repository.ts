@@ -1,7 +1,10 @@
-import {Post} from "../../server/db/conn";
-import {PostType} from "../../services/posts-service";
-import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
+import "reflect-metadata";
+import { injectable } from "inversify";
+import { Post } from "../../server/db/conn";
+import { PostType } from "../../services/posts-service";
+import { sortDirectionEnum, sortDirectionType } from "./blogs-query-repository";
 
+@injectable()
 class PostsQueryRepo {
     async getAllPosts(): Promise<PostType[]> {
         const result = await Post.find({}, '-_id  -__v').lean();
@@ -72,4 +75,4 @@ type PostsOutputType = {
 
 export {
     PostsOutputType, PostsQueryRepo
-}
+};

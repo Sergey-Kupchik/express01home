@@ -1,6 +1,8 @@
-import {Blog} from "../server/db/conn";
-import {BlogType} from "../services/blogs-service";
+import { injectable } from "inversify";
+import { Blog } from "../server/db/conn";
+import { BlogType } from "../services/blogs-service";
 
+@injectable()
 class BlogsRepo {
     async createBlog(newBlog: BlogType): Promise<boolean> {
         const blog = new Blog(newBlog);
@@ -35,4 +37,4 @@ class BlogsRepo {
 
 export {
     BlogsRepo
-}
+};

@@ -1,7 +1,8 @@
-import jsonwebtoken, {JwtPayload} from "jsonwebtoken";
-import {RefreshTokensInfo, RefreshTokensRepo} from "../repositories/refresh-token-repository";
-import {currentDate} from "../utils/utils";
-import {v4 as uuidv4} from "uuid";
+import { injectable, inject } from "inversify";
+import jsonwebtoken, { JwtPayload } from "jsonwebtoken";
+import { RefreshTokensInfo, RefreshTokensRepo } from "../repositories/refresh-token-repository";
+import { currentDate } from "../utils/utils";
+import { v4 as uuidv4 } from "uuid";
 
 
 const accessTokenSecret: string = process.env.TOKEN_KEY || "AccessTokenSecretLocal";
@@ -16,11 +17,12 @@ interface TokenInterface extends JwtPayload {
     email?: string;
 };
 
+@injectable()
 class TokensService {
-    constructor(protected refreshTokensRepo: RefreshTokensRepo) {
+    constructor(@inject(RefreshTokensRepo) protected refreshTokensRepo: RefreshTokensRepo) {
     }
     async createAccessToken(userId: string,): Promise<string> {
-        return jsonwebtoken.sign({userId}, accessTokenSecret, {
+        return jsonwebtoken.sign({ userId }, accessTokenSecret, {
             expiresIn: accessTokenLifeTime,
         });
     }
@@ -44,7 +46,7 @@ class TokensService {
                 lastActiveDate: tokenPayload.lastActiveDate
             }
             await this.saveRefreshTokenInfo(userId, deviceInfo)
-            return jsonwebtoken.sign({...tokenPayload}, refreshTokenSecret, {
+            return jsonwebtoken.sign({ ...tokenPayload }, refreshTokenSecret, {
                 expiresIn: refreshTokenLifeTime,
             });
         }
@@ -53,7 +55,7 @@ class TokensService {
     async updateRefreshToken(userId: string, deviceId: string, clientIp: string): Promise<string> {
         const lastActiveDate = currentDate();
         await this.refreshTokensRepo.updateRefreshTokenDateInfo(userId, deviceId, lastActiveDate, clientIp)
-        return jsonwebtoken.sign({userId, deviceId, lastActiveDate}, refreshTokenSecret, {
+        return jsonwebtoken.sign({ userId, deviceId, lastActiveDate }, refreshTokenSecret, {
             expiresIn: refreshTokenLifeTime,
         });
     }
@@ -114,4 +116,4 @@ type RefTokenInfoType = {
 }
 
 type RefreshTokenPayloadOutputType = Omit<RefTokenInfoType, "expiresIn">;
-export {accessTokenSecret, refreshTokenSecret, TokensService}
+export { accessTokenSecret, refreshTokenSecret, TokensService }

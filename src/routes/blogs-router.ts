@@ -9,7 +9,10 @@ import {
     titleValidation,
     urlBlogIdValidation
 } from "../middlewares/posts-validation-middleware";
-import {blogsController} from "../composition-root";
+import { myContainer } from '../inversify.config';
+import { BlogsController } from './controllers/blogs-controller';
+
+const blogsController = myContainer.get<BlogsController>(BlogsController);
 
 const blogsRouter = Router();
 

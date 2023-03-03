@@ -1,9 +1,11 @@
-import {Router} from 'express';
-import {isAuthT} from "../middlewares/isAuth-middleware";
-import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import {emailValidator, loginValidation, passwordValidation} from "../middlewares/user-middleware";
-import {usersController} from "../composition-root";
+import { Router } from 'express';
+import { myContainer } from '../inversify.config';
+import { isAuthT } from "../middlewares/isAuth-middleware";
+import { emailValidator, loginValidation, passwordValidation } from "../middlewares/user-middleware";
+import { inputValidationMiddleware } from "../middlewares/validation-middleware";
+import { UsersController } from './controllers/users-controller';
 
+const usersController = myContainer.get<UsersController>(UsersController);
 
 const usersRouter = Router();
 
@@ -26,4 +28,4 @@ usersRouter.delete('/:id',
 
 export {
     usersRouter
-}
+};

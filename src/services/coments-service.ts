@@ -1,18 +1,20 @@
-import {CommentsRepo} from "../repositories/comments-db-repository";
-import {UserType} from "../repositories/users-db-repository";
-import {currentDate} from "../utils/utils";
-import {CommentsQueryRepo} from "../repositories/queries/comments-query-repository";
-import {v4 as uuidv4} from "uuid";
-import {PostsQueryRepo} from "../repositories/queries/posts-query-repository";
-import {PostType} from "./posts-service";
-import {LikeQueryRepo} from "../repositories/queries/likes-query-repository";
+import { inject, injectable } from "inversify";
+import { v4 as uuidv4 } from "uuid";
+import { CommentsRepo } from "../repositories/comments-db-repository";
+import { CommentsQueryRepo } from "../repositories/queries/comments-query-repository";
+import { LikeQueryRepo } from "../repositories/queries/likes-query-repository";
+import { PostsQueryRepo } from "../repositories/queries/posts-query-repository";
+import { UserType } from "../repositories/users-db-repository";
+import { currentDate } from "../utils/utils";
+import { PostType } from "./posts-service";
 
+@injectable()
 class CommentsService {
 
-    constructor(protected postsQueryRepository: PostsQueryRepo,
-                protected commentsQueryRepository: CommentsQueryRepo,
-                protected commentsRepository: CommentsRepo,
-                protected likesQueryRepository: LikeQueryRepo
+    constructor(@inject(PostsQueryRepo) protected postsQueryRepository: PostsQueryRepo,
+        @inject(CommentsQueryRepo) protected commentsQueryRepository: CommentsQueryRepo,
+        @inject(CommentsRepo) protected commentsRepository: CommentsRepo,
+        @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo
     ) {
     }
 
@@ -105,6 +107,6 @@ enum LikeQueryRepoEnum {
     Dislike = "Dislike"
 }
 
-export {CommentType, CommentOutputType, CommentsService}
+export { CommentType, CommentOutputType, CommentsService };
 
 

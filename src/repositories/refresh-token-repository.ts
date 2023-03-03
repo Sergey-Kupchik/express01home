@@ -1,5 +1,7 @@
-import {RefreshTokenInfo} from "../server/db/conn";
+import { injectable } from "inversify";
+import { RefreshTokenInfo } from "../server/db/conn";
 
+@injectable()
 class RefreshTokensRepo {
     async addRefreshTokenInfo(userId: string, RefreshTokenPayload: RefreshTokenPayloadType,): Promise<boolean> {
         let result = false;
@@ -102,8 +104,8 @@ type RefreshTokensInfo = {
     refreshTokenInfo: RefreshTokenPayloadType | undefined
 }
 export {
-     RefreshTokensInfo, RefreshTokensRepo
-}
+    RefreshTokensInfo, RefreshTokensRepo
+};
 
 
 

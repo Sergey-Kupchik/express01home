@@ -1,17 +1,19 @@
-import {PostsOutputType, PostsQueryRepo} from "../../repositories/queries/posts-query-repository";
-import {PostsService, PostType} from "../../services/posts-service";
-import {CommentOutputType, CommentsService} from "../../services/coments-service";
-import {CommentGroupType, CommentsQueryRepo} from "../../repositories/queries/comments-query-repository";
-import {Request, Response} from "express";
-import {LikeQueryRepo} from "../../repositories/queries/likes-query-repository";
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { CommentsQueryRepo } from "../../repositories/queries/comments-query-repository";
+import { LikeQueryRepo } from "../../repositories/queries/likes-query-repository";
+import { PostsOutputType, PostsQueryRepo } from "../../repositories/queries/posts-query-repository";
+import { CommentOutputType, CommentsService } from "../../services/coments-service";
+import { PostsService, PostType } from "../../services/posts-service";
 
+@injectable()
 export class PostsController {
 
-    constructor(protected postsQueryRepository: PostsQueryRepo,
-                protected postsService: PostsService,
-                protected commentsService: CommentsService,
-                protected commentsQueryRepository: CommentsQueryRepo,
-                protected likesQueryRepository: LikeQueryRepo,
+    constructor(@inject(PostsQueryRepo) protected postsQueryRepository: PostsQueryRepo,
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(CommentsService) protected commentsService: CommentsService,
+        @inject(CommentsQueryRepo) protected commentsQueryRepository: CommentsQueryRepo,
+        @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo,
     ) {
 
     }
@@ -88,7 +90,7 @@ export class PostsController {
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
         const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "desc";
         const commentsWithNoLikesInfo = await this.commentsQueryRepository.getComments4Post(pageNumber, pageSize, sortBy, sortDirection, req.params.id)
-        const itemsWithLikeInfo:CommentOutputType[] =
+        const itemsWithLikeInfo: CommentOutputType[] =
             await Promise.all(commentsWithNoLikesInfo.items.map(async (comment): Promise<CommentOutputType> => {
                 const likesCountInfo = await this.likesQueryRepository.getLikesCount4Comment(comment.id)
                 const myStatus = await this.likesQueryRepository.getCommentLikeStatus4User(req.user!.accountData.id, comment.id)

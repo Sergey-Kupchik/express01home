@@ -1,7 +1,9 @@
 import {body, CustomValidator, param} from "express-validator";
 import {BlogType} from "../services/blogs-service";
-import {blogsQueryRepository} from "../composition-root";
+import { myContainer } from "../inversify.config";
+import { BlogsQueryRepository } from "../repositories/queries/blogs-query-repository";
 
+const blogsQueryRepository = myContainer.get<BlogsQueryRepository>(BlogsQueryRepository);
 
 const likeStatusType: CustomValidator = async (value) => {
     if (value === LikeStatusEnum.Like || value === LikeStatusEnum.None || value === LikeStatusEnum.Dislike) {

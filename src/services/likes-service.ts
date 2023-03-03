@@ -1,11 +1,13 @@
-import {LikeRepo} from "../repositories/likes-db-repository";
-import {LikeQueryRepo} from "../repositories/queries/likes-query-repository";
+import { injectable, inject } from "inversify";
+import { LikeRepo } from "../repositories/likes-db-repository";
+import { LikeQueryRepo } from "../repositories/queries/likes-query-repository";
 
+@injectable()
 class LikesService {
 
     constructor(
-        protected likesRepository: LikeRepo,
-        protected likesQueryRepository: LikeQueryRepo,
+        @inject(LikeRepo) protected likesRepository: LikeRepo,
+        @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo,
     ) {
     }
 
@@ -66,7 +68,7 @@ class LikesService {
 }
 
 
-export {LikesService}
+export { LikesService }
 
 
 enum LikeActionEnum {

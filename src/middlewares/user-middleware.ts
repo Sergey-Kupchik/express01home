@@ -1,6 +1,9 @@
 import {body, CustomValidator} from "express-validator";
+import { myContainer } from "../inversify.config";
 import {UserDdType} from "../repositories/users-db-repository";
-import {usersService} from "../composition-root";
+import { UsersService } from "../services/users-service";
+
+const usersService = myContainer.get<UsersService>(UsersService);
 
 
 const isEmailUnique: CustomValidator = async (value) => {

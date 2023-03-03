@@ -1,5 +1,7 @@
+import { injectable } from "inversify";
 import nodemailer from "nodemailer";
 
+@injectable()
 class EmailAdapter {
     async _addTransport() {
         const transporter = nodemailer.createTransport({
@@ -11,7 +13,7 @@ class EmailAdapter {
         });
         return transporter
     }
-    async sentConfirmationEmail(email: string,html:string) {
+    async sentConfirmationEmail(email: string, html: string) {
         const transporter = await this._addTransport()
         const info = await transporter.sendMail({
             from: '"Cool man 👻" <kupchikrabota@gmail.com>',
@@ -22,7 +24,7 @@ class EmailAdapter {
         });
         return info.response
     }
-    async sentEmail(email: string,subject: string,textMessage:string, html:string) {
+    async sentEmail(email: string, subject: string, textMessage: string, html: string) {
         const transporter = await this._addTransport()
         const info = await transporter.sendMail({
             from: '"Cool man 👻" <kupchikrabota@gmail.com>',

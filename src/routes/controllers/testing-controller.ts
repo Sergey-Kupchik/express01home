@@ -1,19 +1,21 @@
-import {PostsRepo} from "../../repositories/posts-db-repository";
-import {BlogsRepo} from "../../repositories/blogs-db-repository";
-import {UsersQueryRepo} from "../../repositories/queries/users-query-repository";
-import {CommentsQueryRepo} from "../../repositories/queries/comments-query-repository";
-import {RefreshTokensRepo} from "../../repositories/refresh-token-repository";
-import {Request, Response} from "express";
-import {LikeQueryRepo} from "../../repositories/queries/likes-query-repository";
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { BlogsRepo } from "../../repositories/blogs-db-repository";
+import { PostsRepo } from "../../repositories/posts-db-repository";
+import { CommentsQueryRepo } from "../../repositories/queries/comments-query-repository";
+import { LikeQueryRepo } from "../../repositories/queries/likes-query-repository";
+import { UsersQueryRepo } from "../../repositories/queries/users-query-repository";
+import { RefreshTokensRepo } from "../../repositories/refresh-token-repository";
 
+@injectable()
 export class TestingController {
     constructor(
-        protected postsRepository: PostsRepo,
-        protected blogsRepository: BlogsRepo,
-        protected usersQueryRepository: UsersQueryRepo,
-        protected commentsQueryRepository: CommentsQueryRepo,
-        protected refreshTokensRepo: RefreshTokensRepo,
-        protected likesQueryRepository: LikeQueryRepo,
+        @inject(PostsRepo) protected postsRepository: PostsRepo,
+        @inject(BlogsRepo) protected blogsRepository: BlogsRepo,
+        @inject(UsersQueryRepo) protected usersQueryRepository: UsersQueryRepo,
+        @inject(CommentsQueryRepo) protected commentsQueryRepository: CommentsQueryRepo,
+        @inject(RefreshTokensRepo) protected refreshTokensRepo: RefreshTokensRepo,
+        @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo,
     ) {
     }
 

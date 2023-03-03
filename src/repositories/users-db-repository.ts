@@ -1,5 +1,7 @@
-import {User} from "../server/db/conn";
+import { injectable } from "inversify";
+import { User } from "../server/db/conn";
 
+@injectable()
 class UsersRepo {
     async createUser(newUser: UserDdType): Promise<boolean> {
         const user = new User(newUser);
@@ -63,7 +65,7 @@ class UsersRepo {
 }
 
 
-export { UsersRepo, UserDdType, UserType,UserHashInfoType, emailConfirmationType}
+export { UsersRepo, UserDdType, UserType, UserHashInfoType, emailConfirmationType };
 
 
 type UserType = {

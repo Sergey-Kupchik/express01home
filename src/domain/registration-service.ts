@@ -1,15 +1,17 @@
-import EmailManager from "../managers/email-manager";
-import { UsersService} from "../services/users-service";
-import compareDesc from 'date-fns/compareDesc';
 import add from "date-fns/add";
+import compareDesc from 'date-fns/compareDesc';
+import { inject, injectable } from "inversify";
 import jsonwebtoken from "jsonwebtoken";
-import {accessTokenSecret} from "../services/tokens-service";
+import EmailManager from "../managers/email-manager";
+import { accessTokenSecret } from "../services/tokens-service";
+import { UsersService } from "../services/users-service";
 
 const recoverCodeLifeTime = "200000s";
 
+@injectable()
 class RegistrationService {
-    constructor(protected usersService: UsersService,
-                protected emailManager: EmailManager) {
+    constructor(@inject(UsersService) protected usersService: UsersService,
+        @inject(EmailManager) protected emailManager: EmailManager) {
     }
 
     async registrationNewUser(login: string, email: string, password: string): Promise<boolean> {
@@ -51,8 +53,8 @@ class RegistrationService {
     }
 
     async sentPasswordRecovery(email: string): Promise<boolean> {
-        const resetPasswordExpires = add(new Date, {hours: 5,});
-        const recoverCode = jsonwebtoken.sign({email}, accessTokenSecret, {
+        const resetPasswordExpires = add(new Date, { hours: 5, });
+        const recoverCode = jsonwebtoken.sign({ email }, accessTokenSecret, {
             expiresIn: recoverCodeLifeTime,
         });
         console.log(`recoverCode from sentPasswordRecovery: ${recoverCode}`)

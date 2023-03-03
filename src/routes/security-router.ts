@@ -1,7 +1,9 @@
 import {Router} from 'express';
+import { myContainer } from '../inversify.config';
 import {authRefreshToken} from "../middlewares/isAuth-middleware";
-import {securityController} from "../composition-root";
+import { SecurityController } from './controllers/security-controller';
 
+const securityController = myContainer.get<SecurityController>(SecurityController);
 
 const securityRouter = Router();
 

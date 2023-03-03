@@ -1,6 +1,7 @@
-import {User} from "../../server/db/conn";
-import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
-import {UserType} from "../users-db-repository";
+import { injectable } from "inversify";
+import { User } from "../../server/db/conn";
+import { UserType } from "../users-db-repository";
+import { sortDirectionEnum, sortDirectionType } from "./blogs-query-repository";
 
 const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | null,) => {
     let param;
@@ -21,6 +22,7 @@ const filterParam = (searchLoginTerm: string | null, searchEmailTerm: string | n
     return param
 }
 
+@injectable()
 class UsersQueryRepo {
     async getAllUser(pageNumber: number, pageSize: number, sortBy: string, sortDirection: sortDirectionType, searchLoginTerm: string | null, searchEmailTerm: string | null,): Promise<UsersOutputType> {
         const filter = filterParam(searchLoginTerm, searchEmailTerm)
@@ -62,5 +64,6 @@ type UsersOutputType = {
 }
 
 export {
-     UsersOutputType, UsersQueryRepo
-}
+    UsersOutputType, UsersQueryRepo
+};
+

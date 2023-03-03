@@ -1,17 +1,12 @@
-import {v4 as uuidv4} from "uuid";
-import {currentDate} from "../utils/utils";
-import {BlogsRepo} from "../repositories/blogs-db-repository";
+import { inject, injectable } from "inversify";
+import { v4 as uuidv4 } from "uuid";
+import { BlogsRepo } from "../repositories/blogs-db-repository";
+import { currentDate } from "../utils/utils";
 
-type BlogType = {
-    id: string
-    name: string
-    websiteUrl: string
-    createdAt: string
-    description: string
-}
-
+@injectable()
 class BlogsService {
-    constructor(protected blogsRepository: BlogsRepo
+    constructor(
+        @inject(BlogsRepo) protected blogsRepository: BlogsRepo
     ) {
     }
 
@@ -48,4 +43,13 @@ class BlogsService {
     }
 }
 
-export {BlogType, BlogsService}
+type BlogType = {
+    id: string
+    name: string
+    websiteUrl: string
+    createdAt: string
+    description: string
+}
+
+
+export { BlogType, BlogsService };

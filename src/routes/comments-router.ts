@@ -2,7 +2,10 @@ import {Router} from 'express';
 import {authJwt, authJwtNoError, authZ, commentIdValidation} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {contentCommentsValidation, likeStatusValidation} from "../middlewares/posts-validation-middleware";
-import {commentsController} from "../composition-root";
+import { myContainer } from '../inversify.config';
+import { CommentsController } from './controllers/comments-controller';
+
+const commentsController = myContainer.get<CommentsController>(CommentsController);
 
 const commentsRouter = Router();
 

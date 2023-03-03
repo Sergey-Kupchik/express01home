@@ -1,5 +1,6 @@
-import {Router} from 'express';
-import {authJwt, authRefreshToken, clientIp, deviceTitle} from "../middlewares/isAuth-middleware";
+import { Router } from 'express';
+import { myContainer } from '../inversify.config';
+import { authJwt, authRefreshToken, clientIp, deviceTitle } from "../middlewares/isAuth-middleware";
 import {
     confirmationCodeValidation,
     emailRequired,
@@ -11,11 +12,12 @@ import {
     passwordValidator,
     recoveryCodeValidator
 } from "../middlewares/user-middleware";
-import {inputValidationMiddleware} from "../middlewares/validation-middleware";
-import {authController} from "../composition-root";
+import { inputValidationMiddleware } from "../middlewares/validation-middleware";
+import { AuthController } from './controllers/auth-controller';
+
+const authController = myContainer.get<AuthController>(AuthController);
 
 const authRouter = Router();
-
 
 authRouter.post('/login',
     passwordValidation,
@@ -78,4 +80,5 @@ authRouter.post('/registration-email-resending',
 
 export {
     authRouter
-}
+};
+

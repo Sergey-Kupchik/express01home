@@ -1,14 +1,16 @@
-import {TokensService} from "../../services/tokens-service";
-import {UsersService} from "../../services/users-service";
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
 import RegistrationService from "../../domain/registration-service";
-import {Request, Response} from "express";
-import {UserType} from "../../repositories/users-db-repository";
+import { UserType } from "../../repositories/users-db-repository";
+import { TokensService } from "../../services/tokens-service";
+import { UsersService } from "../../services/users-service";
 
+@injectable()
 export class AuthController {
 
-    constructor(protected tokensService: TokensService,
-                protected usersService: UsersService,
-                protected registrationService: RegistrationService) {
+    constructor(@inject(TokensService) protected tokensService: TokensService,
+        @inject(UsersService) protected usersService: UsersService,
+        @inject(RegistrationService) protected registrationService: RegistrationService) {
 
     }
 
@@ -19,10 +21,10 @@ export class AuthController {
         }
         console.log(`refreshToken ${tokens.refreshToken}`)
         res.cookie('refreshToken', tokens.refreshToken, {
-             httpOnly: true,
-             secure: true,
+            httpOnly: true,
+            secure: true,
         });
-        return res.status(200).send({"accessToken": tokens.accessToken})
+        return res.status(200).send({ "accessToken": tokens.accessToken })
     }
 
     async deleteTokenByDevicesId(req: Request, res: Response) {
@@ -43,7 +45,7 @@ export class AuthController {
             httpOnly: true,
             secure: true,
         });
-        return res.status(200).send({"accessToken": tokens.accessToken})
+        return res.status(200).send({ "accessToken": tokens.accessToken })
     }
 
     async findUserById(req: Request, res: Response) {
@@ -51,7 +53,7 @@ export class AuthController {
         if (!user) {
             return res.sendStatus(401)
         }
-        return res.status(200).send({email: user.email, login: user.login, userId: user.id,})
+        return res.status(200).send({ email: user.email, login: user.login, userId: user.id, })
     }
 
     async sentPasswordRecovery(req: Request, res: Response) {
@@ -62,7 +64,7 @@ export class AuthController {
     async createNewPassword(req: Request, res: Response) {
         const hasBeenCreate: boolean = await this.usersService.createNewPassword(req.body.newPassword, req.body.recoveryCode,)
         if (hasBeenCreate) return res.sendStatus(204)
-        return res.status(400).send({errorsMessages: [{message: "incorrect recoveryCode", field: "recoveryCode"}]})
+        return res.status(400).send({ errorsMessages: [{ message: "incorrect recoveryCode", field: "recoveryCode" }] })
     }
 
     async registrationNewUser(req: Request, res: Response) {

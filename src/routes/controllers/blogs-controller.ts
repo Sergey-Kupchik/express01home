@@ -1,20 +1,22 @@
-import {PostsQueryRepo} from "../../repositories/queries/posts-query-repository";
-import {PostsService} from "../../services/posts-service";
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
 import {
     BlogOutputType,
     BlogsQueryRepository,
     sortDirectionEnum
 } from "../../repositories/queries/blogs-query-repository";
-import {BlogsService, BlogType} from "../../services/blogs-service";
-import {Request, Response} from "express";
+import { PostsQueryRepo } from "../../repositories/queries/posts-query-repository";
+import { BlogsService, BlogType } from "../../services/blogs-service";
+import { PostsService } from "../../services/posts-service";
 
+@injectable()
 export class BlogsController {
 
     constructor(
-        protected postsQueryRepository: PostsQueryRepo,
-        protected postsService: PostsService,
-        protected blogsQueryRepository: BlogsQueryRepository,
-        protected blogsService: BlogsService,
+        // @inject(PostsQueryRepo) protected postsQueryRepository: PostsQueryRepo,
+        @inject(PostsService) protected postsService: PostsService,
+        @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository,
+        @inject(BlogsService) protected blogsService: BlogsService,
     ) {
     }
 
@@ -53,8 +55,8 @@ export class BlogsController {
     async createPost(req: Request, res: Response) {
         const newPostId: string | null = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId);
         if (newPostId) {
-            const newBlog = await this.postsQueryRepository.getPostById(newPostId)
-            res.status(201).send(newBlog)
+            // const newBlog = await this.postsQueryRepository.getPostById(newPostId)
+            // res.status(201).send(newBlog)
             return
         } else {
             res.sendStatus(404)
@@ -68,8 +70,8 @@ export class BlogsController {
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
         const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : sortDirectionEnum.desc;
-        const posts = await this.postsQueryRepository.getAllPostsFor1Blog(blogId, pageNumber, pageSize, sortBy, sortDirection)
-        res.send(posts)
+        // const posts = await this.postsQueryRepository.getAllPostsFor1Blog(blogId, pageNumber, pageSize, sortBy, sortDirection)
+        // res.send(posts)
         return
     }
 

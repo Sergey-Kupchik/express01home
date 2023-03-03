@@ -1,7 +1,9 @@
-import {Comment} from "../../server/db/conn";
-import {CommentOutputType, CommentType} from "../../services/coments-service";
-import {sortDirectionEnum, sortDirectionType} from "./blogs-query-repository";
+import { injectable } from "inversify";
+import { Comment } from "../../server/db/conn";
+import { CommentOutputType, CommentType } from "../../services/coments-service";
+import { sortDirectionEnum, sortDirectionType } from "./blogs-query-repository";
 
+@injectable()
 class CommentsQueryRepo {
     async getCommentById(commentId: string): Promise<CommentType | null> {
         const comment = await Comment.findOne({id: commentId}, '-_id  -__v').lean()
@@ -52,4 +54,4 @@ type CommentOutputNoLikesInfoType = Omit<CommentOutputType, "likesInfo">;
 
 export {
     CommentGroupType, CommentsQueryRepo
-}
+};

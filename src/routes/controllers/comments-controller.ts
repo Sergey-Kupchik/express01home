@@ -1,15 +1,17 @@
-import {CommentsQueryRepo} from "../../repositories/queries/comments-query-repository";
-import {CommentOutputType, CommentsService} from "../../services/coments-service";
-import {Request, Response} from "express";
-import {LikesService} from "../../services/likes-service";
-import {LikeQueryRepo} from "../../repositories/queries/likes-query-repository";
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { CommentsQueryRepo } from "../../repositories/queries/comments-query-repository";
+import { LikeQueryRepo } from "../../repositories/queries/likes-query-repository";
+import { CommentsService } from "../../services/coments-service";
+import { LikesService } from "../../services/likes-service";
 
+@injectable()
 export class CommentsController {
 
-    constructor(protected commentsQueryRepository: CommentsQueryRepo,
-                protected commentsService: CommentsService,
-                protected likesService: LikesService,
-                protected likesQueryRepository: LikeQueryRepo,
+    constructor(@inject(CommentsQueryRepo) protected commentsQueryRepository: CommentsQueryRepo,
+        @inject(CommentsService) protected commentsService: CommentsService,
+        @inject(LikesService) protected likesService: LikesService,
+        @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo,
     ) {
 
     }

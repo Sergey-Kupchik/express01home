@@ -1,6 +1,8 @@
-import {Comment} from "../server/db/conn";
-import {CommentType} from "../services/coments-service";
+import { injectable } from "inversify";
+import { Comment } from "../server/db/conn";
+import { CommentType } from "../services/coments-service";
 
+@injectable()
 class CommentsRepo {
     async createComment(newComment: CommentType): Promise<boolean> {
         const comment = new Comment(newComment);
@@ -19,5 +21,5 @@ class CommentsRepo {
 }
 
 export {
-     CommentsRepo
-}
+    CommentsRepo
+};

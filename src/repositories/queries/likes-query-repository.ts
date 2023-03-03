@@ -1,5 +1,7 @@
-import {Like} from "../../server/db/conn";
+import { injectable } from "inversify";
+import { Like } from "../../server/db/conn";
 
+@injectable()
 class LikeQueryRepo {
     async getCommentLikeStatus4User(userId: string, commentId: string): Promise<LikeQueryRepoEnum> {
         let status = LikeQueryRepoEnum.None
@@ -38,5 +40,5 @@ enum LikeQueryRepoEnum {
 
 export {
     LikeQueryRepo
-}
+};
 

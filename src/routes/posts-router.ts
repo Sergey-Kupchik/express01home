@@ -8,8 +8,11 @@ import {
     shortDescriptionValidation,
     titleValidation
 } from "../middlewares/posts-validation-middleware";
+import { myContainer } from '../inversify.config';
+import { PostsController } from './controllers/posts-controller';
 import {postsController} from "../composition-root";
 
+// const postsController = myContainer.get<PostsController>(PostsController);
 
 const postsRouter = Router();
 

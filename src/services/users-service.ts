@@ -1,18 +1,20 @@
+import { injectable, inject } from "inversify";
 import bcrypt from "bcrypt";
-import {currentDate, validateEmail} from "../utils/utils";
-import {UserDdType, UserHashInfoType, UsersRepo, UserType} from "../repositories/users-db-repository";
-import {v4 as uuidv4} from "uuid";
-import {accessTokenSecret, TokensService} from "./tokens-service";
+import { currentDate, validateEmail } from "../utils/utils";
+import { UserDdType, UserHashInfoType, UsersRepo, UserType } from "../repositories/users-db-repository";
+import { v4 as uuidv4 } from "uuid";
+import { accessTokenSecret, TokensService } from "./tokens-service";
 import add from 'date-fns/add';
-import {RefreshTokensRepo} from "../repositories/refresh-token-repository";
-import {LikesService} from "./likes-service";
+import { RefreshTokensRepo } from "../repositories/refresh-token-repository";
+import { LikesService } from "./likes-service";
 
+@injectable()
 class UsersService {
 
-    constructor(protected usersRepository:UsersRepo,
-                protected tokensService: TokensService,
-                protected refreshTokensRepo: RefreshTokensRepo,
-                protected likesService: LikesService
+    constructor(@inject(UsersRepo) protected usersRepository: UsersRepo,
+        @inject(TokensService) protected tokensService: TokensService,
+        @inject(RefreshTokensRepo) protected refreshTokensRepo: RefreshTokensRepo,
+        @inject(LikesService) protected likesService: LikesService
     ) {
     }
     async createUser(login: string, email: string, password: string): Promise<UserType | null> {
@@ -34,7 +36,7 @@ class UsersService {
             }
         }
         await this.usersRepository.createUser(newUser);
-        await  this.likesService.createInstance(newUser.accountData.id)
+        await this.likesService.createInstance(newUser.accountData.id)
         const user = await this.findUserById(newUser.accountData.id)
         return user
     }
@@ -149,7 +151,7 @@ class UsersService {
         if (!email) return false
         const user = await this.findUserByEmail(email)
         if (!user) return false
-        if (user.accountData.resetPasswordHash === undefined)  return false
+        if (user.accountData.resetPasswordHash === undefined) return false
         const isRecoveryCodeValid = await this._compareHashAndPassword(recoveryCode, user.accountData.resetPasswordHash)
         if (!isRecoveryCodeValid) return false
         const newPasswordHash = await this._hashPassword(newPassword);
@@ -167,7 +169,7 @@ class UsersService {
 }
 
 
-export {UsersService}
+export { UsersService }
 
 
 type TokensType = {

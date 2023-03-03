@@ -1,7 +1,12 @@
-import {NextFunction, Request, Response} from "express";
-import {accessTokenSecret, refreshTokenSecret} from "../services/tokens-service";
-import {CommentOutputType} from "../services/coments-service";
-import {commentsQueryRepository, tokensService, usersRepository} from "../composition-root";
+import { NextFunction, Request, Response } from "express";
+import { myContainer } from "../inversify.config";
+import { CommentsQueryRepo } from "../repositories/queries/comments-query-repository";
+import { UsersRepo } from "../repositories/users-db-repository";
+import { accessTokenSecret, refreshTokenSecret, TokensService } from "../services/tokens-service";
+
+const commentsQueryRepository = myContainer.get<CommentsQueryRepo>(CommentsQueryRepo);
+const tokensService = myContainer.get<TokensService>(TokensService);
+const usersRepository = myContainer.get<UsersRepo>(UsersRepo);
 
 
 const isAuthT = (req: Request, res: Response, next: NextFunction) => {
@@ -156,4 +161,4 @@ const commentIdValidation = async (req: Request, res: Response, next: NextFuncti
 };
 
 
-export {isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId, commentIdValidation, authJwtNoError};
+export { isAuthT, authJwt, authZ, authRefreshToken, clientIp, deviceTitle, devicesId, commentIdValidation, authJwtNoError };

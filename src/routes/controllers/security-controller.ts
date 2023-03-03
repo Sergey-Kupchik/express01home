@@ -1,9 +1,11 @@
-import {TokensService} from "../../services/tokens-service";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+import { inject, injectable } from "inversify";
+import { TokensService } from "../../services/tokens-service";
 
+@injectable()
 export class SecurityController {
 
-    constructor(protected tokensService: TokensService) {
+    constructor(@inject(TokensService) protected tokensService: TokensService) {
     }
 
     async getAllTokensByUserId(req: Request, res: Response) {
