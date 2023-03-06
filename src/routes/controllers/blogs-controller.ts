@@ -13,7 +13,7 @@ import { PostsService } from "../../services/posts-service";
 export class BlogsController {
 
     constructor(
-        // @inject(PostsQueryRepo) protected postsQueryRepository: PostsQueryRepo,
+        @inject(PostsQueryRepo) protected postsQueryRepository: PostsQueryRepo,
         @inject(PostsService) protected postsService: PostsService,
         @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository,
         @inject(BlogsService) protected blogsService: BlogsService,
@@ -55,8 +55,8 @@ export class BlogsController {
     async createPost(req: Request, res: Response) {
         const newPostId: string | null = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId);
         if (newPostId) {
-            // const newBlog = await this.postsQueryRepository.getPostById(newPostId)
-            // res.status(201).send(newBlog)
+            const newBlog = await this.postsQueryRepository.getPostById(newPostId)
+            res.status(201).send(newBlog)
             return
         } else {
             res.sendStatus(404)
@@ -70,8 +70,8 @@ export class BlogsController {
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
         const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : sortDirectionEnum.desc;
-        // const posts = await this.postsQueryRepository.getAllPostsFor1Blog(blogId, pageNumber, pageSize, sortBy, sortDirection)
-        // res.send(posts)
+        const posts = await this.postsQueryRepository.getAllPostsFor1Blog(blogId, pageNumber, pageSize, sortBy, sortDirection)
+        res.send(posts)
         return
     }
 

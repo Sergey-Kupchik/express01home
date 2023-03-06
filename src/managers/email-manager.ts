@@ -1,10 +1,12 @@
-import { inject, injectable } from "inversify";
+import {inject, injectable} from "inversify";
 import EmailAdapter from "../adapters/email-adapter";
 
 @injectable()
 class EmailManager {
 
-    constructor(@inject(EmailAdapter) protected emailAdapter: EmailAdapter) {
+    constructor(
+        @inject(EmailAdapter) protected emailAdapter: EmailAdapter
+    ) {
     }
 
     async sentConfirmationEmail(email: string, confirmationCode: string) {

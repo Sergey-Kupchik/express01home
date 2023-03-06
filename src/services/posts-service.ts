@@ -5,10 +5,23 @@ import { PostsRepo } from "../repositories/posts-db-repository";
 import { BlogsRepo } from "../repositories/blogs-db-repository";
 import { BlogsQueryRepository } from "../repositories/queries/blogs-query-repository";
 
+type PostType = {
+    id: string
+    title: string
+    shortDescription: string
+    content: string
+    blogId: string
+    blogName: string
+    createdAt: string
+};
+
+type PostInfoType = Omit<PostType, "id" | "createdAt">;
+
 @injectable()
 class PostsService {
 
-    constructor(@inject(PostsRepo) protected postsRepository: PostsRepo,
+    constructor(
+        @inject(PostsRepo) protected postsRepository: PostsRepo,
         @inject(BlogsRepo) protected blogsRepository: BlogsRepo,
         @inject(BlogsQueryRepository) protected blogsQueryRepository: BlogsQueryRepository) {
 
@@ -56,18 +69,5 @@ class PostsService {
         return result
     }
 }
-
-
-type PostType = {
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string
-    createdAt: string
-};
-
-type PostInfoType = Omit<PostType, "id" | "createdAt">;
 
 export { PostType, PostInfoType, PostsService }

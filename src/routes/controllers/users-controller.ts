@@ -1,14 +1,16 @@
-import { Request, Response } from "express";
-import { inject, injectable } from "inversify";
-import { UsersOutputType, UsersQueryRepo } from "../../repositories/queries/users-query-repository";
-import { UserType } from "../../repositories/users-db-repository";
-import { UsersService } from "../../services/users-service";
+import {Request, Response} from "express";
+import {inject, injectable} from "inversify";
+import {UsersOutputType, UsersQueryRepo} from "../../repositories/queries/users-query-repository";
+import {UserType} from "../../repositories/users-db-repository";
+import {UsersService} from "../../services/users-service";
 
 @injectable()
 export class UsersController {
 
-    constructor(@inject(UsersService) protected usersService: UsersService, protected usersQueryRepository: UsersQueryRepo) {
-
+    constructor(
+        @inject(UsersService) protected usersService: UsersService,
+        @inject(UsersQueryRepo) protected usersQueryRepository: UsersQueryRepo
+    ) {
     }
 
     async createUser(req: Request, res: Response) {
