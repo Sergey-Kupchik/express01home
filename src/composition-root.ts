@@ -1,4 +1,3 @@
-// import "reflect-metadata";
 // import EmailAdapter from "./adapters/email-adapter";
 // import RegistrationService from "./domain/registration-service";
 // import EmailManager from "./managers/email-manager";

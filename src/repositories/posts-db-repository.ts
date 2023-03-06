@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { Post } from "../server/db/conn";
 import { PostInfoType, PostType } from "../services/posts-service";
 
-injectable()
+@injectable()
 class PostsRepo {
     async createPost(newPost: PostType): Promise<boolean> {
         const post = new Post(newPost);

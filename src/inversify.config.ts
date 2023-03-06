@@ -32,38 +32,38 @@ import {TestingController} from "./routes/controllers/testing-controller";
 export const myContainer = new Container();
 
 //Utils
-myContainer.bind<EmailAdapter>(EmailAdapter).to(EmailAdapter);
-myContainer.bind<EmailManager>(EmailManager).to(EmailManager);
+myContainer.bind<EmailAdapter>(EmailAdapter).toSelf()
+myContainer.bind<EmailManager>(EmailManager).toSelf()
 
 // QueryRepositories
-myContainer.bind<UsersQueryRepo>(UsersQueryRepo).to(UsersQueryRepo);
-myContainer.bind<CommentsQueryRepo>(CommentsQueryRepo).to(CommentsQueryRepo);
-myContainer.bind<BlogsQueryRepository>(BlogsQueryRepository).to(BlogsQueryRepository);
-myContainer.bind<PostsQueryRepo>(PostsQueryRepo).to(PostsQueryRepo);
-myContainer.bind<LikeQueryRepo>(LikeQueryRepo).to(LikeQueryRepo);
+myContainer.bind<UsersQueryRepo>(UsersQueryRepo).toSelf()
+myContainer.bind<CommentsQueryRepo>(CommentsQueryRepo).toSelf()
+myContainer.bind<BlogsQueryRepository>(BlogsQueryRepository).toSelf()
+myContainer.bind<PostsQueryRepo>(PostsQueryRepo).toSelf()
+myContainer.bind<LikeQueryRepo>(LikeQueryRepo).toSelf()
 
 //Repositories
-myContainer.bind<RefreshTokensRepo>(RefreshTokensRepo).to(RefreshTokensRepo);
-myContainer.bind<UsersRepo>(UsersRepo).to(UsersRepo);
-myContainer.bind<CommentsRepo>(CommentsRepo).to(CommentsRepo);
-myContainer.bind<BlogsRepo>(BlogsRepo).to(BlogsRepo);
-myContainer.bind<PostsRepo>(PostsRepo).to(PostsRepo);
-myContainer.bind<LikeRepo>(LikeRepo).to(LikeRepo);
+myContainer.bind<RefreshTokensRepo>(RefreshTokensRepo).toSelf()
+myContainer.bind<UsersRepo>(UsersRepo).toSelf()
+myContainer.bind<CommentsRepo>(CommentsRepo).toSelf()
+myContainer.bind<BlogsRepo>(BlogsRepo).toSelf()
+myContainer.bind<PostsRepo>(PostsRepo).toSelf()
+myContainer.bind<LikeRepo>(LikeRepo).toSelf()
 
 //Services
-myContainer.bind<LikesService>(LikesService).to(LikesService);
-myContainer.bind<TokensService>(TokensService).to(TokensService);
-myContainer.bind<UsersService>(UsersService).to(UsersService);
-myContainer.bind<CommentsService>(CommentsService).to(CommentsService);
-myContainer.bind<BlogsService>(BlogsService).to(BlogsService);
-myContainer.bind<PostsService>(PostsService).to(PostsService);
-myContainer.bind<RegistrationService>(RegistrationService).to(RegistrationService);
+myContainer.bind<LikesService>(LikesService).toSelf()
+myContainer.bind<TokensService>(TokensService).toSelf()
+myContainer.bind<UsersService>(UsersService).toSelf()
+myContainer.bind<CommentsService>(CommentsService).toSelf()
+myContainer.bind<BlogsService>(BlogsService).toSelf()
+myContainer.bind<PostsService>(PostsService).toSelf()
+myContainer.bind<RegistrationService>(RegistrationService).toSelf()
 
 //Controllers
-myContainer.bind<SecurityController>(SecurityController).to(SecurityController);
-myContainer.bind<UsersController>(UsersController).to(UsersController);
-myContainer.bind<CommentsController>(CommentsController).to(CommentsController);
-myContainer.bind<BlogsController>(BlogsController).to(BlogsController);
-myContainer.bind<PostsController>(PostsController).to(PostsController);
-myContainer.bind<AuthController>(AuthController).to(AuthController);
-myContainer.bind<TestingController>(TestingController).to(TestingController);
+myContainer.bind<SecurityController>(SecurityController).toSelf()
+myContainer.bind<UsersController>(UsersController).toSelf()
+myContainer.bind<CommentsController>(CommentsController).toSelf()
+myContainer.bind<BlogsController>(BlogsController).toSelf()
+myContainer.bind<PostsController>(PostsController).toSelf()
+myContainer.bind<AuthController>(AuthController).toSelf()
+myContainer.bind<TestingController>(TestingController).toSelf()

@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { Like } from "../server/db/conn";
 
-injectable()
+@injectable()
 class LikeRepo {
     async createInstance(userId: string,):Promise<boolean> {
         const instance = new Like({

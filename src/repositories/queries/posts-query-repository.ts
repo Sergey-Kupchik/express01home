@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { injectable } from "inversify";
 import { Post } from "../../server/db/conn";
 import { PostType } from "../../services/posts-service";
