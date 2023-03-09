@@ -49,8 +49,12 @@ const commentSchema = new mongoose.Schema<CommentDbType>({
 const likeSchema = new mongoose.Schema<LikeDbType>({
     userId: {type: String, required: true},
     comments: {
-        like: [{type: String, required: false}],
-        dislike: [{type: String, required: false}],
+        like: [{type: String,    default: []}],
+        dislike: [{type: String, default: []}],
+    },
+    posts: {
+        like: [{type: String, default: []}],
+        dislike: [{type: String, default: []}],
     }
 });
 

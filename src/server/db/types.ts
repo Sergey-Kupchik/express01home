@@ -53,6 +53,10 @@ type LikeDbType = WithId<{
         like: Array<string>,
         dislike: Array<string>,
     }
+    posts: {
+        like: Array<string>,
+        dislike: Array<string>,
+    }
 }>;
 
 type RefreshTokensInfoDbType = WithId<{

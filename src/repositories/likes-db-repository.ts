@@ -6,10 +6,10 @@ class LikeRepo {
     async createInstance(userId: string,):Promise<boolean> {
         const instance = new Like({
             userId,
-            comments: {
-                like: [],
-                dislike: [],
-            }
+            // comments: {
+            //     like: [],
+            //     dislike: [],
+            // },
         });
         await instance.save()
         if (instance) return true
