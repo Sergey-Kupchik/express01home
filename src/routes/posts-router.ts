@@ -57,7 +57,7 @@ postsRouter.post('/:id/comments',
     postsController.createComment.bind(postsController)
 );
 
-postsRouter.post('/:id/like-status',
+postsRouter.put('/:id/like-status',
     authJwt,
     likeStatusValidation,
     inputValidationMiddleware,
