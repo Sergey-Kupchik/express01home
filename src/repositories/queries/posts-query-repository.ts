@@ -54,7 +54,7 @@ class PostsQueryRepo {
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
         const posts: PostType[] = await Post.find(filterParam, '-_id  -__v')
-            .sort({sortBy: sortDirectionParam})
+            .sort({[sortBy]: sortDirectionParam})
             .skip(skipItems)
             .limit(pageSize)
         const extendedPosts = await Promise.all(posts.map(async (p)=>await this.getExtendedPostInfoById({ postId:p.id,  userId: userId })))
@@ -75,7 +75,7 @@ class PostsQueryRepo {
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
         const posts = await Post.find(filterParam, '-_id  -__v')
-            .sort({sortBy: sortDirectionParam})
+            .sort({[sortBy]: sortDirectionParam})
             .skip(skipItems)
             .limit(pageSize).lean()
         const extendedPosts = await Promise.all(posts.map(async (p)=>await this.getExtendedPostInfoById({ postId:p.id,  userId: userId })))

@@ -21,7 +21,7 @@ class BlogsQueryRepository {
         const sortDirectionParam = sortDirection === sortDirectionEnum.asc ? 1 : -1;
         const skipItems: number = (pageNumber - 1) * pageSize;
         const blogs: BlogType[] = await Blog.find(filterParam, '-_id  -__v')
-            .sort({sortBy: sortDirectionParam})
+            .sort({[sortBy]: sortDirectionParam})
             .skip(skipItems)
             .limit(pageSize)
         const BlogOutput = {
