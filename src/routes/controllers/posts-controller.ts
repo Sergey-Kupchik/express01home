@@ -63,7 +63,7 @@ export class PostsController {
     async createPost(req: Request, res: Response) {
         const newPostId: string | null = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
         if (newPostId) {
-            const newBlog = await this.postsQueryRepository.getPostById(newPostId)
+            const newBlog = await this.postsQueryRepository.getExtendedPostInfoById( { postId: newPostId, userId: req.user?.accountData.id } )
             res.status(201).send(newBlog)
             return
         } else {
