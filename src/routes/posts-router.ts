@@ -1,10 +1,10 @@
 import {Router} from 'express';
-import {authJwt, isAuthT} from "../middlewares/isAuth-middleware";
+import {authJwt, authJwtNoError, commentIdValidation, isAuthT} from "../middlewares/isAuth-middleware";
 import {inputValidationMiddleware} from "../middlewares/validation-middleware";
 import {
     blogIdValidation,
     contentCommentsValidation,
-    contentValidation,
+    contentValidation, likeStatusValidation,
     shortDescriptionValidation,
     titleValidation
 } from "../middlewares/posts-validation-middleware";
@@ -17,9 +17,11 @@ const postsController = myContainer.get<PostsController>(PostsController);
 const postsRouter = Router();
 
 postsRouter.get('/',
+    authJwtNoError,
     postsController.getFilteredPosts.bind(postsController)
 );
 postsRouter.get('/:id',
+    authJwtNoError,
     postsController.getPostById.bind(postsController)
 );
 postsRouter.put('/:id',
@@ -53,6 +55,13 @@ postsRouter.post('/:id/comments',
     contentCommentsValidation,
     inputValidationMiddleware,
     postsController.createComment.bind(postsController)
+);
+
+postsRouter.post('/:id/like-status',
+    authJwt,
+    likeStatusValidation,
+    inputValidationMiddleware,
+    postsController.likeDislikePost.bind(postsController)
 );
 
 postsRouter.get('/:id/comments',

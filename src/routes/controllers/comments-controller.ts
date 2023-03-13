@@ -74,7 +74,6 @@ export class CommentsController {
             res.sendStatus(404)
             return
         }
-
     }
 }
 

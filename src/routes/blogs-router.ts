@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {isAuthT} from "../middlewares/isAuth-middleware";
+import {authJwtNoError, isAuthT} from "../middlewares/isAuth-middleware";
 import {nameValidation, websiteUrlValidation} from "../middlewares/blogs-validation-middleware";
 import {inputValidationMiddleware, inputValidationMiddleware2} from "../middlewares/validation-middleware";
 import {
@@ -45,6 +45,7 @@ blogsRouter.post('/:blogId/posts',
 );
 
 blogsRouter.get('/:blogId/posts',
+    authJwtNoError,
     urlBlogIdValidation,
     inputValidationMiddleware2,
     blogsController.getAllPostsFor1Blog.bind(blogsController)

@@ -3,6 +3,7 @@ import { myContainer } from "../inversify.config";
 import { CommentsQueryRepo } from "../repositories/queries/comments-query-repository";
 import { UsersRepo } from "../repositories/users-db-repository";
 import { accessTokenSecret, refreshTokenSecret, TokensService } from "../services/tokens-service";
+import {PostsQueryRepo} from "../repositories/queries/posts-query-repository";
 
 const commentsQueryRepository = myContainer.get<CommentsQueryRepo>(CommentsQueryRepo);
 const tokensService = myContainer.get<TokensService>(TokensService);

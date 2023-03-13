@@ -1,19 +1,21 @@
-import { Request, Response } from "express";
-import { inject, injectable } from "inversify";
-import { CommentsQueryRepo } from "../../repositories/queries/comments-query-repository";
-import { LikeQueryRepo } from "../../repositories/queries/likes-query-repository";
-import { PostsOutputType, PostsQueryRepo } from "../../repositories/queries/posts-query-repository";
-import { CommentOutputType, CommentsService } from "../../services/coments-service";
-import { PostsService, PostType } from "../../services/posts-service";
+import {Request, Response} from "express";
+import {inject, injectable} from "inversify";
+import {CommentsQueryRepo} from "../../repositories/queries/comments-query-repository";
+import {LikeQueryRepo} from "../../repositories/queries/likes-query-repository";
+import {IExtendedPost, PostsOutputType, PostsQueryRepo} from "../../repositories/queries/posts-query-repository";
+import {CommentOutputType, CommentsService} from "../../services/coments-service";
+import {PostsService, PostType} from "../../services/posts-service";
+import {LikesService} from "../../services/likes-service";
 
 @injectable()
 export class PostsController {
 
     constructor(@inject(PostsQueryRepo) protected postsQueryRepository: PostsQueryRepo,
-        @inject(PostsService) protected postsService: PostsService,
-        @inject(CommentsService) protected commentsService: CommentsService,
-        @inject(CommentsQueryRepo) protected commentsQueryRepository: CommentsQueryRepo,
-        @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo,
+                @inject(PostsService) protected postsService: PostsService,
+                @inject(CommentsService) protected commentsService: CommentsService,
+                @inject(CommentsQueryRepo) protected commentsQueryRepository: CommentsQueryRepo,
+                @inject(LikeQueryRepo) protected likesQueryRepository: LikeQueryRepo,
+                @inject(LikesService) protected likesService: LikesService,
     ) {
 
     }
@@ -23,13 +25,13 @@ export class PostsController {
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10;
         const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "createdAt";
         const sortDirection = req.query.sortDirection ? req.query.sortDirection.toString() : "desc";
-        const posts: PostsOutputType = await this.postsQueryRepository.getFilteredPosts(pageNumber, pageSize, sortBy, sortDirection)
+        const posts: PostsOutputType = await this.postsQueryRepository.getFilteredPosts(pageNumber, pageSize, sortBy, sortDirection, req.user?.accountData.id)
         res.send(posts)
         return
     }
 
     async getPostById(req: Request, res: Response) {
-        const posts: PostType | null = await this.postsQueryRepository.getPostById(req.params.id.toString())
+        const posts: IExtendedPost | null = await this.postsQueryRepository.getExtendedPostInfoById({postId: req.params.id, userId: req.user?.accountData.id})
         if (!posts) {
             res.sendStatus(404)
             return
@@ -118,5 +120,21 @@ export class PostsController {
         }
         res.send(comments)
         return
+    }
+
+    async likeDislikePost(req: Request, res: Response) {
+        const item = await this.postsQueryRepository.getPostById(req.params.id)
+        if (!item) {
+            res.sendStatus(404)
+            return
+        }
+        const isUpdated: boolean = await this.likesService.likeDislikePost(req.user!.accountData.id, req.params.id, req.body.likeStatus,)
+        if (isUpdated) {
+            res.sendStatus(204)
+            return
+        } else {
+            res.sendStatus(404)
+            return
+        }
     }
 }

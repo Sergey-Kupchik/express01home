@@ -15,7 +15,7 @@ type UserDbType = WithId<{
     // resetPasswordExpires?: string
 }>;
 
-type EmailConfirmationType ={
+type EmailConfirmationType = {
     confirmationCode: string
     expirationDate: Date
     isConfirmed: boolean
@@ -54,7 +54,10 @@ type LikeDbType = WithId<{
         dislike: Array<string>,
     }
     posts: {
-        like: Array<string>,
+        like: Array<{
+            postId: string,
+            addedAt: string,
+        }>,
         dislike: Array<string>,
     }
 }>;
