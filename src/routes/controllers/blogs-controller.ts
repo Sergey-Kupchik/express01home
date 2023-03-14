@@ -55,7 +55,7 @@ export class BlogsController {
     async createPost(req: Request, res: Response) {
         const newPostId: string | null = await this.postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId);
         if (newPostId) {
-            const newBlog = await this.postsQueryRepository.getExtendedPostInfoById( { postId: newPostId, userId: req.user?.accountData.id})
+            const newBlog = await this.postsQueryRepository.getExtendedPostInfoById({ postId: newPostId, userId: req.user?.accountData.id })
             res.status(201).send(newBlog)
             return
         } else {
@@ -96,3 +96,32 @@ export class BlogsController {
     }
 }
 
+// let f = {
+//     "id": "c52b4595-30e2-42b7-ae52-8f18f2b1ab5f",
+//     "title": "post title",
+//     "shortDescription": "description",
+//     "content": "new post content",
+//     "blogId": "14a3c743-50a9-4342-b26d-1c82e9b876f0",
+//     "blogName": "new blog", "createdAt": "2023-03-13T19:33:24.947Z",
+//     "extendedLikesInfo": {
+//         "likesCount": 1, "dislikesCount": 1,
+//         "myStatus": "Like", 
+//         "newestLikes": [{
+//             "addedAt": Any<String>,
+//             "userId": "968d504a-0ae7-4ce2-9505-134ffb7eb5d9", 
+//             "login": "7515lg"
+//         }]
+//     }
+// }
+// let f1 = {
+//     "id":"c52b4595-30e2-42b7-ae52-8f18f2b1ab5f",
+//     "title":"post title",
+//     "shortDescription":"description",
+//     "content":"new post content",
+//     "blogId":"14a3c743-50a9-4342-b26d-1c82e9b876f0",
+//     "blogName":"new blog",
+//     "createdAt":"2023-03-13T19:33:24.947Z",
+//     "extendedLikesInfo":
+//     {"likesCount":0,"dislikesCount":1,
+//     "myStatus":"Like",
+//     "newestLikes":[]}}

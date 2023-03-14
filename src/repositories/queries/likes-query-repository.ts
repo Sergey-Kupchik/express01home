@@ -25,8 +25,8 @@ class LikeQueryRepo {
         let status = LikeQueryRepoEnum.None
         const likeInstance = await Like.findOne({
             userId,
-            "posts.like": {$elemMatch: {'posts.like.$.postId': postId}}
-        }, '-_id  -__v').lean()
+            "posts.like": {$elemMatch: {"postId": postId}}
+            }, '-_id  -__v').lean()
         if (likeInstance) status = LikeQueryRepoEnum.Like
         const dislikeInstance = await Like.findOne({
             userId,
